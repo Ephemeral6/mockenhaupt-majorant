@@ -82,4 +82,7 @@ issue. A refutation is worth more to the author than a citation.
 
 ## Licence
 
-[CC BY 4.0](LICENSE) — reuse and adapt freely, with attribution.
+Copyright © 2026 Guancheng Pan. The paper — both `mockenhaupt.tex` and
+`mockenhaupt.pdf` — is licensed under
+[Creative Commons Attribution 4.0 International](LICENSE) (CC BY 4.0): reuse,
+redistribute and adapt freely, including commercially, with attribution.
