@@ -1,0 +1,1375 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array,longtable}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\definecolor{linkcol}{rgb}{0.10,0.20,0.45}
+\usepackage[colorlinks=true,linkcolor=linkcol,citecolor=linkcol,
+            urlcolor=linkcol]{hyperref}
+
+% Equations are numbered FLAT, (1)...(12), deliberately NOT per section.
+% With \numberwithin all twelve landed on numbers that a statement in the same
+% section already owns -- eq (2.1) beside Lemma 2.1, (8.2) beside Lemma 8.2 --
+% and on page 27 one sentence read "the identity (9.1) is proved from ...
+% Lemmas 4.3(iv) and 9.1", where the two "9.1" are different objects.  The
+% manuscript's own hand-picked tags never collided; flat numbering restores
+% that property.
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{convention}[theorem]{Convention}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\allowdisplaybreaks
+\setlength{\parskip}{0.15\baselineskip}
+% Let slack fall to the foot of the page instead of being distributed into the
+% gaps around displays, which stretched some inter-display spacing to two or
+% three lines' height.
+\raggedbottom
+% Absorbs the last few points of an otherwise unbreakable line rather than
+% letting it stick into the margin.
+\emergencystretch=2.5em
+\setlength{\tabcolsep}{4pt}
+% Narrow table columns are set ragged right, not justified.  The section 11
+% Lean index has cells that are comma-separated lists of \texttt identifiers,
+% and a justified typewriter line has almost nothing to stretch: the log showed
+% seven underfull hboxes at badness 10000, and the rendered page put 31, 47 and
+% 42pt of white between words whose natural space is 5.25pt -- six to nine times
+% normal.  Ragged right spends that slack at the line end, where it reads as a
+% margin rather than as holes inside the sentence.  \arraybackslash restores \\
+% which >{...} would otherwise shadow.
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+% A sentence ending "Hence" or on a colon is a promise that the next thing on
+% the page is the display it announces; page 13 ended on "Hence" and made the
+% reader turn the page to collect it.  Forbidding the break between a paragraph
+% and the display it introduces costs a little vertical slack, which
+% \raggedbottom already absorbs at the foot rather than by stretching the gaps
+% between displays.
+\predisplaypenalty=10000
+
+% Binary operators must not be allowed to vanish under compression.  TeX ships
+% medmuskip as "4mu plus 2mu minus 4mu", so the space around + - and \cdot can
+% shrink to exactly nothing, while thickmuskip is "5mu plus 5mu" with no shrink
+% component at all.  Two situations compress a line: ordinary justification of
+% a text paragraph, and TeX's re-packing of an over-wide unnumbered display via
+% hpack(p, z, exactly) (TeX82 s1202).  In both, the binaries collapse while the
+% relations keep full width, so "a - b = c" sets as "a-b = c" and the operator
+% reads as a hyphen.  Page 5's display lost 13 operators this way, page 7 five.
+% Capping the shrink at 1mu bounds the damage at 0.6pt and, for a display that
+% genuinely does not fit, converts a silent crush into a loud Overfull \hbox
+% that recount_boxes.py can catch.
+\medmuskip=4mu plus 2mu minus 1mu
+
+% End-of-proof mark for the two proofs the manuscript closes outside any proof
+% environment (section 10 and the run-in proof of Theorem 1.2).  Same mechanism
+% amsthm uses for \qed: the \null and the penalty let the square sit on the
+% last text line when there is room and drop to a line of its own when there is
+% not, and \parfillskip=0pt is what actually pins it to the right margin --
+% without it the paragraph's own 1fil competes with the \hfil and the square
+% comes to rest in the middle of the line.  Both assignments MUST be undone
+% after the \par: amsthm can leave them set because its \qed always fires
+% inside the proof environment's group, but this macro fires in open text, so
+% the first version leaked \parfillskip=0pt into the rest of the document and
+% every following paragraph had its last line stretched to the full measure
+% ("be    read    as    such.").
+\newcommand{\qedmark}{\unskip\nobreak\hfil\penalty50\hskip1em\null
+  \nobreak\hfil$\square$\parfillskip=0pt\relax\finalhyphendemerits=0\par
+  \parfillskip=0pt plus 1fil\relax\finalhyphendemerits=5000\relax}
+
+\title[Three-term idempotents defeat the majorant property]
+      {Three-term idempotents defeat the Hardy--Littlewood majorant
+       property on every interval $(2k,\,2k+2)$}
+\author{Guancheng Pan}
+\address{Chu Kochen Honors College, Zhejiang University}
+\email{3250101086@zju.edu.cn}
+% MSC: standard for a mathematics paper, and arXiv's submission form asks for
+% the classification separately.  Must appear BEFORE \maketitle or amsart drops
+% it silently -- there is no warning, the footer just comes out short.
+%   42A05  trigonometric polynomials, inequalities, extremal problems -- the
+%          majorant property for the three-term idempotents is exactly this
+%   33C10  Bessel and Airy functions: the Weber-Schafheitlin integral and the
+%          triple-Bessel products are the engine of the proof, not decoration
+%   42A16  Fourier coefficients of functions with special properties
+%   43A46  special (thin) sets, where the idempotent/character-sum questions live
+\subjclass[2020]{Primary 42A05; Secondary 33C10, 42A16, 43A46}
+% \keywords is DELIBERATELY ABSENT.  Measured, not guessed (exp_frontmatter.py,
+% exp_keywords.py): \subjclass is free, but ANY \keywords -- five terms, three
+% terms, or one -- costs exactly the same: +1 page, +5 orphans, +1 crushed-glue
+% line.  The cost is length-independent because the first-page footer had room
+% for exactly one more line and \subjclass took it; a second block overflows and
+% the reflow cascades through all 31 pages, ending on a near-empty page 32
+% (582.5pt short).  Keywords are optional metadata -- arXiv's form has no
+% keywords field, only MSC/ACM-class and Comments -- so the list lives in
+% ARXIV_SUBMISSION.md for the web form instead of costing a page here:
+%   Hardy-Littlewood majorant property; idempotent exponential polynomial;
+%   Mockenhaupt conjecture; Weber-Schafheitlin integral; Bessel function
+
+\begin{document}
+\begin{abstract}
+For an integer $k \ge 0$ put $N = k+2$ and
+\[ f_k(x) = 1 + e(x) + e(Nx), \qquad  g_k(x) = 1 + e(x) - e(Nx), \qquad  e(t) = e^{2\pi it}, \]
+on the circle $\mathbb{T} = \mathbb{R}/\mathbb{Z}$. Mockenhaupt conjectured that $\|g_k\|_{L^p(\mathbb{T})} > \|f_k\|_{L^p(\mathbb{T})}$ for every real $p \in (2k, 2k+2)$; previously this was known only for $k \le 5$, one value of $k$ at a time. We prove the conjecture for every integer $k \ge 4$ by a single argument, and hence, combined with the published small cases, for every integer $k \ge 0$. The proof replaces the estimate by an exact identity: the difference of $p$-th powers is written as a sum of Fourier coefficients of $H^s$ over a discrete resonant ray on the two-torus, each coefficient is continued analytically in $s$ separately, and the resulting integrals of triple products of Bessel functions are evaluated in closed form, after which a single explicit comparison between the leading mode and the tail closes the argument with threshold $K_{0} = 4$. The proof is self-contained and uses no numerical routine. A partial Lean 4 formalisation exists; it currently covers one lemma of \S2 unconditionally and does not cover the main line, and \S12 states its status in full.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection{The majorant property}
+Say that a set $\Lambda \subseteq \mathbb{Z}$ and an exponent $p$ have the \emph{majorant property with constant 1} if, whenever $|a_n| \le b_n$ for all $n$,
+
+\[
+  \left\| \sum_{n\in \Lambda } a_n e(nx) \right\|_{L^p(\mathbb{T})} \le \left\| \sum_{n\in \Lambda } b_n e(nx) \right\|_{L^p(\mathbb{T})} .
+\]
+Hardy and Littlewood \cite{r7} observed that this holds for every even integer $p$, for the trivial reason that $\|F\|_p^p$ is then an exact convolution count with nonnegative weights. They asked whether it might hold for all $p$. Boas \cite{r1} answered negatively, and the question became quantitative: how small a set, and how mild a failure?
+
+Montgomery \cite{r15} conjectured that the property fails, for every non-even $p$, already for some \emph{idempotent} --- that is, with all coefficients in $\{0,1\}$ and the majorant obtained by flipping a single sign. Mockenhaupt and Schlag \cite{r16} proved a four-term version of this. Mockenhaupt then conjectured the sharpest possible form: three terms suffice, and one may take the same three frequencies $0, 1, N$ throughout, with $N = k+2$ tied to the interval $(2k, 2k+2)$. Explicitly:
+
+
+\begin{quote}
+\textbf{Conjecture (Mockenhaupt).} For every integer $k \ge 0$ and every real $p$ with $2k < p < 2k+2$,
+
+\[
+  \| 1 + e(x) - e((k+2)x) \|_{L^p(\mathbb{T})} > \| 1 + e(x) + e((k+2)x) \|_{L^p(\mathbb{T})} .
+\]
+\end{quote}
+The exponent range is forced: at the two endpoints $p = 2k$ and $p = 2k+2$ the two norms coincide, by Parseval-type identities, so the conjecture asserts a strict inequality on each open interval between consecutive even integers, with a different triple of frequencies on each interval.
+
+
+\subsection{What was known}
+Krenedits settled the conjecture for $k = 0,1,2$ in \cite{r9}, for $k = 3,4$ in \cite{r10}, and for $k = 5$ in \cite{r11}. The case $k = 0$ is analytic; the remaining published cases proceed by a delicate Rolle-type argument on the difference function, driven by numerical quadrature with proved error bounds --- rigorous, but one value of $k$ at a time, with the node count growing rapidly (up to $N \le 1200$ nodes already at $k = 2$). No proof for $k \ge 6$ has appeared, and no uniform method was known. Krenedits himself remarked that no clear structural reason was visible for why the inequality should persist for all $k$.
+
+
+\subsection{Results}
+
+\begin{theorem}\label{res:1.1}
+For every integer $k \ge 4$ and every real $p$ with $2k < p < 2k+2$,
+
+\[
+  \|g_k\|_{L^p(\mathbb{T})} > \|f_k\|_{L^p(\mathbb{T})} .
+\]
+\end{theorem}
+
+\begin{theorem}\label{res:1.2}
+Mockenhaupt's conjecture holds for every integer $k \ge 0$.
+\end{theorem}
+Theorem~1.2 follows from Theorem~1.1 together with the published cases $k = 0,1,2,3$ of \cite{r9,r10}; the normalisations, the exponent intervals and the direction of the inequality agree with ours, as we record in \S11. The overlap at $k = 4$ is genuine: our proof and \cite{r10} establish that case independently.
+
+Two features of Theorem~1.1 deserve emphasis. First, it is \textbf{uniform in $k$}: a single argument covers the whole tail, and the threshold $4$ is not an artefact of where we stopped computing but the exact point at which an explicit comparison turns (\S8). Second, the argument for $k \ge 4$ invokes \textbf{no numerical routine}: no quadrature, no interval arithmetic, no computer algebra. Decimal figures do appear, and they fall into two disjoint classes, kept apart throughout.
+
+\emph{Load-bearing decimals.} The figures that enter proofs are: the constant $\kappa = 0.58$ itself, together with $0.00145$, $442414$ and $3849.0018$, which form its rational certificate in Proposition~7.3; $0.4228$, $0.5836$, $1.7917$, $0.2$ (Lemma~8.2); $1.7321$, $3.15$, $9.9225$, $3.00017$, $12.1247$, $0.608$ (Lemma~8.3); and $0.32$, $0.3364$, $0.587190$, $0.7517$ (Lemma~8.4). Each is a \emph{rational upper or lower bound for an explicitly displayed expression}, in whichever of the two directions the point of use requires, and each such bound is a finite rational inequality verifiable by hand; none is the output of a routine that would have to be trusted. Two of them, $\pi < 3.15$ and $\sqrt{3} < 1.7321$, are verified in situ by squaring.
+
+The six figures of Remark~7.4 ($0.038$, $0.0128$, $0.0043$, $403$, $2980$, $22026$) are rational certificates of the same kind, but they are \textbf{not} load-bearing for any theorem: Remark~7.4 serves only to show that Proposition~7.3 fails for $N = 3, 4, 5$, and no proof in the paper cites it.
+
+\emph{Orientation decimals.} Figures recorded only to inform the reader, used by no step of any proof, appear in the parenthetical of Lemma~8.3 ($0.606097\ldots$, $12.09199\ldots$), in the tables of Remarks~7.4 ($\lambda_N$, $c_N/N$), 7.6 and 8.6, in Remark~8.1 ($\mathrm{about}\, 0.6$), and in \S13. Each is flagged as such where it occurs.
+
+
+\subsection{Method: replacing an estimate by an identity}
+The difficulty of the conjecture is that the two sides differ by an exponentially small amount. With $s = p/2$ and
+
+\[
+  A = |f_k|^{2} , \qquad  B = |g_k|^{2} , \qquad  D(s) = \int_{0}^{1} ( B(x)^s - A(x)^s ) dx ,
+\]
+the assertion is $D(s) > 0$ on $(k, k+1)$, and $D$ vanishes to first order at both endpoints. Any approach that estimates $B^s - A^s$ term by term destroys the cancellation that carries the sign. Our strategy is to avoid estimating it at all until the very last step.
+
+\textbf{Step 1 (\S3): an exact identity on a discrete resonant ray.} The two functions $A$ and $B$ are restrictions of a single function on the two-torus,
+
+\[
+  H(\theta ,\psi ) = |1 + e^{i\theta } + e^{i\psi }|^{2} ,
+\]
+along the line $\theta = 2\pi x, \psi = 2\pi Nx$, respectively that line shifted by $\pi$ in the second coordinate. Integrating over the line picks out exactly the Fourier modes lying on the ray $(-Nq, q)$, and the shift contributes $(-1)^q$, so that
+
+\[
+  D(s) = -4 \sum_{q \ge 1, q \,\mathrm{odd}} \widehat{H}^s(-Nq, q) .
+\]
+This is an identity, not an estimate. Crucially the surviving modes form a ray indexed by a single integer $q$, so that ``leading mode plus tail'' is a meaningful decomposition.
+
+\textbf{Step 2 (\S4): analytic continuation, one mode at a time.} Each coefficient $\widehat{H}^s(-Nq, q)$ extends holomorphically to $\{\Re s > -1\}$, while a triple-Bessel integral
+
+\[
+  I_q(s) = \int_{0}^\infty J_{qN}(r) J_{q(N-1)}(r) J_q(r) r^{-2s-1} dr
+\]
+is holomorphic on the strip $\Omega_q = \{-3/4 < \Re s < qN\}$. The two agree on an anchor strip $\{-1/4 < \Re s < 0\}$, hence on all of $\Omega_q$, and every $\Omega_q$ contains $[k, k+1]$ with one unit to spare.
+
+This step must be performed \textbf{per mode}, and it is worth saying at once why --- and worth not overstating it. Proposition~3.4 is established only for $s \ge 1$, that being where $\widehat{H}^s \in \ell^{1}(\mathbb{Z}^{2})$ is available, and the anchor strip lies in $\{\Re s < 0\}$; so on the anchor strip the summed identity is \textbf{not available} to be continued. The obstruction is one of \emph{proof}, not of existence: we do not show that the summed identity fails there, and numerically it appears to hold (Remark~4.7). What we continue instead is a \textbf{single} Fourier coefficient, for which Lemma~4.1 gives holomorphy on $\{\Re s > -1\} \supset \Omega_q$, Lemma~4.3(iv) gives holomorphy of $I_q$ on $\Omega_q$, and Lemma~4.5 gives agreement on the anchor strip --- all three are needed, as holomorphy of one side alone continues nothing. Summation over $q$ is reinstated only after returning to $s \in (k, k+1)$. This is the single most delicate point of the argument; Remark~4.7 sets it out in full, and also records what the obstruction is \emph{not} --- the failure of $\ell^{1}(\mathbb{Z}^{2})$ over the whole lattice at negative $\Re s$ is by itself no obstacle, because Lemma~3.1 forces the ray coefficients to decay like $q^{-2-2\sigma }$, which is summable exactly when $\sigma > -1/2$. That quantitative decay, and \textbf{not} the fact that the resonant ray has density zero in $\mathbb{Z}^{2}$, is the reason.
+
+\textbf{Step 3 (\S5): the leading mode, in closed form.} The mode $q = 1$ is evaluated exactly, via Neumann's product formula, a Weber--Schafheitlin integral, and an Euler transformation. The point is not that the resulting expression is small or large, but that after the transformation every visible quantity is manifestly nonnegative, so that $I_{1} > 0$ becomes an inspection rather than an estimate --- including at the degenerate endpoint $\alpha = 0$, where a factor $1/\Gamma (\alpha )$ tends to zero and where the whole difficulty of the problem is concentrated.
+
+\textbf{Step 4 (\S\S6--8): one explicit comparison.} Only now do inequalities appear. An explicit lower bound for $I_{1}$ and an explicit bound for the odd tail $\sum_{q\ge 3, q \,\mathrm{odd}}|I_q|$ are compared; the comparison holds precisely when $k \ge 4$. The proof of the comparison for all $k \ge 4$ is by induction, and the mechanism that makes it work is a change of variables ($\Gamma$-arguments become $s+N$ and $N-s$) which removes $\alpha$ from the problem entirely; see Remark~8.1 for why bounding each factor separately in $\alpha$ cannot work.
+
+
+\subsection{What is not claimed}
+We prove nothing about the majorant property for general idempotents, nor about exponents outside the intervals $(2k, 2k+2)$, nor do we obtain the sharp constant in any of the inequalities used. The threshold $K_{0} = 4$ is what our comparison yields; we do not claim it is optimal for the method.
+
+The evaluation of integrals of triple products of Bessel functions is itself a substantial and much older subject, running from MacDonald \cite{r12} and Watson \cite{r18} through Bailey \cite{r2,r3}, Jackson--Maximon \cite{r8}, Glasser--Montaldi \cite{r6}, and on to Fabrikant \cite{r4,r5} and Mehrem--Hohenegger \cite{r14}; none of this is new. The specific two-step technique of \S5 --- collapsing two of the three Bessel factors by Neumann's product formula and then recognising the resulting integral as a Weber--Schafheitlin integral --- also has documented precedent: Martin \cite{r13} applies exactly this reduction (to a different sum) and explicitly identifies the result as ``a critical case of the Weber--Schafheitlin integrals.'' What we did not find in this literature is the specific triple product $J_{qN} J_{q(N-1)} J_q$ with the order ratios $N : (N-1) : 1$ that arise here, the power-law weight $r^{-2s-1}$ evaluated for real (as opposed to integer) $s$, or any prior connection of such an integral to the Hardy--Littlewood majorant problem. No priority claim beyond this is made.
+
+We also claim no formal verification. \S12 reports the state of a partial Lean 4 formalisation; as recorded there, the files intended to carry \S3, \S5 and \S8 do not compile, and the results reported have not been reproduced from a clean build. Theorem~1.1 stands or falls on the argument of \S\S2--10 alone.
+
+
+\subsection{Organisation}
+\S2 fixes notation and reduces the conjecture to positivity of a series $\Phi$. \S3 establishes the two-torus identity, \S4 the per-mode continuation, \S5 the closed-form positivity of the leading mode. \S\S6--7 give the explicit lower and tail bounds; \S8 proves the comparison for all $k \ge 4$. \S9 handles the endpoints $\alpha \in \{0,1\}$ and records the normalisation bridge, \S10 assembles Theorem~1.1, \S11 the merge with the published small cases. \S12 reports the --- partial and largely incomplete --- status of a Lean 4 formalisation, on which nothing in \S\S1--11 depends, and \S13 lists what remains open.
+
+
+\section{Notation and reduction}
+Throughout, $e(t) = e^{2\pi it}$, $\mathbb{T} = \mathbb{R}/\mathbb{Z}$ carries normalised Haar measure, $k$ is an integer, $N = k+2$, $L = 2N - 1 = 2k+3$, and
+
+\[
+  f_k(x) = 1 + e(x) + e(Nx) , \qquad  g_k(x) = 1 + e(x) - e(Nx) .
+\]
+We write $s = p/2$, so that $p \in (2k, 2k+2)$ corresponds to $s \in (k, k+1)$, and $s = k + \alpha$ with $\alpha \in [0,1]$. Set
+
+\[
+  A = |f_k|^{2} , \qquad  B = |g_k|^{2} , \qquad  D(s) = \int_{0}^{1} (B^s - A^s) dx .
+\]
+Since $t \mapsto t^{1/p}$ is strictly increasing, the conjecture at $k$ is equivalent to $D(s) > 0$ for all $s \in (k, k+1)$. In \S\S2--10 we assume $k \ge 1$ (the reduction below requires it); $k = 0$ is covered by \S11.
+
+Writing $z = e(x)$ and using $|h|^{2} = h(z)h(1/z)$ on $|z| = 1$,
+
+\begin{gather*}
+  A(z) = 3 + z + z^{-1} + z^N + z^{-N} + z^{N-1} + z^{1-N} , \\ 
+  B(z) = 3 + z + z^{-1} - z^N - z^{-N} - z^{N-1} - z^{1-N} ,
+\end{gather*}
+both real-valued, and $0 \le A, B \le 9$ by the triangle inequality for a sum of three unit vectors. Put $w_A = (9-A)/9$, $w_B = (9-B)/9$, both in $[0,1]$, and
+
+\[
+  \tau_m = \int_{0}^{1} (w_B^m - w_A^m) dx , \qquad  \sigma_m = (-1)^{k+1} \tau_m , \qquad  C(s,m) = (1/m!) \prod_{j=0}^{m-1} (s - j) .
+\]
+
+\begin{lemma}[uniform absolute summability of the binomial coefficients]\label{res:2.1}
+Let $k \ge 1$ be an integer. For every $s \in [k, k+1]$ and every $m \ge k+2$,
+
+\begin{equation}\label{eq:e20}
+  |C(s,m)| \le (k+1)! \cdot (m-k-1)! / m! ,
+\end{equation}
+a bound independent of $s$. Moreover, for every integer $M \ge k$,
+
+\begin{equation}\label{eq:e20p}
+  \sum_{m > M} (m-k-1)!/m! = (M-k)! / (k \cdot M!) < \infty ,
+\end{equation}
+and consequently $\sum_{m \ge 0} \sup_{s \in [k,k+1]} |C(s,m)| < \infty$.
+\end{lemma}
+
+\begin{proof}
+In $\prod_{j=0}^{m-1}(s-j)$ the factors with $0 \le j \le k$ satisfy $s - j \ge k - j \ge 0$, and those with $k+1 \le j \le m-1$ satisfy $s - j \le (k+1) - j \le 0$. Taking absolute values,
+
+\[
+  |C(s,m)| = \left[ \prod_{j=0}^{k} (s-j) \right] \cdot \left[ \prod_{j=k+1}^{m-1} (j-s) \right] / m! .
+\]
+Since $s \le k+1$, the first bracket is at most $\prod_{j=0}^{k}(k+1-j) = (k+1)!$. Since $s \ge k$, the second is at most $\prod_{j=k+1}^{m-1}(j-k) = 1\cdot 2\cdots (m-1-k) = (m-k-1)!$. This is \eqref{eq:e20}.
+
+For \eqref{eq:e20p} put $u_m = (m-k)!/m!$ for $m \ge k$. Writing both terms over the denominator $m!$,
+
+\begin{gather*}
+  u_{m-1} - u_m = (m-1-k)!/(m-1)! - (m-k)!/m! \\ 
+  = (m-k-1)!/m! \cdot [ m - (m-k) ] = k \cdot (m-k-1)!/m! .
+\end{gather*}
+Summing over $m = M+1, \dots , T$ telescopes to $k \sum_{m=M+1}^{T} (m-k-1)!/m! = u_M - u_T$, and $u_m = 1/(m(m-1)\cdots (m-k+1)) \to 0$ as $m \to \infty$ because $k \ge 1$. Letting $T \to \infty$ gives \eqref{eq:e20p}.
+
+Finally, the finitely many terms $m \le k+1$ are each bounded by the maximum of the continuous function $s \mapsto |C(s,m)|$ on the compact interval $[k, k+1]$, and the terms $m \ge k+2$ are summable by \eqref{eq:e20} and \eqref{eq:e20p}.
+\end{proof}
+
+\begin{remark}[why the naive argument fails]\label{res:2.2}
+It is \emph{not} true that $|C(s,m)| \le 1$: already $C(s,1) = s > 1$ for $s > 1$, and $\sup_m |C(6.5, m)| = 429/16 = 26.8125$, attained at $m = 3$ (the supremum is exact, not a decimal approximation: $C(13/2, 3) = (13/2)(11/2)(9/2)/6 = 429/16$). Even if the bound $1$ did hold it would be useless, since $\sum_m 1$ diverges. A second temptation is to invoke $|w| < 1$ and the radius of convergence, but this also fails: $w_A(x) = 1$ is genuinely attained when $k \equiv 0 ( \mathrm{mod}\, 3)$ --- for such $k$, $1 + z + z^N$ has a zero on $|z| = 1$ at $z = e(\pm 1/3)$, as one checks from $|1+z| = 1 \implies z = e(\pm 1/3)$ and $N \equiv 2 ( \mathrm{mod}\, 3)$. The series therefore sits exactly \emph{on} the radius of convergence, and Lemma~2.1 --- absolute summability, uniform in $s$ --- is what actually licenses the interchange below.
+\end{remark}
+
+\begin{lemma}\label{res:2.3}
+For $s \in [k, k+1]$ the binomial series for $A^s$ and $B^s$ converge uniformly in $x$, and may be integrated term by term:
+
+\par\nobreak
+\begin{equation}\label{eq:d1}
+  D(s) = 9^s \sum_{m \ge 0} (-1)^m C(s,m) \tau_m ,
+\end{equation}
+the series converging absolutely.
+\end{lemma}
+
+\begin{proof}
+Fix $s \in [k, k+1]$. For each $x$, $A(x)/9 = 1 - w_A(x)$ with $w_A(x) \in [0,1]$. By Lemma~2.1 the majorants $M_m := \sup_{s\in [k,k+1]}|C(s,m)|$ satisfy $\sum_m M_m < \infty$, and $|C(s,m)(-w_A(x))^m| \le M_m$ for every $x$; by the Weierstrass M-test the series $\sum_m C(s,m)(-w_A(x))^m$ converges absolutely and uniformly in $x$.
+
+Its sum is $(1 - w_A(x))^s$. Indeed on $w \in [0,1)$ this is the classical binomial theorem, valid inside the radius of convergence. The partial sums are polynomials, hence continuous, and the convergence is uniform on $[0,1]$, so the sum is continuous on $[0,1]$; as $(1-w)^s$ is also continuous there ($s > 0$), and the two agree on the dense subset $[0,1)$, they agree on all of $[0,1]$. This covers the case $w_A(x) = 1$ flagged in Remark~2.2.
+
+Hence $A(x)^s = 9^s \sum_m (-1)^m C(s,m) w_A(x)^m$ uniformly in $x$, and uniform convergence permits term-by-term integration. The same applies to $B$; subtracting gives \eqref{eq:d1}. Absolute convergence of \eqref{eq:d1} follows from $|\tau_m| \le 1$ (the integrand $w_B^m - w_A^m$ lies in $[-1,1]$) together with Lemma~2.1.
+\end{proof}
+
+\begin{lemma}[low-order vanishing]\label{res:2.4}
+$9^m \tau_m \in \mathbb{Z}$, and $\tau_m = 0$ for $0 \le m \le k+1$.
+\end{lemma}
+
+\begin{proof}
+\emph{Integrality.} $9 - A$ and $9 - B$ are Laurent polynomials with integer coefficients, hence so are $(9-A)^m$ and $(9-B)^m$. On $|z| = 1$ one has $\int_{0}^{1} h(e(x)) dx = ct[h]$, the constant term, since $\int_{0}^{1} e(\ell x) dx = 0$ for $\ell \ne 0$. Thus $9^m \tau_m = ct[(9-B)^m] - ct[(9-A)^m] \in \mathbb{Z}$.
+
+\emph{Vanishing.} Both $9 - A$ and $9 - B$ are supported on the frequencies $0, \pm 1, \pm N, \pm (N-1)$, and they differ \textbf{only} in the sign at the four frequencies $\pm N, \pm (N-1)$; call these the \emph{flipped} frequencies and the others ($0, \pm 1$) the \emph{plain} ones. Expand $(9-B)^m$ and $(9-A)^m$ by multilinearity over the $m$ factors: each term of either expansion is indexed by a choice of one frequency from $\{0, \pm 1, \pm N, \pm (N-1)\}$ for each of the $m$ factors, and contributes to the constant term precisely when the chosen frequencies sum to $0$. Let $\nu$ be the number of factors from which a flipped frequency was chosen. The two expansions assign the same coefficient to a given choice up to the sign $(-1)^\nu$, so a choice survives the subtraction $(9-B)^m - (9-A)^m$ only if $\nu$ is \textbf{odd}; in particular $\nu \ge 1$.
+
+Now bound the total frequency. Write each chosen flipped frequency as $\varepsilon N + \delta$ with $\varepsilon \in \{+1,-1\}$ and $\delta \in \{0,-1\}$ (this covers $+N$, $+N-1 = N + (-1)$, $-N$, and $-(N-1) = -N + 1$; the last has $\delta = +1$, so allow $\delta \in \{-1,0,+1\}$, and in all four cases $|\delta | \le 1$). Each chosen plain frequency lies in $\{0, \pm 1\}$, so has absolute value at most $1$. If the chosen frequencies sum to zero, then
+
+\[
+  0 = \left( \sum_{ \mathrm{flipped}} \varepsilon_i \right) N + \sum_{ \mathrm{flipped}} \delta_i + \sum_{ \mathrm{plain}} (\text{plain frequency}) ,
+\]
+whence $| \sum_{ \mathrm{flipped}} \varepsilon_i | \cdot N \le \nu + (m - \nu ) = m$. Since $\nu$ is odd, $\sum_{ \mathrm{flipped}} \varepsilon_i$ is a sum of $\nu$ terms each $\pm 1$, hence is itself an \textbf{odd} integer, and in particular nonzero, so $| \sum_{ \mathrm{flipped}} \varepsilon_i | \ge 1$. Therefore $m \ge N = k+2$. Contrapositively, for $m \le k+1$ no choice survives the subtraction, and $\tau_m = 0$.
+\end{proof}
+
+\begin{lemma}[sign and the positive weights]\label{res:2.5}
+For $s \in [k, k+1]$ and $m \ge k+2$,
+
+\begin{gather*}
+  (-1)^m C(s,m) = (-1)^{k+1} (s-k)(k+1-s) \beta_m(s) , \\ 
+  \beta_m(s) = \left[ \prod_{j=0}^{k-1}(s-j) \right] \cdot \left[ \prod_{j=k+2}^{m-1}(j-s) \right] / m! \\ 
+  = \Gamma (k+1+\alpha ) \Gamma (m-k-\alpha ) / ( \Gamma (1+\alpha ) \Gamma (2-\alpha ) m! ) ,
+\end{gather*}
+with empty products read as $1$, and $\beta_m(s) > 0$ on the \textbf{closed} interval $[k, k+1]$.
+\end{lemma}
+
+\begin{proof}
+\emph{Sign.} As in Lemma~2.1, in $\prod_{j=0}^{m-1}(s-j)$ the factors with $0 \le j \le k$ are $\ge 0$ and those with $k+1 \le j \le m-1$ are $\le 0$; the latter number $(m-1)-(k+1)+1 = m-k-1$. Hence, when no factor vanishes, $\mathrm{sign}\, C(s,m) = (-1)^{m-k-1}$ and
+
+\[
+  (-1)^m C(s,m) = (-1)^m (-1)^{m-k-1} |C(s,m)| = (-1)^{k+1} |C(s,m)| .
+\]
+If some factor vanishes (i.e. $s = k$ or $s = k+1$), both sides are $0$ and the identity is trivial.
+
+\emph{Extraction.} Flipping the signs of the negative factors, $|C(s,m)| = [\prod_{j=0}^{k}(s-j)]\cdot [\prod_{j=k+1}^{m-1}(j-s)]/m!$. Extract the factor $j = k$ from the first bracket (giving $s-k$) and the factor $j = k+1$ from the second (giving $(k+1)-s$); what remains is exactly $\beta_m(s)$.
+
+\emph{The $\Gamma$-form.} Split the two finite products at the extracted indices. First,
+
+\[
+  \prod_{j=0}^{k-1}(s-j) = s(s-1)\cdots (s-k+1) = \Gamma (s+1)/\Gamma (s-k+1) = \Gamma (k+1+\alpha )/\Gamma (1+\alpha ) ,
+\]
+using $s = k+\alpha$ in the last step. Second, with $j$ running from $k+2$ to $m-1$, put $i = j - k - \alpha$, so that the factors $j - s = j - k - \alpha$ run over $2-\alpha , 3-\alpha , \dots , m-1-k-\alpha$; hence
+
+\[
+  \prod_{j=k+2}^{m-1}(j-s) = \Gamma (m-k-\alpha )/\Gamma (2-\alpha ) .
+\]
+(For $m = k+2$ both sides are the empty product $1$, consistent with $\Gamma (2-\alpha )/\Gamma (2-\alpha )$.) Multiplying and dividing by $m!$ gives the stated $\Gamma$-form. Both identities are the standard $\Gamma (x+n) = (x+n-1)\cdots x\cdot \Gamma (x)$ applied to a \emph{finite} product; no analytic continuation is involved.
+
+\emph{Positivity on the closed interval.} For $0 \le j \le k-1$ one has $s - j \ge k - j \ge 1$; for $k+2 \le j \le m-1$ one has $j - s \ge j - (k+1) \ge 1$. Both brackets are products of numbers $\ge 1$ (or empty), and $m! > 0$. The two factors that can vanish have been extracted, so $\beta_m(s) > 0$ \textbf{including at the endpoints} $s = k, k+1$.
+\end{proof}
+
+\begin{lemma}\label{res:2.6}
+$\Phi (s) = \sum_{m \ge k+2} \beta_m(s) \sigma_m$ converges absolutely and uniformly on $[k, k+1]$; in particular $\Phi$ is continuous there.
+\end{lemma}
+
+\begin{proof}
+By Lemma~2.5, $\beta_m(s) = [\prod_{j=0}^{k-1}(s-j)]\cdot [\prod_{j=k+2}^{m-1}(j-s)]/m!$. On $[k, k+1]$, using $s \le k+1$ in the first bracket and $s \ge k$ in the second,
+
+\begin{gather*}
+  \prod_{j=0}^{k-1}(s-j) \le \prod_{j=0}^{k-1}(k+1-j) = (k+1)k\cdots 2 = (k+1)! , \\ 
+  \prod_{j=k+2}^{m-1}(j-s) \le \prod_{j=k+2}^{m-1}(j-k) = 2\cdot 3\cdots (m-1-k) = (m-k-1)! ,
+\end{gather*}
+(the second bracket being the empty product $1$ on both sides when $m = k+2$), so
+
+\[
+  \beta_m(s) \le (k+1)! (m-k-1)!/m! \,\mathrm{for}\, \mathrm{all}\, s \in [k, k+1].
+\]
+Also $|\sigma_m| = |\tau_m| \le 1$, since $w_B^m - w_A^m \in [-1,1]$ pointwise. Hence $\beta_m(s)|\sigma_m| \le (k+1)!(m-k-1)!/m! =: M_m$, a bound independent of $s$, and $\sum_m M_m < \infty$ by \eqref{eq:e20p} with $M = k+1$ (legitimate as $k \ge 1$). The Weierstrass M-test gives absolute and uniform convergence on $[k, k+1]$; a uniform limit of continuous functions (indeed of polynomials) is continuous.
+\end{proof}
+
+\begin{proposition}[reduction]\label{res:2.7}
+For $k \ge 1$ and $s \in [k, k+1]$,
+
+\[
+  D(s) = 9^s (s-k)(k+1-s) \Phi (s) .
+\]
+Consequently, if $\Phi > 0$ on $[k, k+1]$ then the conjecture holds at $k$.
+\end{proposition}
+
+\begin{proof}
+Start from \eqref{eq:d1} of Lemma~2.3. By Lemma~2.4 the terms with $m \le k+1$ vanish, so
+
+\[
+  D(s) = 9^s \sum_{m \ge k+2} (-1)^m C(s,m) \tau_m .
+\]
+For each $m \ge k+2$, Lemma~2.5 and $\tau_m = (-1)^{k+1} \sigma_m$ give
+
+\[
+  (-1)^m C(s,m) \tau_m = (-1)^{k+1}(s-k)(k+1-s) \beta_m(s) \cdot (-1)^{k+1} \sigma_m = (s-k)(k+1-s) \beta_m(s) \sigma_m ,
+\]
+using $(-1)^{2(k+1)} = 1$. The series converges absolutely (Lemma~2.6), so the constant factor $(s-k)(k+1-s)$ may be taken outside the sum, yielding the identity.
+
+For the consequence: if $s \in (k, k+1)$ then $9^s > 0$, $s - k > 0$ and $k+1-s > 0$, so $\Phi (s) > 0$ forces $D(s) > 0$, which is the conjecture at $k$.
+\end{proof}
+The reduction has isolated the two endpoint zeros of $D$ into the explicit factor $(s-k)(k+1-s)$; everything that follows is devoted to proving $\Phi > 0$, and $\Phi$ does not vanish at the endpoints.
+
+
+\begin{remark}[the implication is one-way, deliberately]\label{res:2.8}
+The equivalence $D > 0 \iff \Phi > 0$ holds on the \emph{open} interval only. At the endpoints, continuity of $\Phi$ gives merely $\Phi (k) \ge 0$ and $\Phi (k+1) \ge 0$ from the conjecture. Positivity of $\Phi$ on the closed interval is therefore formally \emph{stronger} than the conjecture; we prove that stronger statement, and use only the direction stated in Proposition~2.7.
+\end{remark}
+
+\subsection*{Index of recurring symbols}
+Several letters carry more than one meaning, as is unavoidable in an argument that crosses a circle, a two-torus and a Mellin transform. The following table fixes each meaning; where a letter is reused, the number and shape of its arguments always disambiguates, no two meanings occur in the same display, and where two meanings would otherwise meet inside a single proof the letters are kept distinct by hand.
+
+
+{\small
+\begin{longtable}{P{0.171\linewidth}P{0.504\linewidth}P{0.235\linewidth}}
+\toprule
+symbol & meaning & where \\
+\midrule
+\endfirsthead
+\multicolumn{3}{l}{\itshape (continued)}\\
+\toprule
+symbol & meaning & where \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{\itshape (continued overleaf)}\\
+\endfoot
+\bottomrule
+\endlastfoot
+$H(\theta ,\psi )$ & $|1 + e^{i\theta } + e^{i\psi }|^{2}$ on the two-torus --- a \textbf{function} & \S3 onwards \\
+$H^s$ & the $s$-th power of that function & \S3 onwards \\
+$\widehat{H}^s(p,q)$ & its $(p,q)$-th Fourier coefficient & \S3 onwards \\
+$p$ & in \S\S1--2 and in the theorem statements, the \textbf{majorant exponent}, $s = p/2$; from \S3 onwards a \textbf{lattice coordinate}, occurring only as the first slot of the pair in $\widehat{H}^s(p,q)$. The two never appear in one display --- the exponent stands alone, the coordinate is always paired with $q$ & \S\S1--2, then \S3 onwards \\
+$H^\sigma (\mathbb{T}^{2})$, $H^{2}(\mathbb{T}^{2})$ & the \textbf{Sobolev space} of order $\sigma$ --- always written with a space argument $(\mathbb{T}^{2})$, never with a point argument & \S3 only \\
+$C(s,m)$ & the generalised binomial coefficient $(1/m!)\prod_{j<m}(s-j)$ --- two arguments & \S2 \\
+$C(s)$ & the Mellin prefactor $2^{2s+1}\Gamma (s+1)/\Gamma (-s)$ --- one argument & \S4 \\
+$C_q$ & $\Gamma (qN+1)\Gamma (q(N-1)+1)\Gamma (q+1)$ --- subscripted by the mode index; defined in Lemma~4.3, used again in \S7 & \S\S4, 7 \\
+$C_{0}$ & the single absolute constant $20\sqrt{3}\pi /9$ --- no argument, no subscript variable & \S8 \\
+$C^{1}$, $C^{2}$, $C^{3}$, $C^{1,1}$ & pointwise smoothness classes --- always with a superscript, never an argument & \S3 \\
+$z_{+}$, $z_{-}$ & the two zeros of $H$; $z_\pm$ means ``either one'' & \S3 \\
+$A$, $B$ & on the circle: $A = |f_k|^{2}$, $B = |g_k|^{2}$ & \S2, \S5 ($A = 2\cos \vartheta$, the junction variable --- flagged in situ) \\
+$B(s)$ & the bracket $1/(6N-2s) + 1/(2s)$ of \S7 --- with an argument & \S\S7--8 \\
+$\kappa$ & the single rational constant $0.58$ of Proposition~7.3 --- never an index or a variable & \S\S7--9 \\
+$Q$ & the local abbreviation $\nu^{2} - 1/4$, occurring in the proof of Lemma~4.3(iii) and nowhere else & \S4 \\
+$\lambda_N$ & the exact limit $\lim_q R_q/(Nq)$ of Remark~7.4; $\lambda = 2s+1$ in \S5 is a different, in-situ use & \S5, \S7 \\
+$s$, $\alpha$, $k$, $N$, $L$, $q$, $m$ & $s = p/2 = k+\alpha$, $\alpha \in [0,1]$, $N = k+2$, $L = 2N-1$; $q$ indexes resonant modes, $m$ indexes moments & throughout \\
+$a$, $b$ & dummy Fourier indices on the two-torus in Lemma~4.2, and in the invocation of Lemma~4.2 inside the proof of Lemma~4.5 (at $(a,b) = (-Nq,q)$); in \S5, $a < b$ are the two Bessel scales of \eqref{eq:ws}. Lemma~4.5 writes $\rho = \sqrt{H}$, not $a = \sqrt{H}$, precisely to keep the letter free & \S\S4, 5 \\
+$\rho$ & $\sqrt{H}$ in the proof of Lemma~4.5 only & \S4 \\
+\end{longtable}}
+
+\section{The two-torus identity}
+Let $\mathbb{T}^{2} = (\mathbb{R}/2\pi \mathbb{Z})^{2}$ and
+
+\[
+  P(\theta ,\psi ) = 1 + e^{i\theta } + e^{i\psi } , \qquad  H = |P|^{2} = 3 + 2\cos \theta + 2\cos \psi + 2\cos (\theta -\psi ) ,
+\]
+so that $A(x) = H(2\pi x, 2\pi Nx)$ and $B(x) = H(2\pi x, 2\pi Nx + \pi )$.
+
+
+\begin{lemma}[zero set]\label{res:3.1}
+$H$ vanishes exactly at the two points $z_{+} = (2\pi /3, 4\pi /3)$ and $z_{-} = (4\pi /3, 2\pi /3)$; below, $z_\pm$ abbreviates ``either of $z_{+}$, $z_{-}$'', every assertion made about it holding for both. Near each zero, $P$ is a real-analytic diffeomorphism onto a neighbourhood of $0$ (the Jacobian is $\sin (\psi -\theta ) = \pm \sqrt{3}/2$), so $H \asymp |{\cdot} - z_\pm |^{2}$ there. Consequently $\int_{\mathbb{T}^{2}} H^\sigma < \infty$ if and only if $\sigma > -1$.
+\end{lemma}
+
+\begin{proof}
+With $u = e^{i\theta }$, $v = e^{i\psi }$, $P = 0$ means $u + v = -1$. Taking imaginary parts, $\Im u = -\Im v$, i.e. $v = \bar{u}$; then $2 \Re u = -1$ with $|u| = 1$ gives $u = e^{\pm 2\pi i/3}$, hence exactly the two stated points. The Jacobian of $(\theta ,\psi ) \mapsto (\Re P, \Im P)$ is computed directly to be $\sin (\psi -\theta )$, which equals $\pm \sqrt{3}/2 \ne 0$ at $z_\pm$; the inverse function theorem applies. Away from the zeros $H$ is bounded below on compacta by continuity. Near a zero the bi-Lipschitz equivalence $H \asymp |y|^{2}$ ($y = \cdot - z_\pm$) reduces the question to $\int_{|y|<\rho } |y|^{2\sigma } dy < \infty \iff 2\sigma + 1 > -1 \iff \sigma > -1$.
+\end{proof}
+
+\begin{lemma}[regularity]\label{res:3.2}
+For real $s \ge 1$, $H^s \in C^{1,1}(\mathbb{T}^{2}) \subset H^{2}(\mathbb{T}^{2})$; hence, by the two-dimensional Sobolev criterion, $\sum_{n \in \mathbb{Z}^{2}} |\widehat{H}^s(n)| < \infty$ and the Fourier series converges uniformly.
+\end{lemma}
+
+\begin{proof}
+Away from the zeros $H^s$ is real-analytic. Near a zero it equals $|w|^{2s}$ composed with a real-analytic diffeomorphism (Lemma~3.1). The second derivatives of $w \mapsto |w|^{2s}$ are $O(|w|^{2s-2})$, which is bounded near $0$ for $s \ge 1$; hence $|w|^{2s} \in W^{2,\infty }_{ \mathrm{loc}}$, and composition with a real-analytic diffeomorphism with non-vanishing Jacobian preserves membership in $W^{2,\infty }_{ \mathrm{loc}}$ (the chain rule expresses the second derivatives of the composite as a finite sum of products of bounded functions with bounded derivatives of the diffeomorphism). Covering $\mathbb{T}^{2}$ by finitely many charts, $H^s \in W^{2,\infty }(\mathbb{T}^{2}) \subset H^{2}(\mathbb{T}^{2})$.
+
+For the Sobolev criterion, by Cauchy--Schwarz applied to $|\widehat{f}(n)| = (1+|n|^{2})^{-1}\cdot (1+|n|^{2})|\widehat{f}(n)|$,
+
+\begin{gather*}
+  \sum_{n \in \mathbb{Z}^{2}} |\widehat{f}(n)| \le \left( \sum_{n} (1+|n|^{2})^{-2} \right)^{1/2} \cdot \left( \sum_{n} (1+|n|^{2})^{2} |\widehat{f}(n)|^{2} \right)^{1/2} \\ 
+  = c \cdot \|f\|_{H^{2}} ,
+\end{gather*}
+and $\sum_{n \in \mathbb{Z}^{2}}(1+|n|^{2})^{-2} < \infty$ since the exponent $4$ exceeds the dimension $2$. Absolute summability of the Fourier coefficients gives uniform convergence of the Fourier series, and its sum is $H^s$ since both are continuous and agree in $L^{2}$.
+\end{proof}
+
+\begin{remark}[which smoothness threshold is the operative one]\label{res:3.3}
+Two thresholds must be kept apart. The criterion used above is the Sobolev one: on $\mathbb{T}^d$, $f \in H^\sigma$ with $\sigma > d/2$ forces $\widehat{f} \in \ell^{1}(\mathbb{Z}^d)$, and the inequality must be \textbf{strict} --- at $\sigma = d/2$ the conclusion is false. Here $d = 2$, so the threshold is $\sigma > 1$, and plain $C^{1}$ smoothness, which gives only $f \in H^{1}$, sits exactly at the failing endpoint. What follows from this is only that \textbf{the Sobolev criterion is silent on $C^{1}$}: a sufficient condition which fails to apply says nothing about its conclusion, and we exhibit no $C^{1}$ function whose Fourier coefficients are not summable. In the H\"older--Zygmund scale there \emph{is} a sharp statement --- $\Lambda^a(\mathbb{T}^{2}) \subset \ell^{1}$ for $a > 1$, and it fails at $a = 1$ --- but that is a \textbf{different} statement, not an equivalent one, because the inclusion $C^{1}(\mathbb{T}^{2}) \subset \Lambda^{1}(\mathbb{T}^{2})$ is strict. Nothing below requires us to decide whether $C^{1}(\mathbb{T}^{2})$ alone forces $\widehat{f} \in \ell^{1}(\mathbb{Z}^{2})$; Lemma~3.2 simply supplies one degree more in the Lipschitz direction, $C^{1,1} \subset H^{2}$, which clears $\sigma > 1$ with room to spare.
+
+Why write the proof through $H^{2}$ rather than through a pointwise class directly? Near a zero of $H$ the function vanishes to second order, so $H^s \asymp |y|^{2s}$, and the derivative count runs as follows. The second derivatives are $O(|y|^{2s-2})$; for $s > 1$ this tends to $0$ and so extends continuously across the zero, while at $s = 1$ the function is $H^1 = H$, a trigonometric polynomial. Hence $H^s \in C^{2}(\mathbb{T}^{2})$ for \textbf{every} $s \ge 1$. For the third derivatives the count is more delicate than the exponent alone suggests, and the naive reading of it is wrong. Differentiating three times in the radial direction produces $2s(2s-1)(2s-2)\cdot |y|^{2s-3}$, whose coefficient \textbf{vanishes identically at $s = 1$} --- as it must, since $H^1 = H$ is a trigonometric polynomial and hence $C^\infty$. For $s \in (1, 3/2)$ the exponent $2s-3$ is negative and the third derivatives genuinely blow up at the zero. At $s = 3/2$ exactly they are homogeneous of degree $0$: bounded, but with different limits along different rays into the zero, so the third differential still fails to exist. Hence
+
+\par\nobreak
+\[
+  H^s \in C^{3}(\mathbb{T}^{2}) \qquad  \iff \qquad  s = 1 \,\mathrm{or}\, s > 3/2 ,
+\]
+so the set on which $C^{3}$ is unavailable is the half-open interval $(1, 3/2]$ --- situated just \emph{above} the bottom of the range of Lemma~3.2, not at it.
+
+Now, $C^{3}$ would give $|\widehat{f}(n)| \lesssim (1+|n|)^{-3}$, plainly summable over $\mathbb{Z}^{2}$, but on $\mathbb{T}^{2}$ the integration by parts has to be carried out in each variable separately: three integrations by parts in $\theta$ bound $|p|^{3}|\widehat{f}(p,q)|$, which is vacuous on the axis $p = 0$, and three in $\psi$ bound $|q|^{3}|\widehat{f}(p,q)|$, vacuous on $q = 0$; taking the better of the two at each lattice point gives $|\widehat{f}(n)| \lesssim (1 + \max (|p|,|q|))^{-3} \asymp (1+|n|)^{-3}$. The same argument with two integrations by parts gives from $C^{2}$ only $|\widehat{f}(n)| \lesssim (1+|n|)^{-2}$, which is \textbf{not} summable over $\mathbb{Z}^{2}$; that sum diverges logarithmically. So on $(1, 3/2]$ the integration-by-parts route is closed, and what rescues $C^{2}$ there is precisely the Sobolev route already used: $C^{2} \subset W^{2,\infty } = C^{1,1} \subset H^{2}$, and $H^{2}$ clears the threshold $\sigma > 1$.
+
+It is worth being explicit about which link in that chain is doing the work, since it is not the one the statement of Lemma~3.2 names. In $C^{2} \subset W^{2,\infty } = C^{1,1} \subset H^{2}$ the hypothesis $C^{1,1}$ is the second \emph{strongest}, not the weakest; the weakest link --- the one that actually suffices --- is $H^{2}$, and indeed $H^\sigma$ for any $\sigma > 1$ would do. Lemma~3.2 is nevertheless stated in the pointwise form $C^{1,1}$ because that is what its proof produces directly from the chain rule, and the resulting hypothesis $s \ge 1$ is an artefact of this route rather than a sharp threshold. Finally, the range actually used is \textbf{not} comfortable: Proposition~3.4 is invoked through Theorem~4.8 and Lemma~9.4, both stated for $k \ge 1$, so $s \in [k, k+1]$ reaches down to $s = 1$. The bottom of that range is exactly where the $C^{3}$ route is closed, which is why Lemma~3.2 is routed through $C^{1,1}$ and $H^{2}$ in the first place.
+\end{remark}
+
+\begin{proposition}[the identity]\label{res:3.4}
+For real $s \ge 1$,
+
+\[
+  D(s) = -4 \sum_{q \ge 1, q \,\mathrm{odd}} \widehat{H}^s(-Nq, q) ,
+\]
+the series converging absolutely.
+\end{proposition}
+
+\begin{proof}
+By Lemma~3.2, $H^s(\theta ,\psi ) = \sum_{(p,q) \in \mathbb{Z}^{2}} \widehat{H}^s(p,q) e^{i(p\theta +q\psi )}$ with absolutely summable coefficients, hence uniformly. Substituting $\theta = 2\pi x$, $\psi = 2\pi Nx$ and $\psi = 2\pi Nx + \pi$ respectively,
+
+\[
+  A(x)^s = \sum_{p,q} \widehat{H}^s(p,q) e( (p+qN)x ) , \qquad  B(x)^s = \sum_{p,q} \widehat{H}^s(p,q) (-1)^q e( (p+qN)x ) .
+\]
+Uniform convergence permits term-by-term integration over $x \in [0,1]$, and $\int_{0}^{1} e(jx) dx = 1_{j=0}$ retains exactly the modes with $p + qN = 0$, i.e. $p = -qN$. Therefore
+
+\par\nobreak
+\[
+  D(s) = \sum_{q \in \mathbb{Z}} ((-1)^q - 1) \widehat{H}^s(-qN, q) = -2 \sum_{q \in \mathbb{Z}, q \,\mathrm{odd}} \widehat{H}^s(-qN, q) .
+\]
+Finally we fold $q$ and $-q$. Since $H$ is real-valued, $\widehat{H}^s(-p,-q) = \,\mathrm{conj}\,(\widehat{H}^s(p,q))$; and since $H$ is \emph{even}, $H(-\theta ,-\psi ) = H(\theta ,\psi )$ (each of $\cos \theta$, $\cos \psi$, $\cos (\theta -\psi )$ is even), so $\widehat{H}^s(-p,-q) = \widehat{H}^s(p,q)$. Combining the two, $\widehat{H}^s(p,q)$ is \textbf{real} and \textbf{even}. Reality alone would not suffice here; evenness is what identifies the $-q$ term with the $q$ term. Hence the sum over odd $q \in \mathbb{Z}$ is twice the sum over odd $q \ge 1$, giving the factor $-4$.
+\end{proof}
+
+\section{Analytic continuation, one mode at a time}
+Set
+
+\begin{gather*}
+  \Psi_q(r) = J_{qN}(r) J_{q(N-1)}(r) J_q(r) , \qquad  I_q(s) = \int_{0}^\infty \Psi_q(r) r^{-2s-1} dr , \\ 
+  C(s) = 2^{2s+1} \Gamma (s+1)/\Gamma (-s) = -2^{2s+1} \Gamma (s+1)^{2} \sin (\pi s)/\pi .
+\end{gather*}
+
+\begin{lemma}\label{res:4.1}
+For each $n \in \mathbb{Z}^{2}$, $s \mapsto \widehat{H}^s(n)$ is holomorphic on $\{\Re s > -1\}$.
+\end{lemma}
+
+\begin{proof}
+Fix $s_{0}$ with $\Re s_{0} > -1$ and choose a closed disc $K = \bar{D}(s_{0}, r) \subset \{\Re s > -1\}$; put $\sigma_{0} = \min_K \Re s > -1$, $\sigma_{1} = \max_K \Re s$. Since $0 \le H \le 9$, $|H^s| = H^{\Re s} \le H^{\sigma_{0}} + H^{\sigma_{1}}$, which lies in $L^{1}(\mathbb{T}^{2})$ by Lemma~3.1 and is independent of $s \in K$. Holomorphy of $s \mapsto H^s(\theta ,\psi )$ for each fixed $(\theta ,\psi )$ with $H > 0$, together with this dominating function, gives continuity of $s \mapsto \widehat{H}^s(n)$ on $K$ by dominated convergence. For Morera, let $\Delta$ be any closed triangle in the interior of $K$. The majorant is integrable on $\mathbb{T}^{2} \times \partial \Delta$ (a finite measure in the second factor), so Fubini applies and
+
+\[
+  \oint_{\partial \Delta } \widehat{H}^s(n) ds = \int_{\mathbb{T}^{2}} e^{-i\langle n,\cdot \rangle } \left( \oint_{\partial \Delta } H^s ds \right) = 0 ,
+\]
+the inner contour integral vanishing by Cauchy's theorem for almost every $(\theta ,\psi )$ --- namely wherever $H > 0$, which by Lemma~3.1 is almost everywhere. Morera's theorem gives holomorphy on $\mathrm{int}\, K$, hence at $s_{0}$; and $s_{0}$ was arbitrary in $\{\Re s > -1\}$.
+\end{proof}
+
+\begin{lemma}[triple-Bessel expansion]\label{res:4.2}
+For every $r > 0$ and every $(a,b) \in \mathbb{Z}^{2}$, the $(a,b)$ Fourier coefficient of $(\theta ,\psi ) \mapsto J_{0}(r\sqrt{H})$ equals $(-1)^{a+b} J_a(r) J_b(r) J_{a+b}(r)$. (The indices are named $(a,b)$ rather than $(p,q)$ because the lemma is applied below at $(a,b) = (-Nq, q)$, with $q$ the resonant-mode index.)
+\end{lemma}
+
+\begin{proof}
+Write $Z = P(\theta ,\psi ) = 1 + e^{i\theta } + e^{i\psi }$, so $\sqrt{H} = |Z|$. The $n = 0$ component of the Jacobi--Anger expansion gives the integral representation
+
+\[
+  J_{0}(|Z| r) = (1/2\pi ) \int_{0}^{2\pi } e^{i r \Re (Z e^{i\omega })} d\omega .
+\]
+Now $\Re (Z e^{i\omega }) = \cos \omega + \cos (\theta +\omega ) + \cos (\psi +\omega )$, so
+
+\[
+  e^{i r \Re (Z e^{i\omega })} = e^{ir \cos \omega } \cdot e^{ir \cos (\theta +\omega )} \cdot e^{ir \cos (\psi +\omega )} .
+\]
+Apply Jacobi--Anger, $e^{ir \cos \varphi } = \sum_{n \in \mathbb{Z}} i^n J_n(r) e^{in\varphi }$, to each of the three factors; each series converges absolutely for fixed $r$ (since $\sum_n |J_n(r)| < \infty$), so the triple product may be expanded and rearranged freely:
+
+\par\nobreak
+\[
+  e^{i r \Re (Z e^{i\omega })} = \sum_{n,u,v} i^{n+u+v} J_n(r) J_u(r) J_v(r) e^{i(n+u+v)\omega } e^{iu\theta } e^{iv\psi } .
+\]
+We use the normalisation $\widehat{F}(a,b) = (2\pi )^{-2}\int_{\mathbb{T}^{2}} F(\theta ,\psi ) e^{-i(a\theta +b\psi )} d\theta d\psi$. Integrating in $\omega$ over $[0,2\pi ]$ and dividing by $2\pi$ retains exactly the terms with $n + u + v = 0$; extracting the $(a,b)$ Fourier coefficient in $(\theta ,\psi )$ retains $u = a$, $v = b$, hence $n = -a-b$. Therefore
+
+\par\nobreak
+\[
+  [J_{0}(r\sqrt{H})]^(a,b) = i^{0} J_{-a-b}(r) J_a(r) J_b(r) = J_{-(a+b)}(r) J_a(r) J_b(r) ,
+\]
+and $J_{-m} = (-1)^m J_m$ for integer $m$ gives $(-1)^{a+b} J_a(r) J_b(r) J_{a+b}(r)$.
+\end{proof}
+
+\begin{lemma}[strip of convergence]\label{res:4.3}
+Let $q \ge 1$ be an integer and $C_q = \Gamma (qN+1) \Gamma (q(N-1)+1) \Gamma (q+1)$. Then \textbf{(i)} the orders add up to $qN + q(N-1) + q = 2qN$; \textbf{(ii)} $|\Psi_q(r)| \le (r/2)^{2qN}/C_q$ for $r > 0$; \textbf{(iii)} $|\Psi_q(r)| = O(r^{-3/2})$ as $r \to \infty$; \textbf{(iv)} $I_q$ converges absolutely and is holomorphic on $\Omega_q = \{-3/4 < \Re s < qN\}$, and the right endpoint is sharp.
+\end{lemma}
+
+\begin{proof}
+\textbf{(i)} $qN + q(N-1) + q = q(N + N - 1 + 1) = 2qN$.
+
+\textbf{(ii)} Poisson's integral representation gives $|J_\nu (r)| \le (r/2)^\nu /\Gamma (\nu +1)$ for $\nu \ge 0$, $r > 0$. Multiplying the three bounds and using (i),
+
+\[
+  |\Psi_q(r)| \le (r/2)^{qN + q(N-1) + q} / ( \Gamma (qN+1)\Gamma (q(N-1)+1)\Gamma (q+1) ) = (r/2)^{2qN}/C_q .
+\]
+\textbf{(iii)} Put $u = r^{1/2} J_\nu (r)$. From Bessel's equation, $u'' + (1 - Q/r^{2})u = 0$ with $Q = \nu^{2} - 1/4$ (a local abbreviation, used only in this proof). For $r \ge r_{0} := (2|Q|+1)^{1/2}$ one has $|Q|/r^{2} \le |Q|/(2|Q|+1) < 1/2$, so the coefficient $1 - Q/r^{2}$ lies between $1/2$ and $3/2$. The energy $E(r) = u'(r)^{2} + (1 - Q/r^{2})u(r)^{2}$ is then $\ge (1/2)u(r)^{2}$, i.e. $u^{2} \le 2E$, and differentiating gives $E'(r) = (2Q/r^{3}) u(r)^{2}$, whence
+
+\[
+  |E'(r)| \le (2|Q|/r^{3}) \cdot 2E(r) = (4|Q|/r^{3}) E(r) , \qquad  r \ge r_{0} .
+\]
+By Gr\"onwall, $E(r) \le E(r_{0}) \exp (\int_{r_{0}}^\infty 4|Q|/t^{3} dt) < \infty$. Hence $u$ is bounded on $[r_{0},\infty )$, i.e. $|J_\nu (r)| \le c_\nu r^{-1/2}$ for $r \ge r_{0}$. Applying this to each of the three factors gives $|\Psi_q(r)| \le c_q r^{-3/2}$ for $r$ large.
+
+\textbf{(iv)} Write $\sigma = \Re s$, and note $|\Psi_q(r) r^{-2s-1}| = |\Psi_q(r)| r^{-2\sigma -1}$. Near $0$, by (ii) the integrand is $O(r^{2qN-2\sigma -1})$, integrable on $(0,1]$ iff $2qN - 2\sigma - 1 > -1$, i.e. $\sigma < qN$. Near $\infty$, by (iii) it is $O(r^{-3/2-2\sigma -1})$, integrable on $[1,\infty )$ iff $3/2 + 2\sigma + 1 > 1$, i.e. $\sigma > -3/4$. Thus $I_q$ converges absolutely on $\Omega_q$. (Only the right endpoint is claimed sharp, and only that is proved below; (iii) supplies an upper bound $O(r^{-3/2})$ and no matching lower bound, so no claim is made that absolute convergence \emph{fails} for $\sigma \le -3/4$.) On any compact $K \subset \Omega_q$ the same two bounds give an $s$-independent integrable majorant, so Morera plus Fubini yields holomorphy on $\Omega_q$.
+
+\emph{Sharpness of the right endpoint.} From the leading term of the power series of each Bessel function, $\Psi_q(r) = c_q r^{2qN}(1 + O(r^{2}))$ as $r \to 0$ with $c_q = 2^{-2qN}/C_q \ne 0$; in particular $\Psi_q(r)$ has a fixed sign on some interval $(0,\delta )$, so $\int_{0}^\delta |\Psi_q| r^{-2\sigma -1} dr = \infty$ for $\sigma \ge qN$. (An upper bound alone would not settle sharpness; the non-vanishing of the leading coefficient is what does.)
+\end{proof}
+
+\begin{remark}[a bookkeeping trap]\label{res:4.4}
+The quantity $q(2N-1) = 2qN - q$ is the sum of the \textbf{first two} orders only. Using it in place of $2qN$ invalidates both the pointwise bound (ii) and the exact cancellation in Theorem~7.1.
+\end{remark}
+
+\begin{lemma}[anchor identity]\label{res:4.5}
+For each integer $q \ge 1$ and each $s$ in the anchor strip $T = \{-1/4 < \Re s < 0\}$,
+
+\[
+  \widehat{H}^s(-Nq, q) = C(s) (-1)^{Nq} I_q(s) .
+\]
+\end{lemma}
+
+\begin{proof}
+Fix $s \in T$ and put $\sigma = \Re s \in (-1/4, 0)$. For a point $(\theta ,\psi )$ with $H(\theta ,\psi ) > 0$ set $\rho = \sqrt{H} > 0$. (The letter $\rho$ is used here, rather than $a$, because $a$ is a Fourier index in Lemma~4.2, which is invoked below in this same proof.) The $\nu = 0$ Weber--Schafheitlin evaluation gives
+
+\begin{equation}\label{eq:e44}
+  \int_{0}^\infty J_{0}(\rho r) r^{-2s-1} dr = \rho^{2s} / C(s) , \qquad  \text{i.e.} \qquad  H^s = \rho^{2s} = C(s) \int_{0}^\infty J_{0}(\rho r) r^{-2s-1} dr ,
+\end{equation}
+with the branch of $\rho^{2s}$ the positive real one ($\rho > 0$). The integral converges absolutely \textbf{exactly} on $T$: near $r = 0$, $J_{0}(\rho r) = 1 + O(r^{2})$ makes the integrand $\asymp r^{-2\sigma -1}$, integrable iff $\sigma < 0$; near $r = \infty$, $|J_{0}(r)| \lesssim r^{-1/2}$ makes it $O(r^{-2\sigma -3/2})$, integrable iff $\sigma > -1/4$.
+
+Identity \eqref{eq:e44} holds for every $(\theta ,\psi )$ with $H > 0$, that is, for \textbf{almost every} $(\theta ,\psi )$: by Lemma~3.1 the zero set is the two points $z_\pm$, a set of measure zero. (The qualification matters: at $z_\pm$ the left-hand side $H^s$ is undefined for $\sigma < 0$, so the identity cannot be asserted pointwise everywhere.)
+
+\emph{Fubini.} Substituting $t = \rho r$,
+
+\[
+  \int_{0}^\infty |J_{0}(\rho r)| r^{-2\sigma -1} dr = \rho^{2\sigma } \int_{0}^\infty |J_{0}(t)| t^{-2\sigma -1} dt = \rho^{2\sigma } M(\sigma ) , \qquad  M(\sigma ) < \infty
+\]
+by the same two endpoint computations. Hence
+
+\par\nobreak
+\[
+  \int_{\mathbb{T}^{2}} \int_{0}^\infty | J_{0}(\sqrt{H} r) r^{-2s-1} | dr d\theta d\psi = M(\sigma ) \int_{\mathbb{T}^{2}} H^\sigma < \infty ,
+\]
+the last integral being finite by Lemma~3.1 because $\sigma > -1/4 > -1$. Tonelli--Fubini therefore licenses interchanging $\int_{\mathbb{T}^{2}}$ with $\int_{0}^\infty$. Taking the $(-Nq, q)$ Fourier coefficient of both sides of \eqref{eq:e44} and inserting Lemma~4.2 with $(a,b) = (-Nq, q)$,
+
+\[
+  \widehat{H}^s(-Nq,q) = C(s) \int_{0}^\infty (-1)^{-Nq+q} J_{-Nq}(r) J_q(r) J_{-Nq+q}(r) r^{-2s-1} dr .
+\]
+Using $J_{-m} = (-1)^m J_m$ twice, the two sign factors combine with $(-1)^{-Nq+q}$ to leave $(-1)^{Nq}$ and the product $J_{qN} J_q J_{q(N-1)} = \Psi_q$, which is the claim.
+\end{proof}
+
+\begin{theorem}[per-mode continuation]\label{res:4.6}
+For each integer $q \ge 1$, the functions $s \mapsto \widehat{H}^s(-Nq,q)$ and $s \mapsto C(s)(-1)^{Nq} I_q(s)$ agree on all of $\Omega_q$. Since $k+1 < N \le qN$, the interval $[k,k+1]$ lies in $\Omega_q$ for every $q \ge 1$.
+\end{theorem}
+
+\begin{proof}
+Both sides are holomorphic on the connected open set $\Omega_q$ (Lemmas~4.1 and 4.3(iv), together with holomorphy of $C$), and they agree on the nonempty open subset $T \subset \Omega_q$ (Lemma~4.5). Apply the identity theorem.
+\end{proof}
+
+\begin{remark}[why the continuation must be done per mode]\label{res:4.7}
+The reason is not that the summed series misbehaves at the anchor --- one should be careful here, and in particular careful not to overstate the obstruction. Proposition~3.4 is proved only for $s \ge 1$, because that is where Lemma~3.2 delivers $\widehat{H}^s \in \ell^{1}(\mathbb{Z}^{2})$. On the anchor strip $T \subset \{\Re s < 0\}$ the identity $D(s) = -4 \sum_q \widehat{H}^s(-Nq,q)$ is therefore \textbf{not available} to be continued. That is the whole of the obstruction, and it is an obstruction of \emph{proof}, not of existence: we have not shown the identity holds on $T$, and we do not claim it fails. (Numerically it does appear to hold. For $N = 6$ at $s = -0.13$, where $\min A = 0.0946$ and $\min B = 0.0277$ are both positive so that $D$ is entire, one finds $D(s) = 0.0072091\ldots$ against $-4 \sum_{q \le 29, q \,\mathrm{odd}} \widehat{H}^s(-Nq,q) = 0.0072082\ldots$, agreeing to about $10^{-4}$ relative. This figure is orientation only in the sense of \S1.3; nothing uses it, and if anything it shows that the per-mode route is a matter of what we can prove rather than of what is true.)
+
+It is worth recording what the obstruction is \emph{not}, and also what the correct reason is, since a tempting wrong one lies close at hand. The full lattice family $(\widehat{H}^s(n))_{n \in \mathbb{Z}^{2}}$ indeed leaves $\ell^{1}(\mathbb{Z}^{2})$ for $\Re s$ negative; but failure of absolute summability over the \emph{whole lattice} says nothing about the sub-sum along the resonant ray $p = -Nq$. The reason that sub-sum converges on $T$ is quantitative: by Lemma~3.1 the two zeros of $H$ are nondegenerate and quadratic, which forces $|\widehat{H}^\sigma (-Nq,q)| = O(q^{-2-2\sigma })$, and $2 + 2\sigma > 1$ exactly when $\sigma > -1/2$. It is \textbf{not} that the ray is a set of density zero in $\mathbb{Z}^{2}$. Density zero is neither necessary nor sufficient for convergence of a sub-series, and a counterexample lies inside this very family: for $\sigma \in (-1, -1/2]$ every $\widehat{H}^\sigma (-Nq,q)$ is still defined (Lemma~3.1) and still holomorphic in $s$ (Lemma~4.1), yet the same density-zero ray sum \textbf{diverges}. At $N = 3$, $\sigma = -0.6$ the quantity $|\widehat{H}^\sigma (-Nq,q)| \cdot q^{0.8}$ is pinned between $0.088$ and $0.193$ out to $q = 31$ instead of decaying, the two levels being the factor $|2 \cos (2\pi q/3)| \in \{1,2\}$ contributed by the two zeros; since the exponent $2+2\sigma = 0.8$ does not exceed $1$, the sum diverges. (Orientation only, as above.)
+
+Theorem~4.6 therefore continues a \textbf{single} Fourier coefficient --- but three ingredients are needed, not one. Holomorphy of that coefficient on $\{\Re s > -1\}$ is \textbf{Lemma~4.1}, not Lemma~4.3(iv), which gives holomorphy of $I_q$ on $\Omega_q$; and holomorphy of one side continues nothing by itself. What makes Theorem~4.6 work is holomorphy of \textbf{both} sides on the connected set $\Omega_q$ (Lemmas~4.1 and 4.3(iv)) together with their agreement on $T$ (Lemma~4.5). Summation over $q$ is postponed to $s \in [k, k+1]$, where absolute convergence of the ray sum is available from Proposition~3.4.
+\end{remark}
+
+\begin{theorem}\label{res:4.8}
+For $k \ge 1$ and $\alpha \in (0,1)$,
+
+\begin{equation}\label{eq:star1}
+  D(s) = ( 2^{2s+3} \Gamma (s+1)^{2} \sin (\pi \alpha )/\pi ) \cdot \sum_{q \ge 1, q \,\mathrm{odd}} I_q(s) ,
+\end{equation}
+the right-hand side converging absolutely. At $\alpha \in \{0,1\}$ the left-hand side vanishes, i.e. $D(k) = D(k+1) = 0$.
+\end{theorem}
+
+\begin{proof}
+By Proposition~3.4 and Theorem~4.6, for $q$ odd $(-1)^{Nq} = (-1)^{(k+2)q} = (-1)^{k}$, so
+
+\[
+  D(s) = -4 C(s) (-1)^k \sum_{q \ge 1, q \,\mathrm{odd}} I_q(s) .
+\]
+For $\alpha \in (0,1)$, $\sin (\pi s) \ne 0$ hence $C(s) \ne 0$, and absolute convergence follows from $\sum_q |I_q(s)| = |C(s)|^{-1} \sum_q |\widehat{H}^s(-Nq,q)| < \infty$, which is Proposition~3.4. Substituting $C(s) = -2^{2s+1}\Gamma (s+1)^{2} \sin (\pi s)/\pi$ and $\sin (\pi (k+\alpha )) = (-1)^k \sin (\pi \alpha )$ gives \eqref{eq:star1}.
+
+At $\alpha \in \{0,1\}$, $s$ is an integer $m \in \{k, k+1\}$, and $H^m$ is a trigonometric polynomial of degree $\le m$ in each variable; since $|{-}Nq| = (k+2)q \ge k+2 > m$, every coefficient $\widehat{H}^m(-Nq,q)$ vanishes, so $D(k) = D(k+1) = 0$.
+\end{proof}
+
+\begin{remark}\label{res:4.9}
+At $\alpha \in \{0,1\}$ the prefactor $\sin (\pi \alpha )$ in \eqref{eq:star1} also vanishes, but one may not yet read the right-hand side as ``zero times a series'': the convergence of $\sum_{q \,\mathrm{odd}} I_q(k+\alpha )$ at the endpoints is established only in \S9 (Lemma~9.1). The endpoint interpretation of \eqref{eq:star1} is deferred to Proposition~9.3. Note also that Theorem~1.1 concerns the \textbf{open} interval $s \in (k,k+1)$ only; \S9 is used to obtain the formally stronger closed-interval positivity of $\Phi$, and a reader interested only in Theorem~1.1 may take $\alpha \in (0,1)$ throughout and thereby avoid Lemma~9.1 and Proposition~9.3. That reader still needs Lemma~9.4, which is stated in \S9 for reasons of exposition but is proved on the open interval directly from Proposition~2.7 and Theorem~4.8, with no other input from \S9.
+\end{remark}
+
+\section{The leading mode is positive}
+\emph{A note on notation.} Throughout this section $A$ denotes the \textbf{scale ratio} $A = 2 \cos \vartheta \in [0,2]$ of Neumann's product formula, not the circle function $A = |f_k|^{2}$ of \S2. The two never appear in the same display, and $A$ occurs here only as the argument of $W$; \S2's $A$ does not occur in \S\S5--8 at all.
+
+
+\begin{proposition}\label{res:5.1}
+For $s = k + \alpha > 0$,
+
+\[
+  I_{1}(s) = (2/\pi ) \int_{0}^{\pi /2} \cos \vartheta \cdot W(2 \cos \vartheta ) d\vartheta , \qquad  W(A) = \int_{0}^\infty J_L(Ar) J_{1}(r) r^{-2s-1} dr .
+\]
+\end{proposition}
+
+\begin{proof}
+Neumann's product formula (\cite{r17}, DLMF 10.9.26; also in \cite{r19}) in the form
+
+\[
+  J_{N}(r) J_{N-1}(r) = (2/\pi ) \int_{0}^{\pi /2} J_{2N-1}(2r \cos \vartheta ) \cos \vartheta d\vartheta = (2/\pi )\int_{0}^{\pi /2} J_L(2r \cos \vartheta ) \cos \vartheta d\vartheta
+\]
+collapses the two Bessel factors of orders $N$ and $N-1$ (the case $q = 1$ of $\Psi_q$) into a single one of order $L = 2N-1$. Hence
+
+\par\nobreak
+\[
+  I_{1}(s) = \int_{0}^\infty \left[ (2/\pi )\int_{0}^{\pi /2} J_L(2r \cos \vartheta ) \cos \vartheta d\vartheta \right] J_{1}(r) r^{-2s-1} dr .
+\]
+To interchange the two integrations we exhibit a majorant valid uniformly in $\vartheta \in [0,\pi /2]$. Write $A = 2 \cos \vartheta \in [0,2]$. For $r \le 1$ the Poisson bound gives $|J_L(Ar)J_{1}(r)| \le (Ar/2)^L (r/2)/(\Gamma (L+1)\Gamma (2)) \le c r^{L+1}$, uniformly in $\vartheta$ since $A \le 2$, so the integrand is $O(r^{L+1-2s-1}) = O(r^{2k+3-2s}) = O(r^{3-2\alpha })$, integrable on $(0,1]$ for $\alpha < 2$. For $r \ge 1$ we use $|J_\nu | \le 1$ twice, giving $O(r^{-2s-1})$, integrable on $[1,\infty )$ because $s > 0$. Both majorants are independent of $\vartheta$, and $\int_{0}^{\pi /2} \cos \vartheta d\vartheta < \infty$, so Fubini applies and yields the stated formula.
+\end{proof}
+
+\begin{proposition}[Weber--Schafheitlin]\label{res:5.2}
+With $\lambda = 2s+1$, $L = 2k+3$, $s = k+\alpha$, and $A \ne 1$,
+
+\begin{gather*}
+  W(A) =
+\begin{cases}
+\dfrac{A^{L}\,\Gamma(2-\alpha)}{2^{2s+1}\,\Gamma(\alpha)\,\Gamma(L+1)}\;
+   {}_2F_1\!\bigl(2-\alpha,\,1-\alpha;\,L+1;\,A^{2}\bigr), & A<1,\\[3.2ex]
+\dfrac{\Gamma(2-\alpha)\,A^{2s-1}}{2^{2s+1}\,\Gamma(2k+2+\alpha)}
+   \bigl(1-A^{-2}\bigr)^{2k+1+2\alpha}\;
+   {}_2F_1\!\bigl(\alpha,\,2k+3+\alpha;\,2;\,A^{-2}\bigr), & A>1.
+\end{cases}
+\end{gather*}
+\end{proposition}
+
+\begin{proof}
+We use the Weber--Schafheitlin evaluation (\cite{r17}, DLMF 10.22.56; also in \cite{r19}) in the form valid for $0 < a < b$:
+
+\par\nobreak
+\begin{equation}\label{eq:ws}
+\begin{gathered}
+  \begin{split}
+\int_0^{\infty} J_\mu(ar)\,J_\nu(br)\,r^{-\lambda}\,dr
+ &= \frac{a^{\mu}\,b^{\lambda-\mu-1}}{2^{\lambda}}\cdot
+   \frac{\Gamma\!\bigl(\tfrac{\mu+\nu-\lambda+1}{2}\bigr)}
+        {\Gamma\!\bigl(\tfrac{\nu-\mu+\lambda+1}{2}\bigr)\,\Gamma(\mu+1)}\\
+ &\qquad \times {}_2F_1\!\Bigl(\tfrac{\mu+\nu-\lambda+1}{2},\,
+        \tfrac{\mu-\nu-\lambda+1}{2};\,\mu+1;\,\tfrac{a^{2}}{b^{2}}\Bigr)
+\end{split}
+\end{gathered}
+\end{equation}
+Its hypotheses are $\Re (\mu +\nu +1) > \Re \lambda$, $\Re \lambda > -1$ and $0 < a < b$. \textbf{The choice of which Bessel factor plays the role of $a$ is forced by which scale is smaller, and therefore differs between the two branches.}
+
+\emph{The hypotheses hold in both branches.} In either assignment the pair of orders is $\{L, 1\}$, so $\mu + \nu + 1 = L + 2 = 2k+5$, while $\lambda = 2s+1 = 2k+2\alpha +1$; hence $\Re (\mu +\nu +1) > \Re \lambda$ reduces to $4 > 2\alpha$, i.e. $\alpha < 2$, and $\Re \lambda > -1$ reduces to $s > -1$. Both hold throughout the range in use, $\alpha \in [0,1]$ and $s \ge 0$. The condition $0 < a < b$ is exactly the case distinction that defines the two branches --- $(a,b) = (A,1)$ with $A < 1$, and $(a,b) = (1,A)$ with $A > 1$ --- so it holds by construction, the two excluded values being $A = 1$, which is the junction treated separately in Proposition~5.4, and $A = 0$, a single endpoint of the $\vartheta$-integration and hence a null set for the purposes of \S6.
+
+\emph{Convergence.} Before applying \eqref{eq:ws} we record that $W(A)$ converges absolutely for $\alpha \in [0,1]$, $s \ge 0$. As $r \to 0$, $J_L(Ar)J_{1}(r) r^{-2s-1} = O(r^{L+1-2s-1}) = O(r^{3-2\alpha })$, so convergence at the origin requires only $\alpha < 2$. As $r \to \infty$, the product of the two Bessel factors is $O(r^{-1})$, so the integrand is $O(r^{-2s-2})$ and absolute convergence requires only $s > -1/2$. In the range actually used, $\alpha \in [0,1]$ and $s \ge 0$, both are satisfied with room to spare. (The weaker hypothesis $s > -1$ quoted in some sources refers to a conditionally convergent version; we do not need it.)
+
+\textbf{Branch $0 < A < 1$.} Here the smaller scale is $A$, so we take $(\mu , \nu , a, b) = (L, 1, A, 1)$. The three parameters of \eqref{eq:ws} evaluate to
+
+\begin{gather*}
+  (\mu +\nu -\lambda +1)/2 = (L + 1 - (2s+1) + 1)/2 = (2k+3+1-2k-2\alpha )/2 = 2 - \alpha , \\ 
+  (\mu -\nu -\lambda +1)/2 = (L - 1 - (2s+1) + 1)/2 = 1 - \alpha , \\ 
+  (\nu -\mu +\lambda +1)/2 = (1 - L + (2s+1) + 1)/2 = \alpha ,
+\end{gather*}
+and $a^\mu b^{\lambda -\mu -1} = A^L$, $\mu +1 = L+1$, $a^{2}/b^{2} = A^{2}$. Substituting gives the first branch verbatim.
+
+\textbf{Branch $A > 1$.} Now the smaller scale is $1$, so the roles must be \textbf{interchanged}: $(\mu , \nu , a, b) = (1, L, 1, A)$. The parameters become
+
+\begin{gather*}
+  (\mu +\nu -\lambda +1)/2 = (1 + L - (2s+1) + 1)/2 = 2 - \alpha , \\ 
+  (\mu -\nu -\lambda +1)/2 = (1 - L - (2s+1) + 1)/2 = -2k - 1 - \alpha , \\ 
+  (\nu -\mu +\lambda +1)/2 = (L - 1 + (2s+1) + 1)/2 = 2k + 2 + \alpha ,
+\end{gather*}
+with $a^\mu b^{\lambda -\mu -1} = A^{2s+1-2} = A^{2s-1}$, $\mu +1 = 2$, $a^{2}/b^{2} = A^{-2}$. Hence
+
+\par\nobreak
+\begin{equation}\label{eq:ast}
+  W(A) = ( \Gamma (2-\alpha ) A^{2s-1} / ( 2^{2s+1} \Gamma (2k+2+\alpha ) ) ) \cdot {}_2F_1( 2-\alpha , -2k-1-\alpha ; 2 ; A^{-2} ) .
+\end{equation}
+Only now do we apply Euler's transformation ${}_2F_1(a,b;c;x) = (1-x)^{c-a-b} {}_2F_1(c-a, c-b; c; x)$ to \eqref{eq:ast}, with
+
+\begin{gather*}
+  a = 2-\alpha , \qquad  b = -2k-1-\alpha , \qquad  c = 2 , \\ 
+  c - a - b = 2 - (2-\alpha ) - (-2k-1-\alpha ) = 2k + 1 + 2\alpha = 2s + 1 , \\ 
+  c - a = \alpha , \qquad  c - b = 2k + 3 + \alpha .
+\end{gather*}
+This yields the second branch as stated.
+\end{proof}
+
+\begin{remark}\label{res:5.3}
+The second branch is \textbf{not} obtained by applying Euler's transformation to the first: the two branches come from two \emph{different} substitutions into \eqref{eq:ws}, differing by the interchange of the two Bessel orders and scales, and Euler's transformation is applied afterwards, to the intermediate form \eqref{eq:ast}. An earlier draft compressed these two steps into one and thereby asserted something false.
+\end{remark}
+
+\begin{proposition}[the junction $A = 1$]\label{res:5.4}
+$W$ is continuous on $(0,2]$; in particular the two branches of Proposition~5.2 have a common limit at $A = 1$, namely
+
+\par\nobreak
+\begin{equation}\label{eq:w1}
+  W(1) = \Gamma (2-\alpha ) \Gamma (2s+1) / ( 2^{2s+1} \Gamma (\alpha ) \Gamma (2k+2+\alpha ) \Gamma (2k+3+\alpha ) ) ,
+\end{equation}
+read at $\alpha = 0$ by the convention $1/\Gamma (0) = 0$.
+\end{proposition}
+
+\begin{proof}
+We prove continuity directly from the integral, which avoids having to compare two hypergeometric limit constants. Fix $\alpha \in [0,1]$, $s = k+\alpha \ge 0$, and let $A$ range over $[1/2, 3/2]$. Then, uniformly in such $A$:
+
+\begin{itemize}
+\item for $0 < r \le 1$, the Poisson bound gives $|J_L(Ar)J_{1}(r)r^{-2s-1}| \le c_{1} r^{L+1-2s-1} = c_{1} r^{3-2\alpha }$;
+\item for $r \ge 1$, the large-argument bound $|J_\nu (r)| \le c_\nu r^{-1/2}$ (Lemma~4.3(iii), applied to each factor, with the constant uniform over the compact $A$-range after the substitution $t = Ar$) gives $|J_L(Ar)J_{1}(r)r^{-2s-1}| \le c_{2} r^{-2s-2}$.
+\end{itemize}
+Both majorants are integrable on their respective ranges ($3-2\alpha > -1$ and $2s+2 > 1$) and independent of $A$. Since $A \mapsto J_L(Ar)$ is continuous for each $r$, dominated convergence gives $W(A) \to W(1)$ as $A \to 1$, from either side. Continuity at other points of $(0,2]$ is the same argument.
+
+It remains to identify $W(1)$. Let $A \uparrow 1$ in the first branch. The hypergeometric argument $A^{2} \uparrow 1$, and Gauss's summation applies because
+
+\par\nobreak
+\[
+  c - a - b = (L+1) - (2-\alpha ) - (1-\alpha ) = 2k + 1 + 2\alpha = 2s + 1 > 0 ,
+\]
+giving ${}_2F_1(2-\alpha , 1-\alpha ; L+1; 1) = \Gamma (L+1)\Gamma (2s+1)/(\Gamma (2k+2+\alpha )\Gamma (2k+3+\alpha ))$, where we used $c - a = L+1-2+\alpha = 2k+2+\alpha$ and $c - b = L+1-1+\alpha = 2k+3+\alpha$. Substituting into the first branch, the factor $\Gamma (L+1)$ cancels and \eqref{eq:w1} results.
+
+For consistency we note that the second branch produces the same value: there $c - a - b = -(2s+1) < 0$, so ${}_2F_1(\alpha , 2k+3+\alpha ; 2; x)$ diverges like $c\cdot (1-x)^{-(2s+1)}$ as $x \uparrow 1$, and this divergence is cancelled \emph{exactly} by the explicit Euler factor $(1-A^{-2})^{2s+1}$ standing in front of it --- which is why the product has a finite limit. The dominated-convergence argument above is what shows the two limits agree; the cancellation alone would only show that each is finite.
+\end{proof}
+
+\begin{theorem}\label{res:5.5}
+For every integer $k \ge 0$ and every $\alpha \in [0,1]$ with $s = k + \alpha > 0$ --- that is, for all $(k,\alpha )$ except $(k,\alpha ) = (0,0)$ --- one has $I_{1}(s) > 0$.
+\end{theorem}
+
+\begin{proof}
+By Proposition~5.1, $I_{1} = (2/\pi )\int_{0}^{\pi /2} \cos \vartheta \cdot W(2\cos \vartheta ) d\vartheta$, with $A = 2 \cos \vartheta$.
+
+On the range $A < 1$ (i.e. $\vartheta \in (\pi /3, \pi /2)$) every displayed factor of the first branch of Proposition~5.2 is nonnegative: $A^L > 0$, $\Gamma (2-\alpha ) > 0$ since $2-\alpha \in [1,2]$, $1/\Gamma (\alpha ) \ge 0$ (equal to $0$ at $\alpha = 0$), $\Gamma (L+1) > 0$, and the hypergeometric series ${}_2F_1(2-\alpha , 1-\alpha ; L+1; A^{2}) = \sum_n \frac{(2-\alpha )_n (1-\alpha )_n}{(L+1)_n n!} A^{2n}$ has nonnegative coefficients since $2-\alpha \ge 1 > 0$ and $1-\alpha \ge 0$. So this contribution is $\ge 0$.
+
+On the range $A \in (1,2)$ (i.e. $\vartheta \in (0, \pi /3)$, a set of positive measure on which $\cos \vartheta > 0$), the second branch gives $\Gamma (2-\alpha ) > 0$, $A^{2s-1} > 0$, $(1 - A^{-2})^{2s+1} > 0$, $1/\Gamma (2k+2+\alpha ) > 0$, and ${}_2F_1(\alpha , 2k+3+\alpha ; 2; A^{-2}) \ge 1$ because all Pochhammer parameters are $\ge 0$, all coefficients are nonnegative and the constant term is $1$. So this contribution is \textbf{strictly} positive.
+
+Adding a strictly positive contribution to a nonnegative one gives $I_{1}(s) > 0$.
+\end{proof}
+
+\begin{remark}[on the hypothesis $s > 0$]\label{res:5.6}
+Proposition~5.1 requires $s > 0$: the interchange there uses $\int_{1}^\infty r^{-2s-1} dr < \infty$, which fails at $s = 0$. Theorem~5.5 is therefore stated for $s > 0$ only, excluding the single degenerate pair $(k,\alpha ) = (0,0)$. This costs nothing: Theorem~1.1 concerns $k \ge 4$, where $s \ge 4$. (A separate argument exploiting the $r^{-1/2}$ decay of the two Bessel factors would cover $s = 0$ as well, but we do not need it.)
+\end{remark}
+
+\begin{remark}[what happens at $\alpha = 0$]\label{res:5.7}
+The endpoint $\alpha = 0$ --- where the whole difficulty of the conjecture is concentrated --- is covered by the proof above without a separate argument, and it is worth saying exactly why. At $\alpha = 0$ the first branch does not merely become small: it \textbf{vanishes identically}. Every factor of that branch is finite and continuous in $A$ on $(0,1)$, and it carries the prefactor $1/\Gamma (\alpha )$, which is $0$ at $\alpha = 0$ by the convention of Proposition~5.4 ($\Gamma$ has a pole at $0$). Hence the entire contribution of the range $A < 1$ to $I_{1}(k)$ is zero, for every $k$. All of $I_{1}(k)$ comes from the range $A \in (1,2)$, i.e. from $\vartheta \in (0, \pi /3)$ --- and there the second branch has no degenerate factor at all: $\Gamma (2-\alpha ) = \Gamma (2) = 1$, $A^{2s-1} > 0$, $(1-A^{-2})^{2s+1} > 0$, $1/\Gamma (2k+2) > 0$, and the hypergeometric factor is $\ge 1$. So the strict positivity survives the endpoint intact; nothing is lost and nothing needs to be recovered by a limiting argument. (Numerically the vanishing of the $A < 1$ contribution at $\alpha = 0$ is visible as a residual at the level of the quadrature error rather than at the level of the integrand, which is the expected signature of an identically-zero contribution; the analytic reason $1/\Gamma (0) = 0$ above is what the proof uses, and it needs no numerics.)
+\end{remark}
+
+\section{An explicit lower bound for the leading mode}
+
+\begin{proposition}\label{res:6.1}
+For every integer $k \ge 1$ and every $\alpha \in [0,1]$,
+
+\par\nobreak
+\[
+  I_{1} \ge W_{\mathrm{low}}(k,\alpha ) := ( \Gamma (2-\alpha )/\pi ) \cdot ( 2/(5\sqrt{3}) ) \cdot (9/8) \cdot (9/16)^s / ( \Gamma (2k+2+\alpha ) (2s+2) ) .
+\]
+\end{proposition}
+
+\begin{proof}
+Discard the nonnegative $A < 1$ contribution (Theorem~5.5) and, on $A \in (1,2)$, insert the second branch of \textbf{Proposition~5.2} and use ${}_2F_1 \ge 1$:
+
+\par\nobreak
+\[
+  I_{1} \ge (2/\pi ) \cdot \Gamma (2-\alpha )/( 2^{2s+1} \Gamma (2k+2+\alpha ) ) \cdot \int_{\vartheta \in (0,\pi /3)} \cos \vartheta \cdot A^{2s-1}(1-A^{-2})^{2s+1} d\vartheta .
+\]
+Substitute $A = 2 \cos \vartheta$, so that $\cos \vartheta = A/2$, $dA = -2 \sin \vartheta d\vartheta$ and $d\vartheta = dA/\sqrt{4-A^{2}}$, with $\vartheta \in (0,\pi /3)$ corresponding to $A \in (1,2)$. The factor $\cos \vartheta = A/2$ supplies the $1/2$:
+
+\par\nobreak
+\[
+  I_{1} \ge (2/\pi ) \cdot \Gamma (2-\alpha )/( 2^{2s+1} \Gamma (2k+2+\alpha ) ) \cdot (1/2) \int_{1}^{2} A^{2s} (1-A^{-2})^{2s+1} (4-A^{2})^{-1/2} dA .
+\]
+\emph{An exact identity.} With $t = A - 1/A$,
+
+\[
+  A^{2s}(1-A^{-2})^{2s+1} = (A^{2}-1)^{2s+1}/A^{2s+2} = ( (A^{2}-1)/A )^{2s+1} \cdot (1/A) = t^{2s+1}/A .
+\]
+\emph{Three elementary bounds.} (a) For $A \in (1,2)$, $4 - A^{2} \in (0,3)$, so $(4-A^{2})^{-1/2} \ge 3^{-1/2}$. (b) From $t = A - 1/A$ we get $dt = (1 + A^{-2}) dA = \frac{A^{2}+1}{A^{2}} dA$, hence
+
+\[
+  dA/A = \frac{A}{A^{2}+1} dt ,
+\]
+and $A \mapsto A/(A^{2}+1)$ is decreasing on $(1,2)$ (its derivative is $(1-A^{2})/(A^{2}+1)^{2} < 0$), so its minimum there is at $A = 2$, namely $2/5$. Thus $dA/A \ge (2/5) dt$. (c) As $A$ runs over $(1,2)$, $t$ runs over $(0, 3/2)$, and $\int_{0}^{3/2} t^{2s+1} dt = (3/2)^{2s+2}/(2s+2)$.
+
+Combining (a)--(c),
+
+\[
+  \int_{1}^{2} A^{2s}(1-A^{-2})^{2s+1}(4-A^{2})^{-1/2} dA \ge 3^{-1/2} \cdot (2/5) \cdot (3/2)^{2s+2}/(2s+2) .
+\]
+Finally the exact bookkeeping $(3/2)^{2s+2}/2^{2s+1} = (9/4)^{s+1}/2^{2s+1} = (9/8)(9/16)^{s}$ collects the powers of $2$, and $(1/2)\cdot (2/\pi )\cdot 3^{-1/2}\cdot (2/5) = (1/\pi )\cdot 2/(5\sqrt{3})$ collects the constants. This is the claim.
+\end{proof}
+
+\section{An explicit bound for the tail}
+
+\begin{theorem}\label{res:7.1}
+Let $q \ge 1$ be an integer, $R_q = 2 C_q^{1/(2qN)}$, and let $s$ be real with $0 < s < qN$. Then
+
+\begin{equation}\label{eq:d2}
+  |I_q(s)| \le R_q^{-2s} [ 1/(2qN - 2s) + 1/(2s) ] .
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Note first that the hypothesis $0 < s < qN$ is exactly the condition placing $s$ in the real trace of the strip $\Omega_q$ on which $I_q$ converges (Lemma~4.3(iv)); for $s \ge qN$ the integral diverges at $r = 0$ and the right-hand side of \eqref{eq:d2} is meaningless (its first denominator is $\le 0$).
+
+Split at $R_q$. On $[0, R_q]$, Lemma~4.3(ii) gives
+
+\[
+  \int_{0}^{R_q} (r/2)^{2qN} C_q^{-1} r^{-2s-1} dr = 2^{-2qN} C_q^{-1} R_q^{2qN-2s}/(2qN-2s) ,
+\]
+using $2qN - 2s > 0$. Since $2^{-2qN} R_q^{2qN} = C_q$ by the definition of $R_q$, the factor $C_q$ cancels exactly, leaving $R_q^{-2s}/(2qN-2s)$. On $[R_q, \infty )$ use $|J_\nu | \le 1$ three times to get $|\Psi_q| \le 1$, so that $\int_{R_q}^\infty r^{-2s-1} dr = R_q^{-2s}/(2s)$, using $s > 0$. Adding the two gives \eqref{eq:d2}.
+\end{proof}
+
+\begin{remark}\label{res:7.2}
+In the application $s \le k+1 < N \le qN$, so the hypothesis $0 < s < qN$ holds with a full unit to spare for every $q \ge 1$.
+\end{remark}
+
+\begin{proposition}\label{res:7.3}
+For $N \ge 6$ and every $q \ge 1$, $R_q \ge \kappa N q$ with $\kappa = 0.58$.
+\end{proposition}
+
+\begin{proof}
+From $\Gamma (n+1) \ge (n/e)^n$ (which follows from $\log n! = \sum_{j \le n} \log j \ge \int_{1}^n \log x dx = n \log n - n + 1$) applied to the three factors of $C_q$,
+
+\[
+  C_q \ge e^{-2qN} q^{2qN} N^{qN} (N-1)^{q(N-1)} .
+\]
+Raising to the power $1/(2qN)$ (order-preserving), $C_q^{1/(2qN)} \ge e^{-1} q \cdot N^{1/2} (N-1)^{(N-1)/(2N)}$. Writing $N^{1/2}(N-1)^{(N-1)/(2N)} = N^{1-1/(2N)} \cdot [(1-1/N)^{N-1}]^{1/(2N)}$ and using $(1-1/N)^{N-1} \ge e^{-1}$ (equivalently $(N-1)\log (1 - 1/N) = -(N-1)\log (1 + 1/(N-1)) \ge -1$, from $\log (1+y) \le y$), we obtain
+
+\[
+  R_q = 2 C_q^{1/(2qN)} \ge c_N q , \qquad  c_N := (2N/e)(eN)^{-1/(2N)} .
+\]
+Now $c_N/N = (2/e) \exp ( - (1 + \log N)/(2N) )$, and $(1 + \log N)/N$ is strictly \textbf{decreasing} for $N > 1$ (its derivative is $-\log N/N^{2} < 0$). Hence $\exp (-(1+\log N)/(2N))$ is strictly \textbf{increasing} in $N$, so $c_N/N$ is strictly increasing and attains its minimum over $N \ge 6$ at $N = 6$.
+
+Finally $c_{6}/6 \ge 0.58$ is a rational inequality. We must show $(2/e)(6e)^{-1/12} \ge 0.58$, i.e. $2/(0.58) \ge e\cdot (6e)^{1/12}$, i.e. raising to the twelfth power, $(2/0.58)^{12} \ge e^{12}\cdot 6e = 6 e^{13}$, i.e. $2^{12} \ge 6 \cdot 0.58^{12} \cdot e^{13}$, i.e. $4096 \ge 6 \cdot 0.58^{12} \cdot e^{13}$. Now $0.58^{12} = 0.001449225\ldots < 0.00145$ and $e^{13} < 442414$, so $6 \cdot 0.00145 \cdot 442414 = 3849.0\ldots < 4096$.
+\end{proof}
+
+\begin{remark}[the hypothesis $N \ge 6$ is not cosmetic]\label{res:7.4}
+For $N = 3, 4, 5$ the conclusion of Proposition~7.3 is \textbf{false}. Establishing this requires care, because the quantity $c_N/N$ produced by the proof above is \emph{not} the limit of $R_q/(Nq)$ but a strict \textbf{lower} bound for it --- and a lower bound cannot certify that a lower bound fails. The true limit is already visible inside that proof, one line before the weakening: the estimate $\Gamma (n+1) \ge (n/e)^n$ alone gives
+
+\[
+  R_q \ge 2e^{-1} q \cdot N^{1/2}(N-1)^{(N-1)/(2N)} = \lambda_N \cdot Nq , \qquad  \lambda_N := (2/e) N^{-1/2}(N-1)^{(N-1)/(2N)} ,
+\]
+for \textbf{every} $q \ge 1$, and this is asymptotically sharp: the companion estimate $\Gamma (n+1) \le \sqrt{2\pi n}(n/e)^n e^{1/(12n)}$ inflates the right-hand side by a factor which does grow with $q$, like $q^{3/2}$, but which is raised to the exponent $1/(2qN)$ --- so its logarithm is $O((\log q)/q)$ and the factor tends to $1$. (It is the ratio $(\log q)/q \to 0$, not the exponent alone, that does the work: at $q = 1$ and $N = 3$ the factor is still $1.8855\ldots$, at $q = 10^{2}$ it is $1.0177\ldots$, at $q = 10^{6}$ it is $1.0000041\ldots$.) Hence $\limsup_q R_q/(Nq) \le \lambda_N$ as well, and therefore
+
+\[
+  \lim_{q\to \infty } R_q/(Nq) = \lambda_N .
+\]
+It is worth being precise about where the slack in $c_N/N$ comes from, since the natural guess is wrong. It is \textbf{not} the discarding of the Stirling factors $\sqrt{2\pi n}$: those are asymptotically free, exactly as the two displays above show. It is entirely the convenience step $(1-1/N)^{N-1} \ge e^{-1}$ taken \emph{after} the estimate just quoted, and its cost is exactly
+
+\par\nobreak
+\[
+  \lambda_N / (c_N/N) = [ e (1-1/N)^{N-1} ]^{1/(2N)} > 1 .
+\]
+So it is $\lambda_N$, not $c_N/N$, that must be compared with $\kappa$:
+
+\par\nobreak
+\[
+  \begin{array}{r@{\;}c@{\quad}c@{\quad}c@{\quad}c@{\quad}c}
+  N & = & 3 & 4 & 5 & 6 \\
+  \lambda_N & = & 0.5352\ldots & 0.5554\ldots & 0.5728\ldots & 0.5873\ldots \\
+  c_N/N & = & 0.5186\ldots & 0.5459\ldots & 0.5667\ldots & 0.5830\ldots
+\end{array}
+\]
+(Every decimal here and below is a truncation, never a rounding, so that each displayed digit string is a valid lower bound for the quantity it names.) The three relevant inequalities $\lambda_N < 0.58$ are rational, since the irrational exponents clear on raising to a suitable power:
+
+\par\nobreak
+\[
+  \lambda_{3}^6 = 2^8/(3^3 e^6) , \qquad  \lambda_{4}^8 = 3^3/e^8 , \qquad  \lambda_{5}^{10} = 2^{18}/(5^5 e^{10}) ,
+\]
+so that $\lambda_N < 0.58$ for $N = 3,4,5$ amounts to
+
+\[
+  256 < 27 \cdot 0.58^6 \cdot e^6 , \qquad  27 < 0.58^8 \cdot e^8 , \qquad  262144 < 3125 \cdot 0.58^{10} \cdot e^{10} ,
+\]
+and these hold because $0.58^6 > 0.038$, $0.58^8 > 0.0128$, $0.58^{10} > 0.0043$ together with $e^6 > 403$, $e^8 > 2980$, $e^{10} > 22026$ give $27 \cdot 0.038 \cdot 403 = 413.4\ldots > 256$, $0.0128 \cdot 2980 = 38.1\ldots > 27$ and $3125 \cdot 0.0043 \cdot 22026 = 295974\ldots > 262144$. Since $R_q/(Nq) \to \lambda_N < 0.58$, the bound $R_q \ge 0.58 Nq$ genuinely fails for all large $q$ when $N \in \{3,4,5\}$. (At $N = 6$ the same closed form gives $\lambda_{6} = 0.5873\ldots > 0.58$, consistent with Proposition~7.3, which proves the logically stronger numerical inequality $c_{6}/6 \ge 0.58$ --- stronger as a \emph{statement}, since $c_{6}/6 < \lambda_{6}$, even though $c_{6} q$ is the \emph{weaker} of the two resulting bounds on $R_q$.) This is why Proposition~7.5 below is stated for $k \ge 4$, i.e. $N \ge 6$, and not for $k \ge 1$.
+\end{remark}
+
+\begin{proposition}[tail sum]\label{res:7.5}
+For every integer $k \ge 4$ and every $\alpha \in [0,1]$ (so $N = k+2 \ge 6$ and $s = k+\alpha \ge 4$),
+
+\begin{gather*}
+  \sum_{q \ge 3, q \,\mathrm{odd}} |I_q(s)| \le (\kappa N)^{-2s} B(s) S(s) , \\ 
+  B(s) = 1/(6N - 2s) + 1/(2s) , \qquad  S(s) = 3^{-2s} T(s) , \qquad  T(s) = 1 + 3/(2(2s-1)) .
+\end{gather*}
+\end{proposition}
+
+\begin{proof}
+Fix $q \ge 3$ odd. Theorem~7.1 applies (Remark~7.2), and by Proposition~7.3, $R_q \ge \kappa Nq$; since $s > 0$, the map $R \mapsto R^{-2s}$ is decreasing, so $R_q^{-2s} \le (\kappa Nq)^{-2s}$. Moreover $2qN - 2s \ge 6N - 2s$ because $q \ge 3$, and $6N - 2s > 0$ since $s \le k+1 < N$. Hence for every odd $q \ge 3$,
+
+\[
+  |I_q(s)| \le (\kappa Nq)^{-2s} [ 1/(2qN-2s) + 1/(2s) ] \le (\kappa N)^{-2s} q^{-2s} B(s) .
+\]
+Summing, it remains to bound $\sum_{q \ge 3, q \,\mathrm{odd}} q^{-2s}$. Separating the first term and comparing the remaining odd $q \ge 5$ with an integral (the odd integers have gaps of $2$, so the comparison carries a factor $1/2$),
+
+\[
+  \sum_{q \ge 3, q \,\mathrm{odd}} q^{-2s} \le 3^{-2s} + (1/2)\int_{3}^\infty x^{-2s} dx = 3^{-2s} + 3^{1-2s}/(2(2s-1)) = 3^{-2s} T(s) = S(s) ,
+\]
+valid since $2s - 1 > 0$ (indeed $s \ge 4$). Multiplying the two bounds gives the claim.
+\end{proof}
+
+\begin{remark}\label{res:7.6}
+It is essential \textbf{not} to degenerate $s$ to a $k$-only quantity prematurely here. To make the point precise, define the \emph{degraded} bound to be what a factor-by-factor worst-casing of Proposition~7.5 produces: replace $6N - 2s$ by $6N - 2(k+1) = 4k+10$ (its $\alpha = 1$ value), $2s$ by $2k$ (its $\alpha = 0$ value) and $S(s)$ by $S(k)$, while retaining $(\kappa N)^{-2s}$ with the true $s$ --- so
+
+\[
+  (\text{degraded bound}) = (\kappa N)^{-2s} \cdot [ 1/(4k+10) + 1/(2k) ] \cdot 3^{-2k} \cdot [ 1 + 3/(2(2k-1)) ] .
+\]
+Each substitution is individually legitimate, yet the first two use $\alpha = 1$ and $\alpha = 0$ in the \emph{same} product. At $k = 4$ the ratio (degraded bound)/$W_{\mathrm{low}}$ is
+
+\[
+  \begin{array}{r@{\;}c@{\quad}c@{\quad}c@{\quad}c@{\quad}c}
+  \alpha & = & 0 & 0.5 & 0.75 & 1 \\
+   &  & 0.6165 & 0.9156 & 1.0334 & 1.0859
+\end{array}
+\]
+so the degraded bound \textbf{exceeds} $W_{\mathrm{low}}$ on the upper part of the interval and \S8 would be unprovable from it, whereas the bound of Proposition~7.5 itself gives
+
+\[
+  \begin{array}{r@{\;}c@{\quad}c@{\quad}c@{\quad}c@{\quad}c}
+  \alpha & = & 0 & 0.5 & 0.75 & 1 \\
+   &  & 0.6061 & 0.2705 & 0.1686 & 0.0982
+\end{array}
+\]
+--- comfortably below $1$ throughout, and in fact \emph{improving} as $\alpha$ grows. Keeping $s = k+\alpha$ intact is what makes \S8 elementary. (These eight figures are arithmetic evaluations of the displayed closed forms, recorded here for orientation only; no step of the proof depends on them. The corresponding statement that is actually proved and used is Lemma~8.2, which shows $R(k,\cdot )$ is decreasing, so that $\alpha = 0$ is the worst case --- visible already in the second table.)
+\end{remark}
+
+\section{The comparison, for every \texorpdfstring{$k \ge 4$}{k >= 4}}
+Write
+
+\[
+  R(k,\alpha ) = (\kappa N)^{-2s} B(s) S(s) / W_{\mathrm{low}}(k,\alpha ) .
+\]
+The goal of this section is $R(k,\alpha ) < 1$ for every integer $k \ge 4$ and every $\alpha \in [0,1]$.
+
+\textbf{A change of variables.} Since $2k+2+\alpha = s+N$ and $2-\alpha = N-s$, we have $\Gamma (2k+2+\alpha ) = \Gamma (s+N)$ and $\Gamma (2-\alpha ) = \Gamma (N-s)$, and therefore
+
+\begin{equation}\label{eq:d3}
+\begin{gathered}
+  R(k,\alpha ) = C_{0} \cdot ( \Gamma (s+N)/\Gamma (N-s) ) \cdot (2s+2) \cdot B(s) \cdot T(s) \cdot \mu_N^s , \\ 
+  C_{0} = 20\sqrt{3} \pi /9 , \qquad  \mu_N = 16/(81 \kappa^{2} N^{2}) ,
+\end{gathered}
+\end{equation}
+with $s \in [N-2, N-1]$. The three exponential factors $(\kappa N)^{-2s}$, $3^{-2s}$ (from $S$) and $(16/9)^s$ (from dividing by $(9/16)^s$) have been merged into $\mu_N^s$; note that what survives next to $B$ is $T$, not $S$. The remaining constants collect as $C_{0} = [ (2/(5\sqrt{3}))\cdot (9/8)/\pi ]^{-1} = 5\sqrt{3}\cdot 8\pi /(2\cdot 9) = 20\sqrt{3}\pi /9$.
+
+
+\begin{remark}[why factorwise bounds fail]\label{res:8.1}
+In \eqref{eq:d3} the factor $\Gamma (s+N)$ increases in $\alpha$ while $\mu_N^s$ decreases; their extreme points are at opposite ends of the interval. Bounding each factor by its own worst case therefore separates a pair of factors that cancel each other, and the resulting product exceeds $1$ even though the true ratio is about $0.6$ (Remark~7.6 quantifies this). The change of variables above removes $\alpha$ from the problem, and the monotonicity lemma below disposes of the whole interval at once.
+\end{remark}
+
+\begin{lemma}[the worst $\alpha$ is $0$]\label{res:8.2}
+For $N \ge 6$, $R(k, \cdot )$ is strictly decreasing on $[0,1]$.
+\end{lemma}
+
+\begin{proof}
+Differentiate \eqref{eq:d3} logarithmically in $s$. Note $\frac{d}{ds} \log \Gamma (N-s) = -\psi (N-s)$, which enters with a \textbf{plus} sign because $\Gamma (N-s)$ sits in the denominator:
+
+\par\nobreak
+\[
+  d/ds \log R = \psi (s+N) + \psi (N-s) + \log \mu_N + 2/(2s+2) + B'/B + T'/T .
+\]
+We bound each term on $s \in [N-2, N-1]$, $N \ge 6$.
+
+\begin{itemize}
+\item $\psi (s+N) \le \log (s+N) \le \log (2N)$, using the standard $\psi (x) < \log x$ for $x > 0$ and $s+N \le 2N-1 < 2N$.
+\item $\psi (N-s) \le \psi (2) = 1 - \gamma = 0.42278\ldots < 0.4228$, since $N - s \in [1,2]$ and $\psi$ is increasing.
+\item $\log \mu_N = \log (16/81) - 2 \log \kappa - 2 \log N$.
+\item $2/(2s+2) = 1/(s+1) \le 1/(N-1)$, since $s \ge N-2$.
+\item $T'/T < 0$: indeed $T(s) = 1 + 3/(2(2s-1))$ has $T'(s) = -3/(2s-1)^{2} < 0$ and $T > 0$.
+\item $B'/B < 0$: differentiating $B(s) = 1/(6N-2s) + 1/(2s)$ gives
+
+\[
+  B'(s) = 2/(6N-2s)^{2} - 1/(2s^{2}) .
+\]
+On our range $N-2 \le s \le N-1$, so $6N - 2s \ge 6N - 2(N-1) = 4N+2 > 4N$, giving $2/(6N-2s)^{2} < 2/(4N)^{2} = 1/(8N^{2})$; and $s \le N-1 < N$ gives $1/(2s^{2}) > 1/(2N^{2})$. Hence $B'(s) < 1/(8N^{2}) - 1/(2N^{2}) = -3/(8N^{2}) < 0$, and since $B > 0$, $B'/B < 0$.
+\end{itemize}
+Both logarithmic derivatives being $\le 0$, we may discard them, and
+
+\begin{gather*}
+  d/ds \log R \le \log (2N) + 0.4228 + \log (16/81) - 2 \log \kappa - 2 \log N + 1/(N-1) \\ 
+  = [ \log 2 + 0.4228 + \log (16/81) - 2 \log \kappa ] - \log N + 1/(N-1) .
+\end{gather*}
+Numerically $\log 2 = 0.69314\ldots$, $\log (16/81) = -1.62186\ldots$, $-2 \log (0.58) = 1.08945\ldots$, so the bracket is $0.58354\ldots < 0.5836$. (The four displayed decimals are truncations and must \emph{not} simply be added: the third is negative, so truncating it moves the sum the wrong way, and adding the four as written would give the too-small $0.58353$. Replacing each instead by a rational \textbf{upper} bound --- $\log 2 < 0.69315$, $\psi (2) < 0.4228$, $\log (16/81) < -1.62186$, $-2 \log (0.58) < 1.08946$ --- yields the bracket $< 0.58355$, which is what the inequality $< 0.5836$ rests on.) Therefore
+
+\par\nobreak
+\[
+  d/ds \log R \le 0.5836 - \log N + 1/(N-1) ,
+\]
+which at $N = 6$ is at most $0.5836 - 1.7917 + 0.2 = -1.0081 < 0$ (the substitution $\log 6 > 1.7917$ is a \emph{lower} bound for $\log 6$, which is the direction required here, since $-\log N$ enters with a minus sign; the truncation convention is the one stated in Remark~7.4), and the right-hand side is decreasing in $N$ (both $-\log N$ and $1/(N-1)$ decrease). Hence $d/ds \log R < 0$ uniformly for $N \ge 6$, and $R(k,\cdot )$ is strictly decreasing on $[0,1]$.
+\end{proof}
+
+\begin{lemma}[base case]\label{res:8.3}
+$R(4,0) < 1$.
+\end{lemma}
+
+\begin{proof}
+At $\alpha = 0$ we have $s = k$, $N - s = 2$, so $\Gamma (N-s) = \Gamma (2) = 1$ and $(2s+2)\Gamma (s+N) = (2k+2)\Gamma (2k+2) = \Gamma (2k+3)$, whence \eqref{eq:d3} collapses to
+
+\[
+  R(k,0) = C_{0} \Gamma (2k+3) B(k) T(k) \mu_N^k .
+\]
+For $k = 4$: $N = 6$, $\Gamma (11) = 3628800$, $B(4) = 1/(36-8) + 1/8 = 1/28 + 1/8 = 9/56$, $T(4) = 1 + 3/14 = 17/14$, and $\mu_{6} = 16/(81 \kappa^{2} \cdot 36)$ with $\kappa = 0.58$ rational. For $C_{0}$ we use the elementary rational bounds $\pi < 3.15$ and $\sqrt{3} < 1.7321$ (both verifiable by squaring: $3.15^{2} = 9.9225 > \pi^{2}$ and $1.7321^{2} = 3.00017 > 3$), giving
+
+\par\nobreak
+\[
+  C_{0} = 20\sqrt{3}\pi /9 < 20 \cdot 1.7321 \cdot 3.15/9 = 12.1247 .
+\]
+Multiplying these exact rationals,
+
+\[
+  R(4,0) \le 12.1247 \cdot 3628800 \cdot (9/56) \cdot (17/14) \cdot \mu_{6}^{4} = 0.6077364\ldots < 0.608 < 1 .
+\]
+(For orientation, the exact value is $R(4,0) = 0.606097\ldots$, and $C_{0} = 12.09199\ldots$; the margin is a factor $1/0.608 > 1.64$.)
+\end{proof}
+
+\begin{lemma}[induction step]\label{res:8.4}
+For every integer $k \ge 4$, $R(k+1, 0) < 0.7517 \cdot R(k, 0)$.
+\end{lemma}
+
+\begin{proof}
+From the closed form in Lemma~8.3, with $N = k+2$,
+
+\[
+  R(k+1,0)/R(k,0) = [ \Gamma (2k+5)/\Gamma (2k+3) ] \cdot [ \mu_{N+1}^{k+1}/\mu_N^{k} ] \cdot [ B(k+1)/B(k) ] \cdot [ T(k+1)/T(k) ] .
+\]
+Block by block:
+
+\begin{itemize}
+\item $\Gamma (2k+5)/\Gamma (2k+3) = (2k+4)(2k+3)$.
+\item $\mu_{N+1}^{k+1}/\mu_N^{k} = \mu_{N+1} \cdot (\mu_{N+1}/\mu_N)^k = \frac{16}{81\kappa^{2}(k+3)^{2}} \cdot \left[\frac{N}{N+1}\right]^{2k} = \frac{16}{81\kappa^{2}}\cdot \frac{1}{(k+3)^{2}}\cdot \left[1 - \frac{1}{k+3}\right]^{2k}$.
+\item $T(k+1)/T(k) < 1$ and $B(k+1)/B(k) < 1$. For $T$, which does not involve $N$, this is Lemma~8.2. For $B$ it is \textbf{not}: Lemma~8.2 gives $B'(s) < 0$ at \emph{fixed} $N$, whereas here $N$ changes with $k$ as well, so the comparison must be made directly, as follows. $B(k)$ means $B$ evaluated at $s = k$ with $N = k+2$, and $B(k+1)$ at $s = k+1$ with $N = k+3$; these are $1/(4k+12) + 1/(2k)$ and $1/(4k+16) + 1/(2k+2)$ respectively, and the second is smaller term by term.
+\end{itemize}
+Now $(2k+4)(2k+3)/(k+3)^{2} < 4$, equivalently $4k^{2} + 14k + 12 < 4k^{2} + 24k + 36$, i.e. $0 < 10k + 24$, true for all $k \ge 0$. Also $[1 - 1/(k+3)]^{2k} \le e^{-2k/(k+3)} \le e^{-8/7} = 0.31890\ldots < 0.32$, since $2k/(k+3)$ increases in $k$ (derivative $6/(k+3)^{2} > 0$) and equals $8/7$ at $k = 4$. Finally $16/(81\kappa^{2}) = 16/(81 \cdot 0.3364) = 0.587190\ldots$. Hence
+
+\par\nobreak
+\[
+  R(k+1,0)/R(k,0) < 4 \cdot 0.587190\ldots \cdot 0.32 = 0.751603\ldots < 0.7517 . \qedhere
+\]
+\end{proof}
+
+\begin{proposition}\label{res:8.5}
+For every integer $k \ge 4$ and every $\alpha \in [0,1]$,
+
+\begin{equation}\label{eq:d4}
+  \sum_{q \ge 3, q \,\mathrm{odd}} |I_q(s)| < W_{\mathrm{low}}(k,\alpha ) .
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Lemmas~8.3 and 8.4 give $R(k,0) < 1$ for all $k \ge 4$ by induction. Lemma~8.2 gives $R(k,\alpha ) \le R(k,0) < 1$ for all $\alpha \in [0,1]$. Unwinding the definition of $R$ and using Proposition~7.5 (applicable since $k \ge 4$) gives \eqref{eq:d4}.
+\end{proof}
+
+\begin{remark}[why the tail must be bounded in absolute value]\label{res:8.6}
+Proposition~8.5 controls $\sum_{q \ge 3, q \,\mathrm{odd}} |I_q|$, not $\sum_{q \ge 3, q \,\mathrm{odd}} I_q$, and the extra strength is genuinely needed: the tail terms are \textbf{not} of one sign. The first of them alternates with $k$ --- at $\alpha = 0$ one finds
+
+\[
+  \begin{array}{r@{\;}c@{\quad}c@{\quad}c@{\quad}c@{\quad}c@{\quad}c}
+  k & = & 1 & 2 & 3 & 4 & 5 \\
+  I_{3} & = & -5.41\cdot 10^{-5} & +9.15\cdot 10^{-8} & -7.46\cdot 10^{-11} & +3.39\cdot 10^{-14} & -9.05\cdot 10^{-18}
+\end{array}
+\]
+i.e. $\mathrm{sign}\, I_{3}(k) = (-1)^k$, while $I_{1} > 0$ for every $k$ by Theorem~5.5. For odd $k$ the leading tail term therefore works \emph{against} the leading resonance, and no argument that merely discards a nonnegative tail is available. (These five figures are orientation only; the proof uses the absolute bound \eqref{eq:d4} and nothing about signs.)
+\end{remark}
+Nothing in this section uses numerical evaluation: the three ingredients are a digamma inequality, a rational base case, and an elementary induction step. The decimal figures appearing above in proofs ($0.4228$, $0.5836$, $12.1247$, $0.608$, $0.32$, $0.587190$, $0.7517$, together with $\pi < 3.15$ and $\sqrt{3} < 1.7321$) are all \textbf{rational upper or lower bounds} for explicitly given expressions, each verifiable by finite rational arithmetic; none is the output of a numerical routine that would have to be trusted. The two figures in the parenthetical of Lemma~8.3 ($0.606097\ldots$ and $12.09199\ldots$) are orientation only, as is the $\mathrm{about}\, 0.6$ of Remark~8.1; no step uses them.
+
+
+\section{The endpoints}
+This section establishes positivity of $\Phi$ on the \textbf{closed} interval $[k, k+1]$, which is formally stronger than Theorem~1.1 (Remark~2.8). A reader interested only in Theorem~1.1 may restrict to $\alpha \in (0,1)$ throughout and use Lemma~9.4 on the open interval only, where it is proved directly.
+
+
+\begin{lemma}\label{res:9.1}
+Let $k \ge 4$. For every odd $q \ge 1$,
+
+\[
+  \sup_{\alpha \in [0,1]} |I_q(k+\alpha )| \le M_q := R_q^{-2k} [ 1/(2qN - 2k - 2) + 1/(2k) ] ,
+\]
+and $M_q = O_k(q^{-2k})$, so that $\sum_{q \,\mathrm{odd}} M_q < \infty$.
+\end{lemma}
+
+\begin{proof}
+Fix $\alpha \in [0,1]$ and put $s = k+\alpha$, so $k \le s \le k+1$. Theorem~7.1 applies ($0 < s < qN$ by Remark~7.2) and gives $|I_q(s)| \le R_q^{-2s}[1/(2qN-2s) + 1/(2s)]$. We relax each factor so that the result no longer depends on $\alpha$:
+
+\begin{itemize}
+\item $R_q \ge 2$ (since $C_q \ge 1$, hence $R_q = 2C_q^{1/(2qN)} \ge 2$), so $R_q^{-2s} \le R_q^{-2k}$ because $s \ge k$ and $R_q > 1$;
+\item $2qN - 2s \ge 2qN - 2k - 2$ since $s \le k+1$, and this is positive because $qN \ge N = k+2 > k+1$;
+\item $2s \ge 2k > 0$.
+\end{itemize}
+This gives the stated $M_q$, uniform in $\alpha$. For the decay: by Proposition~7.3 (applicable since $k \ge 4$, i.e. $N \ge 6$), $R_q \ge \kappa Nq$, so $R_q^{-2k} \le (\kappa N)^{-2k} q^{-2k}$; and the bracket is bounded by $1/(2N-2k-2) + 1/(2k) = 1/2 + 1/(2k)$, a constant depending only on $k$. Hence $M_q \le c_k q^{-2k}$, and $\sum_q q^{-2k} < \infty$ since $2k \ge 8 > 1$.
+\end{proof}
+
+\begin{remark}\label{res:9.2}
+We claim only $M_q = O_k(q^{-2k})$, not the two-sided $M_q \asymp q^{-2k}$; the upper bound is all that the M-test requires, and a matching lower bound is neither proved nor needed.
+\end{remark}
+
+\begin{proposition}\label{res:9.3}
+Let $k \ge 4$. Then $F(\alpha ) = \sum_{q \ge 1, q \,\mathrm{odd}} I_q(k+\alpha )$ converges uniformly on $[0,1]$ and is continuous there. \textbf{Nothing about the identity \eqref{eq:star2} is asserted here.} The closed-interval extension of \eqref{eq:star2} is stated once only, in Lemma~9.4 below, and this proposition is one of its two inputs (the other being Lemma~2.6); the argument for the extension is set out in the proof that follows, since it is the continuity just established that carries it.
+\end{proposition}
+
+\begin{proof}
+Each $I_q(k+\alpha )$ is continuous in $\alpha \in [0,1]$ (Lemma~4.3(iv): $I_q$ is holomorphic on $\Omega_q \supset [k,k+1]$), and $|I_q(k+\alpha )| \le M_q$ with $\sum_q M_q < \infty$ by Lemma~9.1. The Weierstrass M-test gives uniform convergence, hence continuity of $F$ on $[0,1]$.
+
+It should be emphasised what is and is not being done here, since the factor $\sin (\pi \alpha )$ in \eqref{eq:star1} vanishes at both endpoints. \textbf{No division by $\sin (\pi \alpha )$ is performed at the endpoints, and no limit of a quotient is taken.} In the derivation of Lemma~9.4 the factor $\sin (\pi \alpha )$ is produced \emph{on the left-hand side as well}, by the reflection formula $\Gamma (1+\alpha )\Gamma (2-\alpha ) = \alpha (1-\alpha )\cdot \pi /\sin (\pi \alpha )$, so the two occurrences cancel algebraically --- as an identity between two expressions in which $\sin (\pi \alpha )$ no longer appears --- for every $\alpha \in (0,1)$. The resulting identity \eqref{eq:star2} is thus an equality of two functions of $\alpha$, each of which is defined and continuous on the \emph{closed} interval $[0,1]$: the left-hand side by Lemma~2.6 (which gives absolute and uniform convergence of the series defining $\Phi$ on $[k,k+1]$), the right-hand side by the M-test just proved. Two continuous functions on $[0,1]$ that agree on the dense subset $(0,1)$ agree everywhere on $[0,1]$. That is the whole of the argument.
+
+Note that this is not a vacuous extension: at $\alpha \in \{0,1\}$ both sides of \eqref{eq:star2} are \textbf{nonzero}. The right-hand side is $\sum_{q \,\mathrm{odd}} I_q(k+\alpha ) \ge I_{1} - \sum_{q\ge 3, q \,\mathrm{odd}}|I_q| > 0$ by \textbf{Propositions~6.1 and 8.5} --- the first giving $I_{1} \ge W_{\mathrm{low}}(k,\alpha )$, the second $\sum_{q\ge 3, q \,\mathrm{odd}}|I_q| < W_{\mathrm{low}}(k,\alpha )$, so that the difference is strictly positive. (The restriction to odd $q$ is essential in both: Proposition~8.5 bounds only the odd tail, and only the odd tail occurs.) (Theorem~5.5 alone would give only $I_{1} > 0$, which does not by itself dominate the tail.) Both hold for every $\alpha \in [0,1]$ and neither uses \S9; hence the left-hand side, and with it $\Phi (k)$ and $\Phi (k+1)$, is nonzero too. What does vanish at the endpoints is $D(s) = 9^s \alpha (1-\alpha )\Phi (s)$, and it vanishes because of the explicit factor $\alpha (1-\alpha )$, not because of anything in \eqref{eq:star2}.
+\end{proof}
+We record separately the normalisation bridge connecting $\Phi$ (defined via the series $\sigma_m$ in \S2) to the sum $\sum_q I_q(s)$ evaluated in Theorem~4.8; the two objects live on different sides of the reduction and the identity connecting them is not visible from either section alone.
+
+
+\begin{lemma}[normalisation bridge]\label{res:9.4}
+For $k \ge 1$ and $\alpha \in (0,1)$,
+
+\begin{equation}\label{eq:star2}
+  \Phi (s) \Gamma (1+\alpha ) \Gamma (2-\alpha ) = ( 2^{2s+3} \Gamma (s+1)^{2} / 9^s ) \sum_{q \ge 1, q \,\mathrm{odd}} I_q(s) .
+\end{equation}
+For $k \ge 4$, both sides are continuous on $[k, k+1]$ (Lemma~2.6 for the left, Proposition~9.3 for the right), so the identity extends to the closed interval. This is the only place at which that extension is asserted, and the dependence is one-way: the open-interval identity \eqref{eq:star2} is proved below from Proposition~2.7 and Theorem~4.8 alone, and Proposition~9.3 is proved above from Lemmas~4.3(iv) and 9.1 alone, so neither statement is used in establishing the other.
+\end{lemma}
+
+\begin{proof}
+By Proposition~2.7, $D(s) = 9^s \alpha (1-\alpha ) \Phi (s)$, since $(s-k)(k+1-s) = \alpha (1-\alpha )$ for $s = k+\alpha$. By the reflection formula,
+
+\[
+  \Gamma (1+\alpha )\Gamma (2-\alpha ) = \alpha \Gamma (\alpha ) \cdot (1-\alpha ) \Gamma (1-\alpha ) = \alpha (1-\alpha ) \cdot \pi /\sin (\pi \alpha ) ,
+\]
+so $\alpha (1-\alpha ) = \Gamma (1+\alpha )\Gamma (2-\alpha ) \sin (\pi \alpha )/\pi$ and hence
+
+\[
+  D(s) = 9^s \Phi (s) \Gamma (1+\alpha )\Gamma (2-\alpha ) \sin (\pi \alpha )/\pi .
+\]
+Equating this with \eqref{eq:star1} of Theorem~4.8, both sides carry the factor $\sin (\pi \alpha )/\pi$, and both carry $9^s$ (explicitly on the left, and on the right after dividing the displayed $2^{2s+3}$ by $9^s$); for $\alpha \in (0,1)$ these common factors are nonzero and cancel, leaving \eqref{eq:star2}, an identity in which $\sin (\pi \alpha )$ no longer occurs. Proposition~9.3 then extends it to $\alpha \in \{0,1\}$ by continuity.
+\end{proof}
+
+\section{Proof of Theorem~1.1}
+Fix an integer $k \ge 4$ and $\alpha \in [0,1]$, and put $s = k + \alpha$.
+
+\begin{enumerate}
+\item By Theorem~5.5 (applicable since $s \ge 4 > 0$) and Proposition~6.1, $I_{1}(s) \ge W_{\mathrm{low}}(k,\alpha ) > 0$.
+\item By Proposition~8.5, $\sum_{q \ge 3, q \,\mathrm{odd}} |I_q(s)| < W_{\mathrm{low}}(k,\alpha )$.
+\item The series $\sum_{q \ge 1, q \,\mathrm{odd}} I_q(s)$ converges absolutely --- by Theorem~4.8 for $\alpha \in (0,1)$, and by Lemma~9.1 at the endpoints --- and
+
+\[
+  \sum_{q \ge 1, q \,\mathrm{odd}} I_q(s) \ge I_{1}(s) - \sum_{q \ge 3, q \,\mathrm{odd}} |I_q(s)| > I_{1}(s) - W_{\mathrm{low}}(k,\alpha ) \ge 0 ,
+\]
+where the \textbf{strict} inequality is step 2 and the final $\ge 0$ is step 1. Hence $\sum_{q \ge 1, q \,\mathrm{odd}} I_q(s) > 0$.
+\item By the normalisation bridge (Lemma~9.4), $\Phi (s) \Gamma (1+\alpha )\Gamma (2-\alpha ) = (2^{2s+3}\Gamma (s+1)^{2}/9^s) \cdot (\text{a positive quantity}) > 0$, and $\Gamma (1+\alpha )\Gamma (2-\alpha ) > 0$, so $\Phi (s) > 0$ --- for every $s \in [k, k+1]$, endpoints included.
+\item Proposition~2.7 concludes: $D(s) > 0$ for every $s \in (k, k+1)$, i.e. $\|g_k\|_{L^p(\mathbb{T})} > \|f_k\|_{L^p(\mathbb{T})}$ for every $p \in (2k, 2k+2)$.\qedmark
+\end{enumerate}
+
+\begin{remark}\label{res:10.1}
+The chain in step 3 contains a strict inequality in the middle, so the conclusion is a strict $> 0$, not merely $\ge 0$. Only step 4 needs the endpoints; steps 1--3 restricted to $\alpha \in (0,1)$ together with step 4 already suffice for Theorem~1.1, and that restricted route uses neither Lemma~9.1 nor Proposition~9.3. It does use Lemma~9.4 --- step 4 is the only bridge from $\sum_q I_q(s) > 0$ to $\Phi (s) > 0$, and steps 1--3 alone stop at the former, which is not Theorem~1.1 --- but only on the open interval, where Lemma~9.4 is proved from Proposition~2.7 and Theorem~4.8 with no other input from \S9.
+\end{remark}
+
+\section{The cases \texorpdfstring{$k \le 3$}{k <= 3}, and Theorem~1.2}
+For $k \in \{0,1,2,3\}$ we invoke the published results. The following comparison was carried out against the full arXiv texts of both papers.
+
+
+\begin{center}\small
+\begin{tabular}{lP{0.349\linewidth}P{0.407\linewidth}}
+\toprule
+item & this paper & \cite{r9}, \cite{r10} \\
+\midrule
+polynomials & $f_k = 1+e(x)+e(Nx)$, $g_k = 1+e(x)-e(Nx)$, $N = k+2$ & $1 + e^{2\pi ix} \pm e^{2\pi i([p/2]+2)x}$, i.e. our $f_k, g_k$ with $k = [p/2]$ \\
+exponent range & $p \in (2k, 2k+2)$, open & $0 < p < 6$, $p \notin 2\mathbb{N}$ in \cite{r9} ($k = [p/2] \in \{0,1,2\}$); $k = 3,4$ in \cite{r10} \\
+direction & $\|g_k\|_p > \|f_k\|_p$ & $\Delta (p) = f_-(p) - f_+(p) > 0$, i.e. $\|F_-\|_p > \|F_+\|_p$ \\
+measure & normalised Haar on $\mathbb{R}/\mathbb{Z}$, i.e. $\int_{0}^{1}$ & $\int_{0}^{1/2}$, with $e(t) = e^{2\pi it}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Two remarks on the correspondence. First, the sources index by $p$ and read $k$ off as $[p/2]$, so their ``$0 < p < 6$, $p$ not an even integer'' is exactly our $k \in \{0,1,2\}$ together with $p \in (2k, 2k+2)$; the excluded even integers are our excluded endpoints. Second, $\Delta (t)$ denotes the difference of the two $p$-th power integrals at $p = 2t$ --- that is, our $D(s)$ with $s = t$ --- so the comparison is between $p$-th powers of norms, not between norms; since $t \mapsto t^{1/p}$ is strictly increasing this is equivalent, and the direction of the strict inequality is preserved.
+
+The domain of integration differs and must be reconciled explicitly. The sources integrate over $[0,1/2]$, we over $[0,1]$. This changes nothing, for the following reason. The coefficients of $f_k$ and $g_k$ are real, so $f_k(-x) = \overline{f_k(x)}$ and $g_k(-x) = \overline{g_k(x)}$; hence $|f_k|$ and $|g_k|$ are even and $1$-periodic, and therefore
+
+\[
+  \int_{0}^{1/2} |f_k|^p = \int_{1/2}^{1} |f_k|^p = (1/2) \int_{0}^{1} |f_k|^p ,
+\]
+and likewise for $g_k$. The half-range difference is thus exactly $1/2$ of ours: $\Delta_{[0,1/2]} = (1/2) D(s)$. A strictly positive factor multiplying both sides leaves the sign of the difference unchanged, so the published statements and ours are the same statement. No constant intervenes anywhere else: the total mass of the measure is the only normalisation in play, and it enters both sides identically.
+
+One inconsistency in the sources should be recorded rather than smoothed over: the arXiv text of \cite{r9} declares $\mathbb{T} := \mathbb{R}/2\pi \mathbb{Z}$ while simultaneously defining $e(t) = e^{2\pi it}$ and performing every operative integral over a subinterval of $[0,1]$. These statements cannot literally describe the same torus; the functions and propositions used are $1$-periodic, so the operative normalisation is that of $\mathbb{R}/\mathbb{Z}$, matching ours up to the half-range factor just discussed.
+
+The published coverage is: $k = 0,1,2$ in \cite{r9}; $k = 3,4$ in \cite{r10}. Only $k = 0,1,2,3$ are needed, since Theorem~1.1 covers every $k \ge 4$; the third Krenedits paper ($k = 5$) is not needed at all.
+
+\emph{Proof of Theorem~1.2.} Combine Theorem~1.1 ($k \ge 4$) with \cite{r9,r10} ($k \le 3$).\qedmark
+
+It should be stated plainly that the small cases are proved by rigorous numerical quadrature --- each lemma there supplies an analytic bound on a fourth derivative, inserts it into the error term of a quadrature rule, and chooses a node count making the error smaller than the quantity to be signed. This is a complete proof, but it is not of the same character as \S\S2--10, no \emph{proof} in which contains a numerical component. The distinction is worth stating precisely, since decimal figures do occur in \S\S2--10: those catalogued as load-bearing in \S1.3 are finite rational inequalities verifiable by hand (indeed each is an exact rational comparison, as $\sup_m|C(6.5,m)| = 429/16$ in Remark~2.2 illustrates), and the remaining figures --- such as the agreement reported in Remark~4.7 --- are orientation only and are used in no proof. \S11, by contrast, uses a quadrature whose output must be trusted. Consequently Theorem~1.2 is \textbf{not} self-contained within this paper, whereas Theorem~1.1 is.
+
+
+\section{Status of the Lean formalisation}
+\textbf{Summary: the formalisation is partial and, for the main line of the argument, incomplete. Nothing in \S\S1--11 depends on this section.} Theorem~1.1 is proved in full by the ordinary mathematical argument of \S\S2--10; \S12 is a status report on a separate artefact and should be read as such.
+
+An attempt was made to formalise parts of the argument in Lean 4 with Mathlib. Eighteen distinct source files were produced and submitted to a batch compiler; several were recompiled independently in two or three separate build slots, always with identical outcomes. The recorded results are as follows.
+
+\textbf{Compiles cleanly} (exit code $0$, no \texttt{sorry}, no added axioms, no \texttt{native\_decide}):
+
+
+{\small
+\begin{longtable}{P{0.234\linewidth}P{0.386\linewidth}P{0.290\linewidth}}
+\toprule
+file & what it establishes & hypotheses \\
+\midrule
+\endfirsthead
+\multicolumn{3}{l}{\itshape (continued)}\\
+\toprule
+file & what it establishes & hypotheses \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{\itshape (continued overleaf)}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{MOCK-ENDPOINT-W47} & $\|g_k\|_{2m}^{2m} = \|f_k\|_{2m}^{2m}$ for every $k \ge 0$ and every $m \le k+1$, from the trinomial coefficient identity via Parseval; and that the tie \textbf{fails} at $m = k+2$ & none \\
+\texttt{MOCK-TAIL-UNIFORM} & two $k$-free rational inequalities used to make a tail estimate uniform in $k$ & none \\
+\texttt{MOCK-TAIL-PROP7} & an odd-resonance tail sum is at most $1.26$ times its first term, uniformly in $k$ & \textbf{one}: the per-term Weber--Schafheitlin bound is \emph{assumed}, Mathlib having no Bessel functions \\
+\texttt{MOCK-SHARP-51}, \texttt{MOCK-SUPR}, \texttt{MOCK-SWEEP-S14}, \texttt{MOCK-T1-TAIL} & negative results: each certifies that a particular relaxation in an earlier draft was evaluated at the wrong end of its own range, and quantifies the loss & none \\
+\end{longtable}}
+\textbf{Does not compile} (exit code $1$; the errors are hard failures --- unsolved goals and type mismatches --- not \texttt{sorry}s):
+
+
+{\small
+\begin{longtable}{P{0.407\linewidth}P{0.317\linewidth}P{0.186\linewidth}}
+\toprule
+file & intended content & recorded errors \\
+\midrule
+\endfirsthead
+\multicolumn{3}{l}{\itshape (continued)}\\
+\toprule
+file & intended content & recorded errors \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r}{\itshape (continued overleaf)}\\
+\endfoot
+\bottomrule
+\endlastfoot
+\texttt{MOCK-UNIFORM} & the main uniform-in-$k$ comparison inequality & 5 unsolved goals \\
+\texttt{mock-representation-CLOSED} & the ($\star$)-type inequality that makes the leading resonance beat the tail for every $k$ & 2 application type mismatches \\
+\texttt{MOCK-L1-RESONANCE} & the resonance identity of \S3 (our Proposition~3.4) & 1 unsolved goal \\
+\texttt{MOCK-F21-BREAK}, \texttt{MOCK-HALFPOWERS}, \texttt{MOCK-JIA-YI}, \texttt{MOCK-NEUMANN-BV}, \texttt{MOCK-SHARP-G3}, \texttt{MOCK-SHARPNESS}, \texttt{MOCK-T1-PARSEVAL}, \texttt{MOCK-TUNIF} & auxiliary lemmas & 0--7 errors each \\
+\end{longtable}}
+Seven of eighteen files compile. That no file contains a \texttt{sorry} and none introduces an axiom is worth stating but should not be over-read: eleven files fail outright, and a failing file has no theorems at all.
+
+Three further qualifications are necessary.
+
+\begin{enumerate}
+\item \textbf{Only one clean file certifies a lemma this paper actually uses, and it is not one of the hard ones.} \texttt{MOCK-ENDPOINT-W47} is a genuine unconditional formal proof of the vanishing of the moment differences below the critical order --- the content of Lemma~2.4 here --- together with non-vanishing at the critical order $m = k+2$. \texttt{MOCK-TAIL-PROP7} is conditional on precisely the analytic input (Weber--Schafheitlin) that \S5 supplies and that Mathlib lacks, so it formalises the bookkeeping of \S7 but not its substance. \texttt{MOCK-TAIL-UNIFORM} is auxiliary arithmetic. The four remaining clean files are defect certificates about an earlier draft and prove nothing about the present one.
+\item \textbf{The Lean files target an earlier prose draft, not this paper.} Their constants ($0.64963$, $1.26$, $7.7$, and the quantity $(2k+2)(2k+5)$) belong to a previous route; the present \S\S5--8 run on $\kappa = 0.58$, $C_{0} = 20\sqrt{3}\pi /9$ and $R_q = 2C_q^{1/(2qN)}$. Even the clean files therefore do not certify \S\S7--8 as written here. Re-targeting them is work that has not been done.
+\item \textbf{These results were not reproduced by the author at the time of writing.} They are read off a compile report produced by the batch system, not from a clean rebuild. An attempt to rebuild locally failed before reaching any of the files: the Mathlib dependency did not install (the \texttt{git} fetch exited $128$ and the pre-built artefact download failed), so the toolchain never produced a usable \texttt{Mathlib.\allowbreak{}olean} and the smoke-test probe exited non-zero. Nothing in the table above has been independently confirmed by a second build.
+\end{enumerate}
+Accordingly this paper carries \textbf{no claim of formal verification}. The honest statement of the position is: one lemma of \S2 has a clean unconditional Lean proof; the tail bookkeeping of \S7 has a clean proof conditional on an assumed Bessel estimate; the resonance identity of \S3, the closed-form evaluation of \S5, and the comparison of \S8 are \textbf{not} formalised, the files intended to carry them do not compile, and the sources, a commit hash, a pinned Mathlib version and build instructions are not distributed with this paper. A reader wishing to check any of this should request the sources and rebuild.
+
+
+\section{Open questions}
+\begin{enumerate}
+\item The threshold $K_{0} = 4$ is what the comparison of \S8 yields; the true threshold for the method is not determined here. It is worth being precise about \emph{which} step binds, because the natural guess --- that it is the bound on $R_q$ of \S7 --- is wrong. The corrected form of Remark~7.4 establishes $R_q \ge \lambda_N \cdot Nq$ for \textbf{every} $N$ and every $q \ge 1$, with $\lambda_N$ the sharp constant; so \S7 does supply a usable constant at $N = 3,4,5$, merely a smaller one than $\kappa = 0.58$. What fails is the comparison of \S8, which at $s = k$ requires $R(k,0) = C_{0} \Gamma (2k+3) B(k) T(k) \mu_N^k < 1$ with $\mu_N = 16/(81\kappa^{2}N^{2})$, and so demands a constant of size at least
+
+\[
+  k = 1 : \kappa \ge 2.9928\ldots , \qquad  k = 2 : \kappa \ge 0.8790\ldots , \qquad  k = 3 : \kappa \ge 0.6343\ldots ,
+\]
+against the sharp values $\lambda_{3} = 0.5352\ldots$, $\lambda_{4} = 0.5554\ldots$, $\lambda_{5} = 0.5728\ldots$ actually available. The shortfall is a factor of about $5.6$ at $k = 1$ but only $1.11$ at $k = 3$, where the sharp constant gives $R(3,0) = 1.8422\ldots$; so lowering $K_{0}$ to $3$ requires the \S8 comparison to be sharpened by a factor of roughly $1.85$, and \emph{not} a better bound on $R_q$. (For orientation: at $k = 4$ the sharp constant would improve $R(4,0)$ from the $0.6060\ldots$ of Lemma~8.3 to $0.5480\ldots$.) Evaluating $R(k,0)$ at $k = 1,2,3$ is legitimate even though \S8 is \emph{stated} for $k \ge 4$: the only hypothesis of \S\S7--8 that fails below $k = 4$ is Proposition~7.3, which is exactly what $\lambda_N$ replaces here, and every remaining side condition holds at $k = 1,2,3$ --- $s \in \{1,2,3\}$ is never $1/2$, so $T(s)$ is defined; $6N - 2s = 16, 20, 24 > 0$; $2s - 1 > 0$; $s < qN$ for $q \ge 3$; and Proposition~6.1 is stated for every $k \ge 1$. All decimals in this item are orientation-only in the sense of \S1.3; nothing above is used in a proof.
+\item \textbf{At the left endpoint only}, the quantity $k \cdot 16^k \cdot \Phi (k+\alpha )$ appears to converge as $k \to \infty$:
+
+\par\nobreak
+\begin{gather*}
+  \alpha = 0 : \qquad  k \cdot 16^k \cdot \Phi (k) = 0.49598 \quad  (k=4), 0.55226 \quad  (k=13), 0.55423 \quad  (k=14), \\ 
+  \dots \to (3/4)\sqrt{3/5} = 0.58095 ?
+\end{gather*}
+The specification $\alpha = 0$ is essential and was omitted in an earlier draft. The same quantity at the right endpoint \textbf{diverges}: $k \cdot 16^k \cdot \Phi (k+1)$ runs $2.86$ at $k = 4$ to $1224.8$ at $k = 14$, growing without apparent bound, because $\Phi (k+1)/\Phi (k)$ itself grows (from $5.77$ at $k = 4$ to $2.2 \cdot 10^{3}$ at $k = 14$). So there is no $\alpha$-uniform version of the statement, and any correct asymptotic must carry an $\alpha$-dependent normalisation. The limit at $\alpha = 0$ is supported by two independent computations --- one from the exact rational moments $\tau_m$ of \S2, one from the Bessel integrals $I_q$ of \S5 --- and is \textbf{not proved}; the convergence is slow, and the figures above are consistent with, but do not establish, the constant $(3/4)\sqrt{3/5}$.
+\item The sharp regularity threshold for $\sum_n |\widehat{H}^s(n)| < \infty$ is $s > 0$, as the two-point structure of the zero set makes plausible: near a zero $H^s \asymp |y|^{2s}$, whose Fourier coefficients decay like $|n|^{-2-2s}$, and $\sum_{n \in \mathbb{Z}^{2}} |n|^{-2-2s} < \infty$ exactly when $2 + 2s > 2$. We have not written out the localisation needed to turn this into a proof, and \S3 uses instead the convenient but non-sharp $s \ge 1$, which suffices here (the argument only ever needs $s \ge 4$).
+\item Whether the closed-form evaluation of $I_q$ in \S5 is new is addressed in \S1.5: the general subject is classical \cite{r12,r18,r2,r3,r8,r6,r4,r5,r14}, and the Neumann-then-Weber--Schafheitlin reduction has documented precedent in a different setting in \cite{r13}; the specific triple product and its use in the majorant problem were not located in this search.
+\item Completing the Lean formalisation (\S12) requires, at minimum, a Weber--Schafheitlin evaluation in Mathlib, which does not exist --- Mathlib has no Bessel functions at all. Short of that, the three files that would carry \S3, \S5 and \S8 would have to be repaired and re-targeted from the earlier draft's constants to those used here.
+\item Theorem~5.5 is proved for $s > 0$, leaving the single degenerate pair $(k,\alpha ) = (0,0)$ uncovered by our method (Remark~5.6). This is immaterial for Theorem~1.1 but would need attention if the method were pushed to small $k$.
+\end{enumerate}
+
+\begin{thebibliography}{99}
+\bibitem{r1} R. P. Boas, \emph{Majorant problems for trigonometric series}, J. Analyse Math. \textbf{10} (1962/63), 253--271.
+\bibitem{r2} W. N. Bailey, \emph{Some infinite integrals involving Bessel functions}, Proc. London Math. Soc. \textbf{40} (1935), 37--48.
+\bibitem{r3} W. N. Bailey, \emph{Some infinite integrals involving Bessel functions, II}, J. London Math. Soc. \textbf{11} (1936), 16--20.
+\bibitem{r4} V. I. Fabrikant, \emph{Computation of infinite integrals involving three Bessel functions by introduction of a new formalism}, Z. Angew. Math. Mech. \textbf{83} (2003), 363--374.
+\bibitem{r5} V. I. Fabrikant, \emph{Elementary exact evaluation of infinite integrals of the product of several spherical Bessel functions, power and exponential}, Quart. Appl. Math. \textbf{71} (2013), 573--581.
+\bibitem{r6} M. L. Glasser and E. Montaldi, \emph{Some integrals involving Bessel functions}, arXiv:math/9307213 (1993).
+\bibitem{r7} G. H. Hardy and J. E. Littlewood, \emph{Notes on the theory of series (XIX): a problem concerning majorants of Fourier series}, Quart. J. Math. Oxford Ser. \textbf{6} (1935), 304--315.
+\bibitem{r8} A. D. Jackson and L. C. Maximon, \emph{Integrals of products of Bessel functions}, SIAM J. Math. Anal. \textbf{3} (1972), 446--460.
+\bibitem{r9} S. Krenedits, \emph{Three-term idempotent counterexamples in the Hardy--Littlewood majorant problem}, J. Math. Anal. Appl. \textbf{388} (2012), 136--150. arXiv:1006.0409, DOI 10.1016/j.jmaa.2011.09.053.
+\bibitem{r10} S. Krenedits, \emph{On Mockenhoupt's conjecture in the Hardy--Littlewood majorant problem}, J. Contemp. Math. Anal. \textbf{48} (2013), 91--109. arXiv:1203.2378, DOI 10.3103/S1068362313030011.
+\bibitem{r11} S. Krenedits, \emph{On the Hardy--Littlewood majorant problem for the case k = 5}, Acta Math. Acad. Paedagog. Nyh\'azi. \textbf{28} (2012), 121--151.
+\bibitem{r12} H. M. MacDonald, \emph{Note on the evaluation of a certain integral containing Bessel's functions}, Proc. London Math. Soc. \textbf{7} (1909), 142--149.
+\bibitem{r13} P. A. Martin, \emph{On functions defined by sums of products of Bessel functions}, J. Phys. A \textbf{41} (2008), 015207.
+\bibitem{r14} R. Mehrem and A. Hohenegger, \emph{A generalization for the infinite integral over three spherical Bessel functions}, J. Phys. A \textbf{43} (2010), 455204.
+\bibitem{r15} H. L. Montgomery, \emph{Ten lectures on the interface between analytic number theory and harmonic analysis}, CBMS Regional Conference Series in Mathematics \textbf{84}, AMS, 1994.
+\bibitem{r16} G. Mockenhaupt and W. Schlag, \emph{On the Hardy--Littlewood majorant problem for random sets}, J. Funct. Anal. \textbf{256} (2009), 1189--1237.
+\bibitem{r17} NIST Digital Library of Mathematical Functions. Neumann's product formula 10.9.26; Weber--Schafheitlin 10.22.56.
+\bibitem{r18} G. N. Watson, \emph{An infinite integral involving Bessel functions}, J. London Math. Soc. \textbf{9} (1934), 16--22.
+\bibitem{r19} G. N. Watson, \emph{A treatise on the theory of Bessel functions}, 2nd ed., Cambridge Univ. Press, 1944.
+\end{thebibliography}
+
+\end{document}

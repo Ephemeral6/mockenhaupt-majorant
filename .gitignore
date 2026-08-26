@@ -1,0 +1,15 @@
+# 编译中间产物：arXiv 明确要求不要带，仓库里也没必要留
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.toc
+*.nav
+*.snm
+*.vrb
+__pycache__/
+*.pyc
