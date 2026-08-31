@@ -42,14 +42,16 @@
 % letting it stick into the margin.
 \emergencystretch=2.5em
 \setlength{\tabcolsep}{4pt}
-% Narrow table columns are set ragged right, not justified.  The section 11
-% Lean index has cells that are comma-separated lists of \texttt identifiers,
-% and a justified typewriter line has almost nothing to stretch: the log showed
-% seven underfull hboxes at badness 10000, and the rendered page put 31, 47 and
-% 42pt of white between words whose natural space is 5.25pt -- six to nine times
-% normal.  Ragged right spends that slack at the line end, where it reads as a
-% margin rather than as holes inside the sentence.  \arraybackslash restores \\
-% which >{...} would otherwise shadow.
+% Narrow table columns are set ragged right, not justified.  A cell holding a
+% comma-separated list of \texttt identifiers gives a justified typewriter line
+% almost nothing to stretch: the log showed seven underfull hboxes at badness
+% 10000, and the rendered page put 31, 47 and 42pt of white between words whose
+% natural space is 5.25pt -- six to nine times normal.  Ragged right spends that
+% slack at the line end, where it reads as a margin rather than as holes inside
+% the sentence.  \arraybackslash restores \\ which >{...} would otherwise
+% shadow.  (The table that first produced those readings was the formalisation
+% index, removed on 2026-08-31; the setting stays because the symbol index of
+% 2.7 has the same shape.)
 \newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 % A sentence ending "Hence" or on a colon is a promise that the next thing on
 % the page is the display it announces; page 13 ended on "Hence" and made the
