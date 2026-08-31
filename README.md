@@ -54,23 +54,42 @@ pdfTeX's embedded timestamps (`/CreationDate`, `/ModDate`, `/ID`) are stripped.
 
 | File | |
 |---|---|
-| `mockenhaupt.tex` | the source; 31 pages, 11pt `amsart` |
+| `mockenhaupt.tex` | the source; 32 pages, 11pt `amsart` |
 | `mockenhaupt.pdf` | compiled proof copy |
+
+## What changed on 2026-08-31
+
+This revision responds to comments received on the first version. Nothing in the
+line of argument changed; the differences are:
+
+- **No decimal figure appears in any proof.** Every constant a proof uses is now
+  an explicit rational — the comparison constant is `κ = 29/50`, and each auxiliary
+  bound (`π < 22/7`, `√3 < 97/56`, `ψ(2) < 3/7`, `e^{-8/7} < 8/25`, …) reduces to a
+  comparison of two integers. Decimals survive only where a transcendental quantity
+  is being illustrated, always beside the closed form they truncate.
+- **The triple-Bessel identity behind Lemma 4.2 is stated explicitly**, so the
+  reader can recognise the lemma as its equal-radii special case.
+- **`C(s,m)` is given in Gamma and Pochhammer form**, and the motive for
+  introducing `σ_m = (−1)^{k+1} τ_m` is now spelled out where it is defined.
+- **The section reporting the state of a Lean 4 formalisation was removed.** See
+  the status note below for what that does and does not mean.
 
 ## Status — please read this before citing
 
 Being typeset and compiling cleanly says nothing about whether the mathematics is
-right. As of 2026-08-26:
+right. As of 2026-08-31:
 
 - **Not independently refereed.** The paper has not been submitted to a journal
   and has not been read by a referee. It has not yet been through the independent
   multi-engine audit its author's own project criteria require.
-- **The Lean 4 formalisation is partial and its build is red.** It currently
-  covers **one lemma of Section 2** unconditionally and does **not** cover the main
-  line. Of 18 files, 7 compile cleanly and 11 fail (28 hard errors); the largest
-  single obstacle is that Mathlib has no Bessel functions. Section 12 of the paper
-  states this in full and does not overstate it. The formalisation is **not** in
-  this repository — only the paper is.
+- **No formal verification is claimed.** An exploratory Lean 4 formalisation was
+  attempted while the paper was being written; it is partial, its build does not
+  pass, it covers no part of the main line, and it is not part of the proof or of
+  this repository. The paper's closing note records the same thing. Removing the
+  earlier status section changed the paper's exposition, not this fact.
+- **AI assistance was used** in developing and checking the argument. The
+  mathematics stands or falls on the written proof, which is self-contained and can
+  be checked by hand.
 - **No systematic literature search has been run.** One targeted check was done
   and confirmed that the known small cases (Krenedits, `k = 3, 4`) are cited and
   disclosed in the abstract; but a full novelty screen against the literature has
