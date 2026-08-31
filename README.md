@@ -64,15 +64,36 @@ line of argument changed; the differences are:
 
 - **No decimal figure appears in any proof.** Every constant a proof uses is now
   an explicit rational — the comparison constant is `κ = 29/50`, and each auxiliary
-  bound (`π < 22/7`, `√3 < 97/56`, `ψ(2) < 3/7`, `e^{-8/7} < 8/25`, …) reduces to a
-  comparison of two integers. Decimals survive only where a transcendental quantity
-  is being illustrated, always beside the closed form they truncate.
+  bound (`π < 22/7`, `√3 < 97/56`, `log 2 < 7/10`, `e^{-8/7} < 8/25`, …) reduces to
+  a comparison of two integers. §1.3 lists them all, once; no later section keeps a
+  list of its own. Decimals survive only where a transcendental quantity is being
+  illustrated, always beside the closed form they truncate.
 - **The triple-Bessel identity behind Lemma 4.2 is stated explicitly**, so the
   reader can recognise the lemma as its equal-radii special case.
 - **`C(s,m)` is given in Gamma and Pochhammer form**, and the motive for
   introducing `σ_m = (−1)^{k+1} τ_m` is now spelled out where it is defined.
 - **The section reporting the state of a Lean 4 formalisation was removed.** See
   the status note below for what that does and does not mean.
+
+A second pass the same day acted on a full read-through by a mathematician:
+
+- **The one constant that did not reduce to integer arithmetic is gone.** Lemma 8.2
+  used to bound `ψ(2) = 1 − γ` by `3/7`, which rests on `γ > 4/7` and on nothing in
+  the paper. It now bounds `ψ(2)` by `log 2 < 7/10` — the inequality `ψ(x) < log x`
+  that the previous item of the same proof already uses, applied at `x = 2`. Euler's
+  constant no longer appears anywhere, and the claim that every constant reduces to
+  a comparison of two integers is now true without exception.
+- **Eleven orientation decimals were printed rounded while the paper said they were
+  truncations.** They are now genuine truncations, so each displayed digit string is
+  the lower bound the text claims it is.
+- **A numerical comparison that could not be reproduced was withdrawn.** The anchor
+  strip remark quoted a figure for a ray sum that two independent computations did
+  not agree on; the qualitative statement stays, the figures are gone, and the
+  reason they are gone is stated in the text.
+- **Overstated wording downgraded, draft history removed, one bibliography entry
+  corrected** (`[11]` was cited under a title that journal never printed), one added
+  (Mockenhaupt's 1996 habilitation, where the conjecture is posed), and several
+  entries completed with series numbers and DOIs.
 
 ## Status — please read this before citing
 
