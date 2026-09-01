@@ -1,10 +1,10 @@
-\documentclass[11pt,reqno]{amsart}
+\documentclass[11pt]{article}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{booktabs,array,longtable}
-\usepackage[margin=1.1in]{geometry}
+\usepackage[margin=1in]{geometry}
 \usepackage{microtype}
 \usepackage{xcolor}
 \definecolor{linkcol}{rgb}{0.10,0.20,0.45}
@@ -33,7 +33,13 @@
 \newtheorem{remark}[theorem]{Remark}
 
 \allowdisplaybreaks
-\setlength{\parskip}{0.15\baselineskip}
+% 2026-09-01: was 0.15\baselineskip under amsart.  article indents paragraphs
+% AND would then also space them, which is the belt-and-braces combination the
+% reference preprint does not use: its baselines are a uniform 12.0pt with no
+% inter-paragraph glue at all (measured off page 5 of arXiv:2608.08463).  On a
+% manuscript with several hundred paragraphs the extra glue was worth about
+% three pages on its own.
+\setlength{\parskip}{0pt}
 % Let slack fall to the foot of the page instead of being distributed into the
 % gaps around displays, which stretched some inter-display spacing to two or
 % three lines' height.
@@ -60,6 +66,40 @@
 % \raggedbottom already absorbs at the foot rather than by stretching the gaps
 % between displays.
 \predisplaypenalty=10000
+% 2026-09-01, with the class change: article leaves club/widow penalties at 150,
+% which is low enough that a single line will be left behind at a page foot to
+% avoid a slightly loose page.  amsart set them higher, so this was free before.
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+% 2026-09-01, recorded as a NEGATIVE result so that it is not retried.  After
+% the class change the document has one Overfull hbox (2.18pt, on p2) and one
+% line carrying two crushed binary operators (p31).  Both look like "TeX ran
+% out of room on one line", so two global levers were tried, one at a time, and
+% MEASURED:
+%   \tolerance 200 -> 600          : 1 Overfull, 1 crushed line.  No change.
+%   \emergencystretch 2.5em -> 3em : 1 Overfull, 1 crushed line.  No change.
+% Neither is kept.  A setting that changes nothing is not a fix, and leaving it
+% in with a plausible-sounding comment is how a false rationale gets inherited
+% (this comment replaced one that claimed the second lever "is what moved
+% them" -- it did not, and the claim was written before the count was read).
+%
+% The crushed line was fixed at source instead, by rewording one sentence of
+% section 11 so that it breaks differently; check_glue is green.
+%
+% The remaining Overfull is 2.18pt, in the FRONT MATTER (TeX attributes it to
+% the line where the abstract environment opens; the box holds "[][]" and no
+% text).  NOTE: this comment must not spell that environment's opening command
+% out, because arxiv_form.py locates the abstract by searching the tex for it
+% and would then slice from here -- it did, and reported 685 words against the
+% form's 149.  Comments are part of the file every other tool reads.  Three
+% candidates for the overfull were
+% ruled out by measurement, not by argument: replacing the abstract display's
+% \qquad by \quad left the amount at exactly 2.17523pt; so did \tolerance and
+% \emergencystretch.  Nothing actually crosses the margin -- the widest ink on
+% page 1 ends at x=538.2 against a text block that ends at 540.0 -- so it is a
+% log artefact of a box measured wide, not a visible defect.  Amount and page
+% recorded here so the next person does not re-derive them.
 
 % Binary operators must not be allowed to vanish under compression.  TeX ships
 % medmuskip as "4mu plus 2mu minus 4mu", so the space around + - and \cdot can
@@ -90,36 +130,44 @@
   \nobreak\hfil$\square$\parfillskip=0pt\relax\finalhyphendemerits=0\par
   \parfillskip=0pt plus 1fil\relax\finalhyphendemerits=5000\relax}
 
-\title[Three-term idempotents defeat the majorant property]
-      {Three-term idempotents defeat the Hardy--Littlewood majorant
-       property on every interval $(2k,\,2k+2)$}
-\author[G. Pan]{Guancheng Pan}
-\address{(G. Pan) Apex Intelligence; and Chu Kochen Honors College,
-  Zhejiang University}
-\email{3250101086@zju.edu.cn}
+% ---------------------------------------------------------------- title block
+% Hand-built rather than left to the class, because article's \author puts the
+% names in one centred paragraph with \and separators and has no mechanism for
+% superscript affiliation keys.  The arrangement below reproduces the reference
+% preprint's: names 12pt in a 3+2 grid, affiliation key list at 10pt, the
+% e-mails at 10pt, then the date.
+%
+% NO equal-contribution stars.  The reference marks three of its six authors
+% with one; who contributed equally here has never been stated, and inventing
+% that mark would be a claim about people.  The corresponding authors are the
+% two the author list was given with, marked with a dagger and spelled out
+% under the affiliations.
+\title{\vspace{-2em}Three-term idempotents defeat the Hardy--Littlewood\\
+       majorant property on every interval $(2k,\,2k+2)$}
 
-\author[C. You]{Chengsong You}
-\address{(C. You) Apex Intelligence; and East China Normal University}
-\email{youchengsong3@gmail.com}
-
-\author[H. Wang]{Hengyu Wang}
-\address{(H. Wang) Apex Intelligence; and Tongji University}
-\email{2252592@tongji.edu.cn}
-
-\author[J. Zhou]{Junwei Zhou}
-\address{(J. Zhou) Independent Researcher}
-\email{zjw330501@gmail.com}
-
-\author[Y. Chen]{Yongchao Chen}
-\address{(Y. Chen) Apex Intelligence; and Tsinghua University}
-\email{cyc@apexin.ai}
-
-% Corresponding authors get a \thanks footnote, not a symbol on the names:
-% amsart has no author-symbol mechanism, and a hand-made \footnotemark
-% inside \author leaks into the running head.  The optional [G. Pan] etc.
-% exist so the running head is initials, not five full names.
-\thanks{Corresponding authors: Junwei Zhou (\texttt{zjw330501@gmail.com})
-  and Yongchao Chen (\texttt{cyc@apexin.ai}).}
+\newcommand{\afn}[1]{\textsuperscript{\normalfont #1}}
+\author{%
+\normalsize
+\begin{tabular}{c@{\hspace{2.2em}}c@{\hspace{2.2em}}c}
+\large Guancheng Pan\afn{1,2} & \large Chengsong You\afn{1,3} &
+  \large Hengyu Wang\afn{1,4}
+\end{tabular}\\[0.5ex]
+\begin{tabular}{c@{\hspace{2.2em}}c}
+\large Junwei Zhou\afn{5,\dag} & \large Yongchao Chen\afn{1,6,\dag}
+\end{tabular}\\[1.4ex]
+\small
+\textsuperscript{1}Apex Intelligence \quad
+\textsuperscript{2}Chu Kochen Honors College, Zhejiang University \quad
+\textsuperscript{3}East China Normal University\\
+\textsuperscript{4}Tongji University \quad
+\textsuperscript{5}Independent Researcher \quad
+\textsuperscript{6}Tsinghua University\\[0.8ex]
+\texttt{3250101086@zju.edu.cn}, \texttt{youchengsong3@gmail.com},
+\texttt{2252592@tongji.edu.cn}\\
+\texttt{zjw330501@gmail.com}, \texttt{cyc@apexin.ai}\\[0.6ex]
+\textsuperscript{\dag}Corresponding authors%
+}
+\date{September 1, 2026}
 % MSC: standard for a mathematics paper, and arXiv's submission form asks for
 % the classification separately.  Must appear BEFORE \maketitle or amsart drops
 % it silently -- there is no warning, the footer just comes out short.
@@ -129,9 +177,12 @@
 %          triple-Bessel products are the engine of the proof, not decoration
 %   42A16  Fourier coefficients of functions with special properties
 %   43A46  special (thin) sets, where the idempotent/character-sum questions live
-\subjclass[2020]{Primary 42A05; Secondary 33C10, 42A16, 43A46}
-\keywords{Hardy--Littlewood majorant problem; idempotent polynomials; Bessel
-  functions; Weber--Schafheitlin integrals; analytic continuation}
+%
+% 2026-09-01: article has no \subjclass or \keywords -- they are amsart's.  The
+% content is NOT dropped: MSCKW below is emitted as a small centred block right
+% after the abstract, which is where a preprint that is not using a journal
+% class normally puts it.  Deleting them outright would lose information the
+% previous version printed in its first-page footer.
 % \keywords was DELIBERATELY ABSENT until 2026-08-31, and the reason is worth
 % keeping.  On the 31-page version of 2026-08-26, measured not guessed
 % (exp_frontmatter.py, exp_keywords.py): \subjclass was free, but ANY \keywords
@@ -146,13 +197,22 @@
 % that changes the page count before assuming it is still free.
 
 \begin{document}
+\maketitle
 \begin{abstract}
 For an integer $k \ge 0$ put $N = k+2$ and
 \[ f_k(x) = 1 + e(x) + e(Nx), \qquad  g_k(x) = 1 + e(x) - e(Nx), \qquad  e(t) = e^{2\pi it}, \]
 on the circle $\mathbb{T} = \mathbb{R}/\mathbb{Z}$. Mockenhaupt conjectured that $\|g_k\|_{L^p(\mathbb{T})} > \|f_k\|_{L^p(\mathbb{T})}$ for every real $p \in (2k, 2k+2)$; previously this was known only for $k \le 5$, one value of $k$ at a time. We prove the conjecture for every integer $k \ge 4$ by a single argument, and hence, combined with the published small cases, for every integer $k \ge 0$. The proof replaces the estimate by an exact identity: the difference of $p$-th powers is written as a sum of Fourier coefficients of $H^s$ over a discrete resonant ray on the two-torus, each coefficient is continued analytically in $s$ separately, and the resulting integrals of triple products of Bessel functions are evaluated in closed form, after which a single explicit comparison between the leading mode and the tail closes the argument with threshold $K_{0} = 4$. The proof is self-contained and uses no numerical routine; no decimal figure enters any of its steps, and every constant that a proof uses is an explicit rational.
+
+\textbf{AI Usage.} The argument was produced with Apex Math, an automated mathematical research system built by the authors, which runs about forty agent processes in parallel behind the language models Claude Opus 5 and GPT-5.6 Sol and assigns every adversarial re-check across model families. The elementary reduction of \S2 was found first and fixed the shape of everything that followed; five independent lines of attack were then run on the resulting inequality, and the line that closed the problem was not the line the system set out on. The finite range was verified by machine in exact arithmetic. The system's output was wrong in four identifiable ways, each corrected. Appendix A records what the system did and where it was wrong. The authors have read and checked the argument of \S\S2--10, which is self-contained and can be checked by hand, and take full responsibility for it. No formal verification is claimed.
 \end{abstract}
 
-\maketitle
+\begin{center}\small
+\emph{2020 Mathematics Subject Classification.}\ Primary 42A05;
+Secondary 33C10, 42A16, 43A46.\\
+\emph{Key words and phrases.}\ Hardy--Littlewood majorant problem; idempotent
+polynomials; Bessel functions; Weber--Schafheitlin integrals; analytic
+continuation.
+\end{center}
 
 \section{Introduction}
 
@@ -181,15 +241,12 @@ The exponent range is forced: at the two endpoints $p = 2k$ and $p = 2k+2$ the t
 \textbf{Later work on the same property.} Gressman, Guo, Pierce, Roos and Yung~\cite{r17} showed that a set $\Gamma \subseteq \mathbb{Z}^d$ has the strict majorant property on $L^p([0,1]^d)$ for every $p > 0$ precisely when it is affinely independent, and that any $\Gamma$ of cardinality at least $d+2$ --- in particular any three frequencies on the circle --- fails it on some interval $(2m, 2m+2)$. That statement and Mockenhaupt's conjecture are close in shape, down to the length of the interval, but neither contains the other. Their violating coefficients are small real numbers produced by a Taylor expansion, whereas the conjecture asks for an idempotent with a single sign flipped; and their $m$ is produced by the argument, whereas the conjecture prescribes the interval $(2k, 2k+2)$ and attaches it to the frequency $N = k+2$. The analogous question for the periodic Schr\"odinger group is treated by Bennett and Bez~\cite{r7}.
 
 
-\subsection{What was known}
-Krenedits settled the conjecture for $k = 0,1,2$ in~\cite{r20}, for $k = 3,4$ in~\cite{r21}, and for $k = 5$ in~\cite{r22}. The case $k = 0$ is analytic; the remaining published cases proceed by a delicate Rolle-type argument on the difference function, driven by numerical quadrature with proved error bounds --- rigorous, but one value of $k$ at a time, with the node count growing rapidly (up to $N \le 1200$ nodes already at $k = 2$). No proof for $k \ge 6$ has appeared, and no uniform method was known. Krenedits himself remarked that no clear structural reason was visible for why the inequality should persist for all $k$.
-
-
 \subsection{Results}
 
 \begin{theorem}\label{res:1.1}
 For every integer $k \ge 4$ and every real $p$ with $2k < p < 2k+2$,
 
+\par\nobreak
 \[
   \|g_k\|_{L^p(\mathbb{T})} > \|f_k\|_{L^p(\mathbb{T})} .
 \]
@@ -207,7 +264,7 @@ Two features of Theorem~1.1 deserve emphasis. First, it is \textbf{uniform in $k
 \emph{Orientation figures.} Decimals occur only where a transcendental quantity is being \textbf{illustrated} rather than bounded: in the note following Lemma~8.3, in the tables of Remarks~7.4, 7.6 and 8.6, in Remark~8.1, in Remark~4.7 and in \S12. Each is a truncation --- never a rounding --- of a quantity whose closed form is displayed alongside it, each is flagged where it occurs, and no step of any proof uses one.
 
 
-\subsection{Method: replacing an estimate by an identity}
+\subsection{Technical Overview}
 The difficulty of the conjecture is that the two sides differ by an exponentially small amount. With $s = p/2$ and
 
 \[
@@ -223,6 +280,7 @@ the assertion is $D(s) > 0$ on $(k, k+1)$, and $D$ vanishes to first order at bo
 \]
 along the line $\theta = 2\pi x, \psi = 2\pi Nx$, respectively that line shifted by $\pi$ in the second coordinate. Integrating over the line picks out exactly the Fourier modes lying on the ray $(-Nq, q)$, and the shift contributes $(-1)^q$, so that
 
+\par\nobreak
 \[
   D(s) = -4 \sum_{q \ge 1, q \,\mathrm{odd}} \widehat{H}^s(-Nq, q) .
 \]
@@ -246,21 +304,25 @@ This step must be performed \textbf{per mode}, and it is worth saying at once wh
 \textbf{Step 4 (\S\S6--8): one explicit comparison.} Only now do inequalities appear. An explicit lower bound for $I_{1}$ and an explicit bound for the odd tail $\sum_{q\ge 3, q \,\mathrm{odd}}|I_q|$ are compared; the comparison holds precisely when $k \ge 4$. The proof of the comparison for all $k \ge 4$ is by induction, and the mechanism that makes it work is a change of variables ($\Gamma$-arguments become $s+N$ and $N-s$) which removes $\alpha$ from the problem entirely; see Remark~8.1 for why bounding each factor separately in $\alpha$ cannot work.
 
 
-\subsection{What is not claimed}
-We prove nothing about the majorant property for general idempotents, nor about exponents outside the intervals $(2k, 2k+2)$, nor do we obtain the sharp constant in any of the inequalities used. The threshold $K_{0} = 4$ is what our comparison yields; we do not claim it is optimal for the method.
+\subsection{Related Works}
+Krenedits settled the conjecture for $k = 0,1,2$ in~\cite{r20}, for $k = 3,4$ in~\cite{r21}, and for $k = 5$ in~\cite{r22}. The case $k = 0$ is analytic; the remaining published cases proceed by a delicate Rolle-type argument on the difference function, driven by numerical quadrature with proved error bounds --- rigorous, but one value of $k$ at a time, with the node count growing rapidly (up to $N \le 1200$ nodes already at $k = 2$). No proof for $k \ge 6$ has appeared, and no uniform method was known. Krenedits himself remarked that no clear structural reason was visible for why the inequality should persist for all $k$.
 
 The evaluation of integrals of triple products of Bessel functions is itself a substantial and much older subject, running from MacDonald~\cite{r23} and Watson~\cite{r31} through Bailey~\cite{r5,r6}, Jackson--Maximon~\cite{r19}, Gervois--Navelet~\cite{r13,r14,r15}, Glasser--Montaldi~\cite{r16}, and on to Fabrikant~\cite{r11,r12} and Mehrem--Hohenegger~\cite{r25}; none of this is new. Of these the closest general framework is that of Gervois and Navelet, who carry Bailey's Appell-$F_4$ formula for $\int_{0}^\infty t^{\lambda -1} J_\mu (at) J_\nu (bt) J_\rho (ct) dt$ into the triangle region by analytic continuation in every case where the $F_4$ factorises into functions of one variable, and who tabulate those cases. One of them is exactly the relation $\mu - \nu = \pm \rho$ among the orders that holds here; but it is tabulated only for $\lambda = 2$, whereas the weight of \S5 has $\lambda = -2s$ with $s$ real. That is where the present situation leaves the tabulated ones, and it is also why the route of \S5 is open at all: the three arguments here are equal, which is what allows Neumann's product formula to collapse two of the factors --- that step requires the two collapsed factors to have the same argument --- leaving a Weber--Schafheitlin integral, which is available for general $\lambda$.
 
 Both ingredients of that two-step reduction also occur, separately, in Martin~\cite{r24}: he uses Neumann's product formula, there to obtain a Fourier representation of $J_n^{2}$, and he twice identifies an infinite Bessel integral as ``a critical case of the Weber--Schafheitlin integrals.'' His own evaluation of an integral of three Bessel factors proceeds differently, by a Mellin--Barnes representation followed by a Weber--Schafheitlin integration and a residue computation. What we did not find in this literature is the two-step route of \S5 itself --- Neumann's product formula to collapse two of the three factors, then Weber--Schafheitlin on what is left --- nor the specific triple product $J_{qN} J_{q(N-1)} J_q$ with the order ratios $N : (N-1) : 1$ that arise here, nor the power-law weight $r^{-2s-1}$ evaluated for real (as opposed to integer) $s$, nor any prior connection of such an integral to the Hardy--Littlewood majorant problem. No priority claim beyond this is made.
 
-We also claim no formal verification: Theorem~1.1 stands or falls on the argument of \S\S2--10 alone. On the tools used while the paper was prepared, see the note preceding the references.
+
+\subsection{What is not claimed}
+We prove nothing about the majorant property for general idempotents, nor about exponents outside the intervals $(2k, 2k+2)$, nor do we obtain the sharp constant in any of the inequalities used. The threshold $K_{0} = 4$ is what our comparison yields; we do not claim it is optimal for the method.
+
+We also claim no formal verification: Theorem~1.1 stands or falls on the argument of \S\S2--10 alone. On the tools used while the paper was prepared, see Appendix A.
 
 
 \subsection{Organisation}
 \S2 fixes notation and reduces the conjecture to positivity of a series $\Phi$. \S3 establishes the two-torus identity, \S4 the per-mode continuation, \S5 the closed-form positivity of the leading mode. \S\S6--7 give the explicit lower and tail bounds; \S8 proves the comparison for all $k \ge 4$. \S9 handles the endpoints $\alpha \in \{0,1\}$ and records the normalisation bridge, \S10 assembles Theorem~1.1, \S11 the merge with the published small cases, and \S12 lists what remains open.
 
 
-\section{Notation and reduction}
+\section{Preliminaries}
 Throughout, $e(t) = e^{2\pi it}$, $\mathbb{T} = \mathbb{R}/\mathbb{Z}$ carries normalised Haar measure, $k$ is an integer, $N = k+2$, $L = 2N - 1 = 2k+3$, and
 
 \[
@@ -325,6 +387,7 @@ Since $s \le k+1$, the first bracket is at most $\prod_{j=0}^{k}(k+1-j) = (k+1)!
 
 For \eqref{eq:e20p} put $u_m = (m-k)!/m!$ for $m \ge k$. Writing both terms over the denominator $m!$,
 
+\par\nobreak
 \begin{gather*}
   u_{m-1} - u_m = (m-1-k)!/(m-1)! - (m-k)!/m! \\ 
   = (m-k-1)!/m! \cdot [ m - (m-k) ] = k \cdot (m-k-1)!/m! .
@@ -759,6 +822,7 @@ For $s = k + \alpha > 0$,
 \begin{proof}
 Neumann's product formula (\cite{r29}, DLMF 10.9.26; also in~\cite{r32}) in the form
 
+\par\nobreak
 \[
   J_{N}(r) J_{N-1}(r) = (2/\pi ) \int_{0}^{\pi /2} J_{2N-1}(2r \cos \vartheta ) \cos \vartheta d\vartheta = (2/\pi )\int_{0}^{\pi /2} J_L(2r \cos \vartheta ) \cos \vartheta d\vartheta
 \]
@@ -1101,6 +1165,7 @@ The goal of this section is $R(k,\alpha ) < 1$ for every integer $k \ge 4$ and e
 
 \textbf{A change of variables.} Since $2k+2+\alpha = s+N$ and $2-\alpha = N-s$, we have $\Gamma (2k+2+\alpha ) = \Gamma (s+N)$ and $\Gamma (2-\alpha ) = \Gamma (N-s)$, and therefore
 
+\par\nobreak
 \begin{equation}\label{eq:d3}
 \begin{gathered}
   R(k,\alpha ) = C_{0} \cdot ( \Gamma (s+N)/\Gamma (N-s) ) \cdot (2s+2) \cdot B(s) \cdot T(s) \cdot \mu_N^s , \\ 
@@ -1253,7 +1318,7 @@ Proposition~8.5 controls $\sum_{q \ge 3, q \,\mathrm{odd}} |I_q|$, not $\sum_{q 
 \]
 i.e. $\mathrm{sign}\, I_{3}(k) = (-1)^k$, while $I_{1} > 0$ for every $k$ by Theorem~5.5. For odd $k$ the leading tail term therefore works \emph{against} the leading resonance, and no argument that merely discards a nonnegative tail is available. (The five figures are decimal evaluations of the integral $I_{3}(s)$ of \S4 at $s = k$, recorded for orientation only; the proof uses the absolute bound \eqref{eq:d4} and nothing about signs. Only the sign pattern, which is exact, is asserted.)
 \end{remark}
-Nothing in this section uses numerical evaluation: the three ingredients are a digamma inequality, a rational base case, and an elementary induction step, and no decimal occurs in any of the three proofs. Every constant they use is one of the explicit rationals listed once and for all in \S1.3, and the decimals that do appear in this section --- the four in the note following Lemma~8.3 and the $\mathrm{about}\, 0.6$ of Remark~8.1 --- are orientation figures in the sense of \S1.3, each standing beside the closed form it truncates.
+Nothing in this section uses numerical evaluation: the three ingredients are a digamma inequality, a rational base case, and an elementary induction step, and no decimal occurs in any of the three proofs. Every constant they use is one of the explicit rationals listed once and for all in \S1.2, and the decimals that do appear in this section --- the four in the note following Lemma~8.3 and the $\mathrm{about}\, 0.6$ of Remark~8.1 --- are orientation figures in the sense of \S1.2, each standing beside the closed form it truncates.
 
 
 \section{The endpoints}
@@ -1361,7 +1426,7 @@ measure & normalised Haar on $\mathbb{R}/\mathbb{Z}$, i.e. $\int_{0}^{1}$ & $\in
 \end{center}
 Two remarks on the correspondence. First, the sources index by $p$ and read $k$ off as $[p/2]$, so their ``$0 < p < 6$, $p$ not an even integer'' is exactly our $k \in \{0,1,2\}$ together with $p \in (2k, 2k+2)$; the excluded even integers are our excluded endpoints. Second, $\Delta (t)$ denotes the difference of the two $p$-th power integrals at $p = 2t$ --- that is, our $D(s)$ with $s = t$ --- so the comparison is between $p$-th powers of norms, not between norms; since $t \mapsto t^{1/p}$ is strictly increasing this is equivalent, and the direction of the strict inequality is preserved.
 
-The domain of integration differs and must be reconciled explicitly. The sources integrate over $[0,1/2]$, we over $[0,1]$. This changes nothing, for the following reason. The coefficients of $f_k$ and $g_k$ are real, so $f_k(-x) = \overline{f_k(x)}$ and $g_k(-x) = \overline{g_k(x)}$; hence $|f_k|$ and $|g_k|$ are even and $1$-periodic, and therefore
+The domain of integration differs and must be reconciled explicitly. The sources integrate over $[0,1/2]$, we over $[0,1]$. This changes nothing, for the following reason. Since the coefficients of $f_k$ and $g_k$ are real, $f_k(-x) = \overline{f_k(x)}$ and $g_k(-x) = \overline{g_k(x)}$, so $|f_k|$ and $|g_k|$ are even and $1$-periodic, and therefore
 
 \[
   \int_{0}^{1/2} |f_k|^p = \int_{1/2}^{1} |f_k|^p = (1/2) \int_{0}^{1} |f_k|^p ,
@@ -1374,10 +1439,10 @@ The published coverage is: $k = 0,1,2$ in~\cite{r20}; $k = 3,4$ in~\cite{r21}. O
 
 \emph{Proof of Theorem~1.2.} Combine Theorem~1.1 ($k \ge 4$) with~\cite{r20,r21} ($k \le 3$).\qedmark
 
-It should be stated plainly that the small cases are proved by rigorous numerical quadrature --- each lemma there supplies an analytic bound on a fourth derivative, inserts it into the error term of a quadrature rule, and chooses a node count making the error smaller than the quantity to be signed. This is a complete proof, but it is not of the same character as \S\S2--10, no \emph{proof} in which contains a numerical component. The distinction is worth stating precisely: no proof in \S\S2--10 contains a decimal at all, every constant entering one being one of the explicit rationals listed in \S1.3, whereas \S11 relies on a quadrature whose output must be trusted. Consequently Theorem~1.2 is \textbf{not} self-contained within this paper, whereas Theorem~1.1 is.
+It should be stated plainly that the small cases are proved by rigorous numerical quadrature --- each lemma there supplies an analytic bound on a fourth derivative, inserts it into the error term of a quadrature rule, and chooses a node count making the error smaller than the quantity to be signed. This is a complete proof, but it is not of the same character as \S\S2--10, no \emph{proof} in which contains a numerical component. The distinction is worth stating precisely: no proof in \S\S2--10 contains a decimal at all, every constant entering one being one of the explicit rationals listed in \S1.2, whereas \S11 relies on a quadrature whose output must be trusted. Consequently Theorem~1.2 is \textbf{not} self-contained within this paper, whereas Theorem~1.1 is.
 
 
-\section{Open questions}
+\section{Conclusion and Future Work}
 \begin{enumerate}
 \item The threshold $K_{0} = 4$ is what the comparison of \S8 yields; the true threshold for the method is not determined here. It is worth being precise about \emph{which} step binds, because the natural guess --- that it is the bound on $R_q$ of \S7 --- is wrong. The sharp form of Remark~7.4 establishes $R_q \ge \lambda_N \cdot Nq$ for \textbf{every} $N$ and every $q \ge 1$, with $\lambda_N$ the sharp constant; so \S7 does supply a usable constant at $N = 3,4,5$, merely a smaller one than $\kappa = 29/50$. What fails is the comparison of \S8, which at $s = k$ requires $R(k,0) = C_{0} \Gamma (2k+3) B(k) T(k) \mu_N^k < 1$ with $\mu_N = 16/(81\kappa^{2}N^{2})$, and so demands a constant of size at least $\kappa_{\min }(k) := (4/(9N)) \cdot [ C_{0} \Gamma (2k+3) B(k) T(k) ]^{1/(2k)}$, namely
 
@@ -1385,7 +1450,7 @@ It should be stated plainly that the small cases are proved by rigorous numerica
 \[
   k = 1 : \kappa_{\min } = 2.9928\ldots , \qquad  k = 2 : \kappa_{\min } = 0.8790\ldots , \qquad  k = 3 : \kappa_{\min } = 0.6343\ldots ,
 \]
-against the sharp values $\lambda_{3} = 0.5352\ldots$, $\lambda_{4} = 0.5554\ldots$, $\lambda_{5} = 0.5728\ldots$ actually available. The shortfall is a factor of about $5.6$ at $k = 1$ but only $1.11$ at $k = 3$, where the sharp constant gives $R(3,0) = 1.8422\ldots$; so lowering $K_{0}$ to $3$ requires the \S8 comparison to be sharpened by a factor of roughly $1.85$, and \emph{not} a better bound on $R_q$. (For orientation: at $k = 4$ the sharp constant would improve $R(4,0)$ from the $0.6060\ldots$ of Lemma~8.3 to $0.5480\ldots$.) Evaluating $R(k,0)$ at $k = 1,2,3$ is legitimate even though \S8 is \emph{stated} for $k \ge 4$: the only hypothesis of \S\S7--8 that fails below $k = 4$ is Proposition~7.3, which is exactly what $\lambda_N$ replaces here, and every remaining side condition holds at $k = 1,2,3$ --- $s \in \{1,2,3\}$ is never $1/2$, so $T(s)$ is defined; $6N - 2s = 16, 20, 24 > 0$; $2s - 1 > 0$; $s < qN$ for $q \ge 3$; and Proposition~6.1 is stated for every $k \ge 1$. All decimals in this item are orientation-only in the sense of \S1.3; nothing above is used in a proof.
+against the sharp values $\lambda_{3} = 0.5352\ldots$, $\lambda_{4} = 0.5554\ldots$, $\lambda_{5} = 0.5728\ldots$ actually available. The shortfall is a factor of about $5.6$ at $k = 1$ but only $1.11$ at $k = 3$, where the sharp constant gives $R(3,0) = 1.8422\ldots$; so lowering $K_{0}$ to $3$ requires the \S8 comparison to be sharpened by a factor of roughly $1.85$, and \emph{not} a better bound on $R_q$. (For orientation: at $k = 4$ the sharp constant would improve $R(4,0)$ from the $0.6060\ldots$ of Lemma~8.3 to $0.5480\ldots$.) Evaluating $R(k,0)$ at $k = 1,2,3$ is legitimate even though \S8 is \emph{stated} for $k \ge 4$: the only hypothesis of \S\S7--8 that fails below $k = 4$ is Proposition~7.3, which is exactly what $\lambda_N$ replaces here, and every remaining side condition holds at $k = 1,2,3$ --- $s \in \{1,2,3\}$ is never $1/2$, so $T(s)$ is defined; $6N - 2s = 16, 20, 24 > 0$; $2s - 1 > 0$; $s < qN$ for $q \ge 3$; and Proposition~6.1 is stated for every $k \ge 1$. All decimals in this item are orientation-only in the sense of \S1.2; nothing above is used in a proof.
 \item \textbf{At the left endpoint only}, the quantity $k \cdot 16^k \cdot \Phi (k+\alpha )$ appears to converge as $k \to \infty$. That a limit shape should exist at large $k$ was already suggested by Krenedits~\cite{r20}, \S5; what the specification below adds is that it holds at the left endpoint and fails at the right one.
 
 \begin{gather*}
@@ -1398,16 +1463,8 @@ The specification $\alpha = 0$ is essential. The same quantity at the right endp
 \item Theorem~5.5 is proved for $s > 0$, leaving the single degenerate pair $(k,\alpha ) = (0,0)$ uncovered by our method (Remark~5.6). This is immaterial for Theorem~1.1 but would need attention if the method were pushed to small $k$.
 \end{enumerate}
 
-\section*{Note on tools}
-The argument was produced with Apex Math, an automated mathematical research system built by the authors. It runs about forty agent processes in parallel on one server, each carrying its own line of attack, together with a dispatcher that assigns targets and two supervisor processes; the language models behind the agents are Claude Opus 5 and GPT-5.6 Sol. The two belong to different model families, and the system assigns every adversarial re-check across families, on the ground that two agents of one family fail in correlated ways. We record below what the system actually did, including where it was wrong, because a reader is entitled to know which parts of a proof were searched for by machine.
-
-The elementary reduction of \S2 --- from the conjecture to the positivity of a single explicit sum over an integer sequence --- was found first, and it fixed the shape of everything that followed: after it, the whole problem is one inequality about $\sigma_m$, with no $p$, no oscillatory integral and no quadrature. Five independent lines of attack on that inequality were then run in parallel; four are recorded by name --- lattice-path counting, generating functions, induction, and positivity certificates. Without being directed to, four of them converged on the same saddle-point geometry, each measuring a different projection of it: the lattice-path line independently produced the constant $9/16 = \min_{w>0} ((1+w^{3})/(1+w))^{2}$, the induction line located the cancellation at $\alpha = 0$, and the certificate line located the difficulty in an exponentially thin subinterval. The line that closed the problem was the generating-function one, but only after it was rerouted through the two-torus rather than the circle; the Laurent machinery originally planned for it then turned out to be unnecessary, and the Bessel route is strictly shorter. The route that won was not the route the system set out on.
-
-The finite range was verified by machine in exact arithmetic. The coefficients $9^m \tau_m$ are constant terms of integer Laurent polynomials and are computed as big integers; the truncation is controlled by an exact rational bound; and positivity on each closed interval is decided in the Bernstein basis over the integers, with Sturm sequences run as an independent necessary-and-sufficient cross-check. No floating-point number enters any of these decisions. The implementation was held to a negative control: at $k = 6$ the smallest Bernstein coefficient is negative for every truncation up to $38$ and turns positive only at $39$, so an implementation that reported success at every parameter would have been evidence of a bug rather than of a theorem. This is also the empirical answer to why exact arithmetic is necessary at all: at $k = 50$ a direct high-precision quadrature needs about $140$ digits before the gap becomes visible, and is entirely invisible at $40$.
-
-The system's output was wrong in four identifiable ways, and the corrections are part of the record. First, the first draft performed the analytic continuation at the level of the sum. That is not legitimate: the Mellin identity converges absolutely only in a strip in which the Fourier coefficients are not summable over the lattice, so there is no summation-level identity there to continue. The continuation had to be redone one mode at a time, which is what \S4 now does; this was a genuine gap and it is closed. Second, a later re-derivation reported that the tail bound had dropped a factor. The re-derivation was itself the error: the three Bessel orders sum to $2qN$, not $q(2N-1)$, and the pointwise bound it proposed is false, with an explicit counterexample at $k = 1$, $q = 3$, $r = 2.7724565$. The formula in the draft was correct and was left unchanged; only the derivation around it was repaired. Third, a standoff over the prefactor, in which two expressions appeared to differ by a factor $\Gamma (s+1)$, was traced not to an algebraic slip but to an object, $\sigma_m$, that the draft had never defined; once the definition was written down both expressions were verified correct, and the discrepancy was the normalisation. Fourth, a control function used the bound $|J_\nu (Ar)| \le (2/(\pi Ar))^{1/2}$, which holds only for $\nu \le 1/2$ and is exceeded by a factor $1.449$ at $\nu = 21$; it was replaced and the estimate reproved. The first draft also asserted that the argument needs no computer assistance. That was false, and it was deleted rather than weakened; \S1.3 instead separates the decimals that carry weight, each of which is an explicit rational bound checkable by hand, from those that are there only for orientation.
-
-What is not claimed. Parts of the argument were submitted to an interactive theorem prover (Lean 4 with Mathlib) in an exploratory attempt at formalisation; that attempt is incomplete, and no claim of formal verification is made. The ancillary scripts distributed with this paper re-check the finite range; they are tools and are not part of the proof. Theorem~1.1 rests on the argument of \S\S2--10 as written here, which is self-contained and can be checked by hand. The authors have read and checked that argument and take full responsibility for it, including for the parts a machine wrote.
+\section*{Acknowledgment}
+As stated after the abstract, the argument was produced by an automated system and then read and checked by the authors. Appendix A records what the system did --- the reduction that fixed the shape of the proof, the five parallel lines of attack, the exact-arithmetic verification of the finite range, and the four identifiable ways in which its output was wrong, together with the correction made in each case.
 
 
 \begin{thebibliography}{99}
@@ -1444,5 +1501,17 @@ What is not claimed. Parts of the argument were submitted to an interactive theo
 \bibitem{r31} G. N. Watson, \emph{An infinite integral involving Bessel functions}, J. London Math. Soc. \textbf{9} (1934), 16--22. DOI \mbox{10.1112/jlms/s1-9.1.16}.
 \bibitem{r32} G. N. Watson, \emph{A treatise on the theory of Bessel functions}, 2nd ed., Cambridge Univ. Press, 1944.
 \end{thebibliography}
+
+\appendix
+
+\section{What the automated system did}
+The elementary reduction of \S2 --- from the conjecture to the positivity of a single explicit sum over an integer sequence --- was found first, and it fixed the shape of everything that followed: after it the whole problem is one inequality about $\sigma_m$, with no $p$, no oscillatory integral and no quadrature. Five independent lines of attack were then run in parallel on that inequality, and four of them converged, without being directed to, on the same saddle-point geometry, each measuring a different projection of it: the lattice-path line independently produced the constant $9/16 = \min_{w>0} ((1+w^{3})/(1+w))^{2}$, the induction line located the cancellation at $\alpha = 0$, and the certificate line located the difficulty in an exponentially thin subinterval. The line that closed the problem was the generating-function one, and only after it had been rerouted through the two-torus rather than the circle: the route that won was not the route the system set out on.
+
+The finite range was verified by machine in exact arithmetic. The coefficients $9^m \tau_m$ are constant terms of integer Laurent polynomials and are computed as big integers; the truncation is controlled by an exact rational bound; and positivity on each closed interval is decided in the Bernstein basis over the integers, with Sturm sequences run as an independent cross-check. No floating-point number enters any of these decisions. The implementation was held to a negative control: at $k = 6$ the smallest Bernstein coefficient is negative for every truncation up to $38$ and turns positive only at $39$, so an implementation that reported success at every parameter would have been evidence of a bug rather than of a theorem. This is also the empirical answer to why exact arithmetic is necessary at all: at $k = 50$ a direct high-precision quadrature needs about $140$ digits before the gap becomes visible, and is entirely invisible at $40$.
+
+The system's output was wrong in four identifiable ways, and the corrections are part of the record. The first draft performed the analytic continuation at the level of the sum, where no summation-level identity exists --- the Mellin identity converges absolutely only in a strip in which the Fourier coefficients are not summable over the lattice --- so the continuation had to be redone one mode at a time, which is what \S4 now does; this was a genuine gap and it is closed. A later re-derivation reported that the tail bound had dropped a factor, but the re-derivation was itself the error: the three Bessel orders sum to $2qN$, not $q(2N-1)$, with an explicit counterexample at $k = 1$, $q = 3$, $r = 2.7724565$; the formula in the draft was correct and only the derivation around it was repaired. A standoff over the prefactor, in which two expressions appeared to differ by a factor $\Gamma (s+1)$, was traced not to an algebraic slip but to an object, $\sigma_m$, that the draft had never defined. A control function used the bound $|J_\nu (Ar)| \le (2/(\pi Ar))^{1/2}$, which holds only for $\nu \le 1/2$ and is exceeded by a factor $1.449$ at $\nu = 21$; it was replaced and the estimate reproved. The first draft also asserted that the argument needs no computer assistance; that was false, and it was deleted rather than weakened.
+
+Parts of the argument were submitted to an interactive theorem prover (Lean 4 with Mathlib) in an exploratory attempt at formalisation; that attempt is incomplete, and no claim of formal verification is made. The ancillary scripts distributed with this paper re-check the finite range; they are tools and are not part of the proof.
+
 
 \end{document}

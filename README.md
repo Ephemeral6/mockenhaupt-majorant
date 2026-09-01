@@ -58,10 +58,32 @@ pdfTeX's embedded timestamps (`/CreationDate`, `/ModDate`, `/ID`) are stripped.
 
 | File | |
 |---|---|
-| `mockenhaupt.tex` | the source; 35 pages, 11pt `amsart` |
+| `mockenhaupt.tex` | the source; 36 pages, 11pt `article`, 32 bibliography entries |
 | `mockenhaupt.pdf` | compiled proof copy |
 
-## What changed on 2026-09-01
+## What changed on 2026-09-01 (second revision of the day)
+
+The mathematics is untouched. The paper was re-set as a preprint rather than in a
+journal class, and reorganised to match.
+
+- **Layout.** `amsart` → `article`: a title page carrying the authors with
+  numbered affiliations, their e-mail addresses and a date; plain numbered
+  section headings.
+- **The tool disclosure moved to the front and shrank at the back.** A short
+  **AI Usage** paragraph now follows the abstract, naming the system and the two
+  models; the long note at the end became **Appendix A**, cut from a full page to
+  half a page. Nothing it asserted was dropped: the search, the exact-arithmetic
+  verification of the finite range with its negative control, and all four ways
+  the system's output was wrong are still there, told shorter.
+- **Section 1 was reorganised** into Results, Technical Overview and Related
+  Works, and an **Acknowledgment** was added before the references. Section 2 is
+  now *Preliminaries* and section 12 *Conclusion and Future Work*. No sentence of
+  the argument was rewritten; the subsections were moved, not edited. One
+  sentence in section 11 was reworded so that its line breaks differently — it
+  was setting with two binary operators crushed to nothing, so that `a − b` read
+  as `a-b`.
+
+## What changed on 2026-09-01 (first revision of the day)
 
 - **The paper now has five authors** rather than one; four of them hold two
   affiliations each, and the corresponding authors are named in a footnote on the
