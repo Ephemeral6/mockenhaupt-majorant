@@ -1,6 +1,10 @@
 # Three-term idempotents defeat the Hardy–Littlewood majorant property on every interval (2k, 2k+2)
 
-**Guancheng Pan** — Chu Kochen Honors College, Zhejiang University — `3250101086@zju.edu.cn`
+**Guancheng Pan**`¹²` · **Chengsong You**`¹³` · **Hengyu Wang**`¹⁴` · **Junwei Zhou**`⁵ *` · **Yongchao Chen**`¹⁶ *`
+
+`¹` Apex Intelligence · `²` Chu Kochen Honors College, Zhejiang University · `³` East China Normal University · `⁴` Tongji University · `⁵` Independent Researcher · `⁶` Tsinghua University
+
+`*` Corresponding authors: Junwei Zhou `<zjw330501@gmail.com>`, Yongchao Chen `<cyc@apexin.ai>`
 
 This repository holds the LaTeX source and a compiled PDF of a paper proving
 Mockenhaupt's three-term conjecture for every integer `k ≥ 4`, and hence —
@@ -54,8 +58,24 @@ pdfTeX's embedded timestamps (`/CreationDate`, `/ModDate`, `/ID`) are stripped.
 
 | File | |
 |---|---|
-| `mockenhaupt.tex` | the source; 33 pages, 11pt `amsart` |
+| `mockenhaupt.tex` | the source; 35 pages, 11pt `amsart` |
 | `mockenhaupt.pdf` | compiled proof copy |
+
+## What changed on 2026-09-01
+
+- **The paper now has five authors** rather than one; four of them hold two
+  affiliations each, and the corresponding authors are named in a footnote on the
+  first page. Nothing in the mathematics changed with this revision.
+- **The closing `Note on tools` was expanded from one paragraph to a full page.**
+  It now says which system produced the argument (Apex Math, an automated
+  mathematical research system built by the authors, running Claude Opus 5 and
+  GPT-5.6 Sol), how the search actually went — five parallel lines of attack, four
+  of which converged on the same saddle-point geometry, and the one that closed the
+  problem was not the one it set out on — and, in detail, **the four ways the
+  system's output was wrong** and how each was corrected. It also records that the
+  first draft's claim to need no computer assistance was false and was deleted.
+  If you read only one page of this paper before deciding what to make of it, that
+  is a reasonable page to pick.
 
 ## What changed on 2026-08-31
 
@@ -128,27 +148,34 @@ right. As of 2026-08-31:
 
 - **Not independently refereed.** The paper has not been submitted to a journal
   and has not been read by a referee. It has not yet been through the independent
-  multi-engine audit its author's own project criteria require.
+  multi-engine audit the authors' own project criteria require.
 - **No formal verification is claimed.** An exploratory Lean 4 formalisation was
   attempted while the paper was being written; it is partial, its build does not
   pass, it covers no part of the main line, and it is not part of the proof or of
   this repository. The paper's closing note records the same thing. Removing the
   earlier status section changed the paper's exposition, not this fact.
-- **AI assistance was used** in developing and checking the argument. The
-  mathematics stands or falls on the written proof, which is self-contained and can
-  be checked by hand.
-- **No systematic literature search has been run.** One targeted check was done
-  and confirmed that the known small cases (Krenedits, `k = 3, 4`) are cited and
-  disclosed in the abstract; but a full novelty screen against the literature has
-  not been performed. If part of this argument is already in print somewhere,
-  that has not yet been ruled out.
+- **The argument was produced by an automated system**, not merely checked by
+  one. This is stated plainly in the paper's `Note on tools`, together with what the
+  system got wrong. The mathematics stands or falls on the written proof, which is
+  self-contained and can be checked by hand; the authors have read it and take
+  responsibility for it.
+- **A novelty screen was run on 2026-09-01, and it is not complete.** It found no
+  prior work on `k ≥ 6`, and it also found that several things the paper had been
+  claiming for itself were already known — `f_0, g_0` are a specialisation of the
+  Bonami–Révész idempotents, and the `q = 0` mode of the route used here is
+  published as a short-random-walk moment. All of those were corrected in the text
+  rather than left standing. The screen declares its own blind spots: MathSciNet was
+  not covered, Google Scholar refused access, and one reference work
+  (Prudnikov vol. 2, §2.13) could not be read first-hand. If part of this argument
+  is already in print somewhere those gaps are where it would be hiding.
 
 Corrections, counterexamples, and pointers to prior art are all welcome — open an
-issue. A refutation is worth more to the author than a citation.
+issue. A refutation is worth more to the authors than a citation.
 
 ## Licence
 
-Copyright © 2026 Guancheng Pan. The paper — both `mockenhaupt.tex` and
+Copyright © 2026 Guancheng Pan, Chengsong You, Hengyu Wang, Junwei Zhou and
+Yongchao Chen. The paper — both `mockenhaupt.tex` and
 `mockenhaupt.pdf` — is licensed under
 [Creative Commons Attribution 4.0 International](LICENSE) (CC BY 4.0): reuse,
 redistribute and adapt freely, including commercially, with attribution.

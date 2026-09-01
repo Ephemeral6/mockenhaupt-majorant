@@ -93,9 +93,33 @@
 \title[Three-term idempotents defeat the majorant property]
       {Three-term idempotents defeat the Hardy--Littlewood majorant
        property on every interval $(2k,\,2k+2)$}
-\author{Guancheng Pan}
-\address{Chu Kochen Honors College, Zhejiang University}
+\author[G. Pan]{Guancheng Pan}
+\address{(G. Pan) Apex Intelligence; and Chu Kochen Honors College,
+  Zhejiang University}
 \email{3250101086@zju.edu.cn}
+
+\author[C. You]{Chengsong You}
+\address{(C. You) Apex Intelligence; and East China Normal University}
+\email{youchengsong3@gmail.com}
+
+\author[H. Wang]{Hengyu Wang}
+\address{(H. Wang) Apex Intelligence; and Tongji University}
+\email{2252592@tongji.edu.cn}
+
+\author[J. Zhou]{Junwei Zhou}
+\address{(J. Zhou) Independent Researcher}
+\email{zjw330501@gmail.com}
+
+\author[Y. Chen]{Yongchao Chen}
+\address{(Y. Chen) Apex Intelligence; and Tsinghua University}
+\email{cyc@apexin.ai}
+
+% Corresponding authors get a \thanks footnote, not a symbol on the names:
+% amsart has no author-symbol mechanism, and a hand-made \footnotemark
+% inside \author leaks into the running head.  The optional [G. Pan] etc.
+% exist so the running head is initials, not five full names.
+\thanks{Corresponding authors: Junwei Zhou (\texttt{zjw330501@gmail.com})
+  and Yongchao Chen (\texttt{cyc@apexin.ai}).}
 % MSC: standard for a mathematics paper, and arXiv's submission form asks for
 % the classification separately.  Must appear BEFORE \maketitle or amsart drops
 % it silently -- there is no warning, the footer just comes out short.
@@ -1375,7 +1399,15 @@ The specification $\alpha = 0$ is essential. The same quantity at the right endp
 \end{enumerate}
 
 \section*{Note on tools}
-The argument was developed and checked with the assistance of AI language models, and parts of it were also submitted to an interactive theorem prover (Lean 4 with Mathlib) in an exploratory attempt at formalisation. Neither is part of the proof, and no claim of formal verification is made: Theorem~1.1 rests on the argument of \S\S2--10 as written here, which is self-contained and can be checked by hand.
+The argument was produced with Apex Math, an automated mathematical research system built by the authors. It runs about forty agent processes in parallel on one server, each carrying its own line of attack, together with a dispatcher that assigns targets and two supervisor processes; the language models behind the agents are Claude Opus 5 and GPT-5.6 Sol. The two belong to different model families, and the system assigns every adversarial re-check across families, on the ground that two agents of one family fail in correlated ways. We record below what the system actually did, including where it was wrong, because a reader is entitled to know which parts of a proof were searched for by machine.
+
+The elementary reduction of \S2 --- from the conjecture to the positivity of a single explicit sum over an integer sequence --- was found first, and it fixed the shape of everything that followed: after it, the whole problem is one inequality about $\sigma_m$, with no $p$, no oscillatory integral and no quadrature. Five independent lines of attack on that inequality were then run in parallel; four are recorded by name --- lattice-path counting, generating functions, induction, and positivity certificates. Without being directed to, four of them converged on the same saddle-point geometry, each measuring a different projection of it: the lattice-path line independently produced the constant $9/16 = \min_{w>0} ((1+w^{3})/(1+w))^{2}$, the induction line located the cancellation at $\alpha = 0$, and the certificate line located the difficulty in an exponentially thin subinterval. The line that closed the problem was the generating-function one, but only after it was rerouted through the two-torus rather than the circle; the Laurent machinery originally planned for it then turned out to be unnecessary, and the Bessel route is strictly shorter. The route that won was not the route the system set out on.
+
+The finite range was verified by machine in exact arithmetic. The coefficients $9^m \tau_m$ are constant terms of integer Laurent polynomials and are computed as big integers; the truncation is controlled by an exact rational bound; and positivity on each closed interval is decided in the Bernstein basis over the integers, with Sturm sequences run as an independent necessary-and-sufficient cross-check. No floating-point number enters any of these decisions. The implementation was held to a negative control: at $k = 6$ the smallest Bernstein coefficient is negative for every truncation up to $38$ and turns positive only at $39$, so an implementation that reported success at every parameter would have been evidence of a bug rather than of a theorem. This is also the empirical answer to why exact arithmetic is necessary at all: at $k = 50$ a direct high-precision quadrature needs about $140$ digits before the gap becomes visible, and is entirely invisible at $40$.
+
+The system's output was wrong in four identifiable ways, and the corrections are part of the record. First, the first draft performed the analytic continuation at the level of the sum. That is not legitimate: the Mellin identity converges absolutely only in a strip in which the Fourier coefficients are not summable over the lattice, so there is no summation-level identity there to continue. The continuation had to be redone one mode at a time, which is what \S4 now does; this was a genuine gap and it is closed. Second, a later re-derivation reported that the tail bound had dropped a factor. The re-derivation was itself the error: the three Bessel orders sum to $2qN$, not $q(2N-1)$, and the pointwise bound it proposed is false, with an explicit counterexample at $k = 1$, $q = 3$, $r = 2.7724565$. The formula in the draft was correct and was left unchanged; only the derivation around it was repaired. Third, a standoff over the prefactor, in which two expressions appeared to differ by a factor $\Gamma (s+1)$, was traced not to an algebraic slip but to an object, $\sigma_m$, that the draft had never defined; once the definition was written down both expressions were verified correct, and the discrepancy was the normalisation. Fourth, a control function used the bound $|J_\nu (Ar)| \le (2/(\pi Ar))^{1/2}$, which holds only for $\nu \le 1/2$ and is exceeded by a factor $1.449$ at $\nu = 21$; it was replaced and the estimate reproved. The first draft also asserted that the argument needs no computer assistance. That was false, and it was deleted rather than weakened; \S1.3 instead separates the decimals that carry weight, each of which is an explicit rational bound checkable by hand, from those that are there only for orientation.
+
+What is not claimed. Parts of the argument were submitted to an interactive theorem prover (Lean 4 with Mathlib) in an exploratory attempt at formalisation; that attempt is incomplete, and no claim of formal verification is made. The ancillary scripts distributed with this paper re-check the finite range; they are tools and are not part of the proof. Theorem~1.1 rests on the argument of \S\S2--10 as written here, which is self-contained and can be checked by hand. The authors have read and checked that argument and take full responsibility for it, including for the parts a machine wrote.
 
 
 \begin{thebibliography}{99}
