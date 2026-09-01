@@ -11,14 +11,6 @@
 \usepackage[colorlinks=true,linkcolor=linkcol,citecolor=linkcol,
             urlcolor=linkcol]{hyperref}
 
-% Equations are numbered FLAT, (1)...(12), deliberately NOT per section.
-% With \numberwithin all twelve landed on numbers that a statement in the same
-% section already owns -- eq (2.1) beside Lemma 2.1, (8.2) beside Lemma 8.2 --
-% and on page 27 one sentence read "the identity (9.1) is proved from ...
-% Lemmas 4.3(iv) and 9.1", where the two "9.1" are different objects.  The
-% manuscript's own hand-picked tags never collided; flat numbering restores
-% that property.
-
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -34,58 +26,14 @@
 
 \allowdisplaybreaks
 \setlength{\parskip}{0.15\baselineskip}
-% Let slack fall to the foot of the page instead of being distributed into the
-% gaps around displays, which stretched some inter-display spacing to two or
-% three lines' height.
 \raggedbottom
-% Absorbs the last few points of an otherwise unbreakable line rather than
-% letting it stick into the margin.
 \emergencystretch=2.5em
 \setlength{\tabcolsep}{4pt}
-% Narrow table columns are set ragged right, not justified.  A cell holding a
-% comma-separated list of \texttt identifiers gives a justified typewriter line
-% almost nothing to stretch: the log showed seven underfull hboxes at badness
-% 10000, and the rendered page put 31, 47 and 42pt of white between words whose
-% natural space is 5.25pt -- six to nine times normal.  Ragged right spends that
-% slack at the line end, where it reads as a margin rather than as holes inside
-% the sentence.  \arraybackslash restores \\ which >{...} would otherwise
-% shadow.  (The table that first produced those readings was the formalisation
-% index, removed on 2026-08-31; the setting stays because the symbol index of
-% 2.7 has the same shape.)
 \newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
-% A sentence ending "Hence" or on a colon is a promise that the next thing on
-% the page is the display it announces; page 13 ended on "Hence" and made the
-% reader turn the page to collect it.  Forbidding the break between a paragraph
-% and the display it introduces costs a little vertical slack, which
-% \raggedbottom already absorbs at the foot rather than by stretching the gaps
-% between displays.
 \predisplaypenalty=10000
 
-% Binary operators must not be allowed to vanish under compression.  TeX ships
-% medmuskip as "4mu plus 2mu minus 4mu", so the space around + - and \cdot can
-% shrink to exactly nothing, while thickmuskip is "5mu plus 5mu" with no shrink
-% component at all.  Two situations compress a line: ordinary justification of
-% a text paragraph, and TeX's re-packing of an over-wide unnumbered display via
-% hpack(p, z, exactly) (TeX82 s1202).  In both, the binaries collapse while the
-% relations keep full width, so "a - b = c" sets as "a-b = c" and the operator
-% reads as a hyphen.  Page 5's display lost 13 operators this way, page 7 five.
-% Capping the shrink at 1mu bounds the damage at 0.6pt and, for a display that
-% genuinely does not fit, converts a silent crush into a loud Overfull \hbox
-% that recount_boxes.py can catch.
 \medmuskip=4mu plus 2mu minus 1mu
 
-% End-of-proof mark for the two proofs the manuscript closes outside any proof
-% environment (section 10 and the run-in proof of Theorem 1.2).  Same mechanism
-% amsthm uses for \qed: the \null and the penalty let the square sit on the
-% last text line when there is room and drop to a line of its own when there is
-% not, and \parfillskip=0pt is what actually pins it to the right margin --
-% without it the paragraph's own 1fil competes with the \hfil and the square
-% comes to rest in the middle of the line.  Both assignments MUST be undone
-% after the \par: amsthm can leave them set because its \qed always fires
-% inside the proof environment's group, but this macro fires in open text, so
-% the first version leaked \parfillskip=0pt into the rest of the document and
-% every following paragraph had its last line stretched to the full measure
-% ("be    read    as    such.").
 \newcommand{\qedmark}{\unskip\nobreak\hfil\penalty50\hskip1em\null
   \nobreak\hfil$\square$\parfillskip=0pt\relax\finalhyphendemerits=0\par
   \parfillskip=0pt plus 1fil\relax\finalhyphendemerits=5000\relax}
@@ -96,30 +44,9 @@
 \author{Guancheng Pan}
 \address{Chu Kochen Honors College, Zhejiang University}
 \email{3250101086@zju.edu.cn}
-% MSC: standard for a mathematics paper, and arXiv's submission form asks for
-% the classification separately.  Must appear BEFORE \maketitle or amsart drops
-% it silently -- there is no warning, the footer just comes out short.
-%   42A05  trigonometric polynomials, inequalities, extremal problems -- the
-%          majorant property for the three-term idempotents is exactly this
-%   33C10  Bessel and Airy functions: the Weber-Schafheitlin integral and the
-%          triple-Bessel products are the engine of the proof, not decoration
-%   42A16  Fourier coefficients of functions with special properties
-%   43A46  special (thin) sets, where the idempotent/character-sum questions live
 \subjclass[2020]{Primary 42A05; Secondary 33C10, 42A16, 43A46}
 \keywords{Hardy--Littlewood majorant problem; idempotent polynomials; Bessel
   functions; Weber--Schafheitlin integrals; analytic continuation}
-% \keywords was DELIBERATELY ABSENT until 2026-08-31, and the reason is worth
-% keeping.  On the 31-page version of 2026-08-26, measured not guessed
-% (exp_frontmatter.py, exp_keywords.py): \subjclass was free, but ANY \keywords
-% -- five terms, three terms, or one -- cost exactly the same, +1 page,
-% +5 orphans and +1 crushed-glue line, because the first-page footer had room
-% for exactly one more line and \subjclass had taken it; a second block
-% overflowed and the reflow cascaded to a near-empty page 32 (582.5pt short).
-% Re-measured on the 32-page version of 2026-08-31, the same block is FREE:
-% 32 pages before and after, 4 split lead-ins before and after, 1 crushed line
-% before and after, last-page blank 440.1pt before and after.  The old cost was
-% a property of that pagination, not of \keywords.  Re-measure after any reflow
-% that changes the page count before assuming it is still free.
 
 \begin{document}
 \begin{abstract}
@@ -142,7 +69,6 @@ Hardy and Littlewood~\cite{r18} observed that this holds for every even integer 
 
 Montgomery~\cite{r26} conjectured that the property fails, for every non-even $p$, already for some \emph{idempotent} --- that is, with all coefficients in $\{0,1\}$ and the majorant obtained by flipping a single sign. Mockenhaupt and Schlag~\cite{r28} proved a four-term version of this. Mockenhaupt then conjectured~\cite{r27} the sharpest possible form: three terms suffice, and one may take the same three frequencies $0, 1, N$ throughout, with $N = k+2$ tied to the interval $(2k, 2k+2)$. Explicitly:
 
-
 \begin{quote}
 \textbf{Conjecture (Mockenhaupt).} For every integer $k \ge 0$ and every real $p$ with $2k < p < 2k+2$,
 
@@ -156,10 +82,8 @@ The exponent range is forced: at the two endpoints $p = 2k$ and $p = 2k+2$ the t
 
 \textbf{Later work on the same property.} Gressman, Guo, Pierce, Roos and Yung~\cite{r17} showed that a set $\Gamma \subseteq \mathbb{Z}^d$ has the strict majorant property on $L^p([0,1]^d)$ for every $p > 0$ precisely when it is affinely independent, and that any $\Gamma$ of cardinality at least $d+2$ --- in particular any three frequencies on the circle --- fails it on some interval $(2m, 2m+2)$. That statement and Mockenhaupt's conjecture are close in shape, down to the length of the interval, but neither contains the other. Their violating coefficients are small real numbers produced by a Taylor expansion, whereas the conjecture asks for an idempotent with a single sign flipped; and their $m$ is produced by the argument, whereas the conjecture prescribes the interval $(2k, 2k+2)$ and attaches it to the frequency $N = k+2$. The analogous question for the periodic Schr\"odinger group is treated by Bennett and Bez~\cite{r7}.
 
-
 \subsection{What was known}
 Krenedits settled the conjecture for $k = 0,1,2$ in~\cite{r20}, for $k = 3,4$ in~\cite{r21}, and for $k = 5$ in~\cite{r22}. The case $k = 0$ is analytic; the remaining published cases proceed by a delicate Rolle-type argument on the difference function, driven by numerical quadrature with proved error bounds --- rigorous, but one value of $k$ at a time, with the node count growing rapidly (up to $N \le 1200$ nodes already at $k = 2$). No proof for $k \ge 6$ has appeared, and no uniform method was known. Krenedits himself remarked that no clear structural reason was visible for why the inequality should persist for all $k$.
-
 
 \subsection{Results}
 
@@ -181,7 +105,6 @@ Two features of Theorem~1.1 deserve emphasis. First, it is \textbf{uniform in $k
 \emph{Every constant used in a proof is an explicit rational, and the following list is the complete one; no later section keeps a list of its own.} The comparison constant is $\kappa = 29/50$. The auxiliary bounds are $\pi < 22/7$ and $\sqrt{3} < 97/56$ (Lemma~8.3), $\log 2 < 7/10$, $\log (16/81) < -8/5$, $-2 \log \kappa < 12/11$, $\log 6 > 17/10$ (Lemma~8.2), $e^{-8/7} < 8/25$ (Lemma~8.4), and the integer bounds $e^4 < 55$, $e^6 > 403$, $e^7 > 1096$, $e^8 > 2980$, $e^8 < 2981$, $e^{10} > 22026$, $e^{13} < 442414$ on powers of $e$. (The two bounds on $e^8$ point in opposite directions and are used at different places; $\log 2 < 7/10$ is used twice in Lemma~8.2, once for $\log 2$ itself and once for $\psi (2)$.) Each is a \emph{rational upper or lower bound for an explicitly displayed expression}, in whichever of the two directions the point of use requires; each reduces to a comparison of two integers, and none is the output of a routine that would have to be trusted. Two of them are verified in situ: $\sqrt{3} < 97/56$ because $97^{2} = 9409 > 9408 = 3 \cdot 56^{2}$, and $\pi < 22/7$ by the classical integral $\int_{0}^{1} x^{4}(1-x)^{4}/(1+x^{2}) dx = 22/7 - \pi > 0$.
 
 \emph{Orientation figures.} Decimals occur only where a transcendental quantity is being \textbf{illustrated} rather than bounded: in the note following Lemma~8.3, in the tables of Remarks~7.4, 7.6 and 8.6, in Remark~8.1, in Remark~4.7 and in \S12. Each is a truncation --- never a rounding --- of a quantity whose closed form is displayed alongside it, each is flagged where it occurs, and no step of any proof uses one.
-
 
 \subsection{Method: replacing an estimate by an identity}
 The difficulty of the conjecture is that the two sides differ by an exponentially small amount. With $s = p/2$ and
@@ -221,7 +144,6 @@ This step must be performed \textbf{per mode}, and it is worth saying at once wh
 
 \textbf{Step 4 (\S\S6--8): one explicit comparison.} Only now do inequalities appear. An explicit lower bound for $I_{1}$ and an explicit bound for the odd tail $\sum_{q\ge 3, q \,\mathrm{odd}}|I_q|$ are compared; the comparison holds precisely when $k \ge 4$. The proof of the comparison for all $k \ge 4$ is by induction, and the mechanism that makes it work is a change of variables ($\Gamma$-arguments become $s+N$ and $N-s$) which removes $\alpha$ from the problem entirely; see Remark~8.1 for why bounding each factor separately in $\alpha$ cannot work.
 
-
 \subsection{What is not claimed}
 We prove nothing about the majorant property for general idempotents, nor about exponents outside the intervals $(2k, 2k+2)$, nor do we obtain the sharp constant in any of the inequalities used. The threshold $K_{0} = 4$ is what our comparison yields; we do not claim it is optimal for the method.
 
@@ -231,10 +153,8 @@ Both ingredients of that two-step reduction also occur, separately, in Martin~\c
 
 We also claim no formal verification: Theorem~1.1 stands or falls on the argument of \S\S2--10 alone. On the tools used while the paper was prepared, see the note preceding the references.
 
-
 \subsection{Organisation}
 \S2 fixes notation and reduces the conjecture to positivity of a series $\Phi$. \S3 establishes the two-torus identity, \S4 the per-mode continuation, \S5 the closed-form positivity of the leading mode. \S\S6--7 give the explicit lower and tail bounds; \S8 proves the comparison for all $k \ge 4$. \S9 handles the endpoints $\alpha \in \{0,1\}$ and records the normalisation bridge, \S10 assembles Theorem~1.1, \S11 the merge with the published small cases, and \S12 lists what remains open.
-
 
 \section{Notation and reduction}
 Throughout, $e(t) = e^{2\pi it}$, $\mathbb{T} = \mathbb{R}/\mathbb{Z}$ carries normalised Haar measure, $k$ is an integer, $N = k+2$, $L = 2N - 1 = 2k+3$, and
@@ -275,7 +195,6 @@ The Pochhammer form is the one to keep in mind: it is a polynomial identity in $
   D(s) = 9^s (s-k)(k+1-s) \sum_{m \ge k+2} \beta_m(s) \sigma_m .
 \]
 The conjecture at $k$ thereby becomes the single statement ``a sum of positive multiples of the $\sigma_m$ is positive'', with no case distinction on the parity of $k$ anywhere in \S\S3--10. Had we kept $\tau_m$, every subsequent inequality would have carried a factor $(-1)^{k+1}$ and every comparison would have had to be read in two directions at once.
-
 
 \begin{lemma}[uniform absolute summability of the binomial coefficients]\label{res:2.1}
 Let $k \ge 1$ be an integer. For every $s \in [k, k+1]$ and every $m \ge k+2$,
@@ -431,14 +350,12 @@ For the consequence: if $s \in (k, k+1)$ then $9^s > 0$, $s - k > 0$ and $k+1-s 
 \end{proof}
 The reduction has isolated the two endpoint zeros of $D$ into the explicit factor $(s-k)(k+1-s)$; everything that follows is devoted to proving $\Phi > 0$, and $\Phi$ does not vanish at the endpoints.
 
-
 \begin{remark}[the implication is one-way, deliberately]\label{res:2.8}
 The equivalence $D > 0 \iff \Phi > 0$ holds on the \emph{open} interval only. At the endpoints, continuity of $\Phi$ gives merely $\Phi (k) \ge 0$ and $\Phi (k+1) \ge 0$ from the conjecture. Positivity of $\Phi$ on the closed interval is therefore formally \emph{stronger} than the conjecture; we prove that stronger statement, and use only the direction stated in Proposition~2.7.
 \end{remark}
 
 \subsection*{Index of recurring symbols}
 Several letters carry more than one meaning, as is unavoidable in an argument that crosses a circle, a two-torus and a Mellin transform. The following table fixes each meaning; where a letter is reused, the number and shape of its arguments always disambiguates, no two meanings occur in the same display, and where two meanings would otherwise meet inside a single proof the letters are kept distinct by hand.
-
 
 {\small
 \begin{longtable}{P{0.175\linewidth}P{0.515\linewidth}l}
@@ -485,7 +402,6 @@ Let $\mathbb{T}^{2} = (\mathbb{R}/2\pi \mathbb{Z})^{2}$ and
   P(\theta ,\psi ) = 1 + e^{i\theta } + e^{i\psi } , \qquad  H = |P|^{2} = 3 + 2\cos \theta + 2\cos \psi + 2\cos (\theta -\psi ) ,
 \]
 so that $A(x) = H(2\pi x, 2\pi Nx)$ and $B(x) = H(2\pi x, 2\pi Nx + \pi )$.
-
 
 \begin{lemma}[zero set]\label{res:3.1}
 $H$ vanishes exactly at the two points $z_{+} = (2\pi /3, 4\pi /3)$ and $z_{-} = (4\pi /3, 2\pi /3)$; below, $z_\pm$ abbreviates ``either of $z_{+}$, $z_{-}$'', every assertion made about it holding for both. Near each zero, $P$ is a real-analytic diffeomorphism onto a neighbourhood of $0$ (the Jacobian is $\sin (\psi -\theta ) = \pm \sqrt{3}/2$), so $H \asymp |{\cdot} - z_\pm |^{2}$ there. Consequently $\int_{\mathbb{T}^{2}} H^\sigma < \infty$ if and only if $\sigma > -1$.
@@ -615,7 +531,6 @@ the sum converging absolutely for fixed radii. The sign is a matter of where the
   = \sum_{k_{1} \in \mathbb{Z}} \sum_{k_{2} \in \mathbb{Z}} J_{k_{1}}(r_{2}) J_{k_{2}}(r_{3}) J_{k_{1}+k_{2}}(r_{1}) e^{i(k_{1}\theta_{1} + k_{2}\theta_{2})} .
 \end{gather*}
 Both are Graf's addition theorem applied twice, or equivalently the computation just made with three distinct radii; the vector reading is that $J_{0}$ of the length of a sum of three planar vectors expands in the two angles between them, with the index of the third factor forced to be $k_{1}+k_{2}$ by rotation invariance. We have given the direct proof because the paper is self-contained, and because it is the Fourier coefficient, not the expansion, that is used below: only the $(a,b) = (-Nq, q)$ coefficient survives in \S4.
-
 
 \begin{lemma}[strip of convergence]\label{res:4.3}
 Let $q \ge 1$ be an integer and $C_q = \Gamma (qN+1) \Gamma (q(N-1)+1) \Gamma (q+1)$. Then \textbf{(i)} the orders add up to $qN + q(N-1) + q = 2qN$; \textbf{(ii)} $|\Psi_q(r)| \le (r/2)^{2qN}/C_q$ for $r > 0$; \textbf{(iii)} $|\Psi_q(r)| = O(r^{-3/2})$ as $r \to \infty$; \textbf{(iv)} $I_q$ converges absolutely and is holomorphic on $\Omega_q = \{-3/4 < \Re s < qN\}$, and the right endpoint is sharp.
@@ -1085,7 +1000,6 @@ The goal of this section is $R(k,\alpha ) < 1$ for every integer $k \ge 4$ and e
 \end{equation}
 with $s \in [N-2, N-1]$. The three exponential factors $(\kappa N)^{-2s}$, $3^{-2s}$ (from $S$) and $(16/9)^s$ (from dividing by $(9/16)^s$) have been merged into $\mu_N^s$; note that what survives next to $B$ is $T$, not $S$. The remaining constants collect as $C_{0} = [ (2/(5\sqrt{3}))\cdot (9/8)/\pi ]^{-1} = 5\sqrt{3}\cdot 8\pi /(2\cdot 9) = 20\sqrt{3}\pi /9$.
 
-
 \begin{remark}[why factorwise bounds fail]\label{res:8.1}
 In \eqref{eq:d3} the factor $\Gamma (s+N)$ increases in $\alpha$ while $\mu_N^s$ decreases; their extreme points are at opposite ends of the interval. Bounding each factor by its own worst case therefore separates a pair of factors that cancel each other, and the resulting product exceeds $1$ even though the true ratio is about $0.6$ (Remark~7.6 quantifies this). The change of variables above removes $\alpha$ from the problem, and the monotonicity lemma below disposes of the whole interval at once.
 \end{remark}
@@ -1180,7 +1094,6 @@ the last comparison being again between two integers once the fraction is cleare
 \end{proof}
 \emph{For orientation, and used nowhere:} the exact values are $R(4,0) = 0.606097\ldots$ and $C_{0} = 20\sqrt{3}\pi /9 = 12.09199\ldots$, against the bound $5335/441 = 12.097505\ldots$ just used for $C_{0}$; the proved bound on $R(4,0)$ is $0.606373\ldots$, and the margin to $1$ is a factor $100/61 > 8/5$.
 
-
 \begin{lemma}[induction step]\label{res:8.4}
 For every integer $k \ge 4$, $R(k+1, 0) < (19/25) \cdot R(k, 0)$.
 \end{lemma}
@@ -1231,10 +1144,8 @@ i.e. $\mathrm{sign}\, I_{3}(k) = (-1)^k$, while $I_{1} > 0$ for every $k$ by The
 \end{remark}
 Nothing in this section uses numerical evaluation: the three ingredients are a digamma inequality, a rational base case, and an elementary induction step, and no decimal occurs in any of the three proofs. Every constant they use is one of the explicit rationals listed once and for all in \S1.3, and the decimals that do appear in this section --- the four in the note following Lemma~8.3 and the $\mathrm{about}\, 0.6$ of Remark~8.1 --- are orientation figures in the sense of \S1.3, each standing beside the closed form it truncates.
 
-
 \section{The endpoints}
 This section establishes positivity of $\Phi$ on the \textbf{closed} interval $[k, k+1]$, which is formally stronger than Theorem~1.1 (Remark~2.8). A reader interested only in Theorem~1.1 may restrict to $\alpha \in (0,1)$ throughout and use Lemma~9.4 on the open interval only, where it is proved directly.
-
 
 \begin{lemma}\label{res:9.1}
 Let $k \ge 4$. For every odd $q \ge 1$,
@@ -1265,7 +1176,6 @@ Let $k \ge 4$. Then $F(\alpha ) = \sum_{q \ge 1, q \,\mathrm{odd}} I_q(k+\alpha 
 \end{proposition}
 \textbf{What the proposition does not assert.} Nothing about the identity \eqref{eq:star2} is asserted here. The closed-interval extension of \eqref{eq:star2} is stated once only, in Lemma~9.4 below, and this proposition is one of its two inputs (the other being Lemma~2.6); the argument for the extension is set out in the proof that follows, since it is the continuity just established that carries it.
 
-
 \begin{proof}
 Each $I_q(k+\alpha )$ is continuous in $\alpha \in [0,1]$ (Lemma~4.3(iv): $I_q$ is holomorphic on $\Omega_q \supset [k,k+1]$), and $|I_q(k+\alpha )| \le M_q$ with $\sum_q M_q < \infty$ by Lemma~9.1. The Weierstrass M-test gives uniform convergence, hence continuity of $F$ on $[0,1]$.
 
@@ -1274,7 +1184,6 @@ It should be emphasised what is and is not being done here, since the factor $\s
 Note that this is not a vacuous extension: at $\alpha \in \{0,1\}$ both sides of \eqref{eq:star2} are \textbf{nonzero}. The right-hand side is $\sum_{q \,\mathrm{odd}} I_q(k+\alpha ) \ge I_{1} - \sum_{q\ge 3, q \,\mathrm{odd}}|I_q| > 0$ by \textbf{Propositions~6.1 and 8.5} --- the first giving $I_{1} \ge W_{\mathrm{low}}(k,\alpha )$, the second $\sum_{q\ge 3, q \,\mathrm{odd}}|I_q| < W_{\mathrm{low}}(k,\alpha )$, so that the difference is strictly positive. (The restriction to odd $q$ is essential in both: Proposition~8.5 bounds only the odd tail, and only the odd tail occurs.) (Theorem~5.5 alone would give only $I_{1} > 0$, which does not by itself dominate the tail.) Both hold for every $\alpha \in [0,1]$ and neither uses \S9; hence the left-hand side, and with it $\Phi (k)$ and $\Phi (k+1)$, is nonzero too. What does vanish at the endpoints is $D(s) = 9^s \alpha (1-\alpha )\Phi (s)$, and it vanishes because of the explicit factor $\alpha (1-\alpha )$, not because of anything in \eqref{eq:star2}.
 \end{proof}
 We record separately the normalisation bridge connecting $\Phi$ (defined via the series $\sigma_m$ in \S2) to the sum $\sum_q I_q(s)$ evaluated in Theorem~4.8; the two objects live on different sides of the reduction and the identity connecting them is not visible from either section alone.
-
 
 \begin{lemma}[normalisation bridge]\label{res:9.4}
 For $k \ge 1$ and $\alpha \in (0,1)$,
@@ -1322,7 +1231,6 @@ The chain in step 3 contains a strict inequality in the middle, so the conclusio
 \section{The cases \texorpdfstring{$k \le 3$}{k <= 3}, and Theorem~1.2}
 For $k \in \{0,1,2,3\}$ we invoke the published results. The following comparison was carried out against the full arXiv texts of both papers.
 
-
 \begin{center}\small
 \begin{tabular}{lP{0.349\linewidth}P{0.407\linewidth}}
 \toprule
@@ -1352,7 +1260,6 @@ The published coverage is: $k = 0,1,2$ in~\cite{r20}; $k = 3,4$ in~\cite{r21}. O
 
 It should be stated plainly that the small cases are proved by rigorous numerical quadrature --- each lemma there supplies an analytic bound on a fourth derivative, inserts it into the error term of a quadrature rule, and chooses a node count making the error smaller than the quantity to be signed. This is a complete proof, but it is not of the same character as \S\S2--10, no \emph{proof} in which contains a numerical component. The distinction is worth stating precisely: no proof in \S\S2--10 contains a decimal at all, every constant entering one being one of the explicit rationals listed in \S1.3, whereas \S11 relies on a quadrature whose output must be trusted. Consequently Theorem~1.2 is \textbf{not} self-contained within this paper, whereas Theorem~1.1 is.
 
-
 \section{Open questions}
 \begin{enumerate}
 \item The threshold $K_{0} = 4$ is what the comparison of \S8 yields; the true threshold for the method is not determined here. It is worth being precise about \emph{which} step binds, because the natural guess --- that it is the bound on $R_q$ of \S7 --- is wrong. The sharp form of Remark~7.4 establishes $R_q \ge \lambda_N \cdot Nq$ for \textbf{every} $N$ and every $q \ge 1$, with $\lambda_N$ the sharp constant; so \S7 does supply a usable constant at $N = 3,4,5$, merely a smaller one than $\kappa = 29/50$. What fails is the comparison of \S8, which at $s = k$ requires $R(k,0) = C_{0} \Gamma (2k+3) B(k) T(k) \mu_N^k < 1$ with $\mu_N = 16/(81\kappa^{2}N^{2})$, and so demands a constant of size at least $\kappa_{\min }(k) := (4/(9N)) \cdot [ C_{0} \Gamma (2k+3) B(k) T(k) ]^{1/(2k)}$, namely
@@ -1376,11 +1283,6 @@ The specification $\alpha = 0$ is essential. The same quantity at the right endp
 
 \section*{Note on tools}
 The argument was developed and checked with the assistance of AI language models, and parts of it were also submitted to an interactive theorem prover (Lean 4 with Mathlib) in an exploratory attempt at formalisation. Neither is part of the proof, and no claim of formal verification is made: Theorem~1.1 rests on the argument of \S\S2--10 as written here, which is self-contained and can be checked by hand.
-
-
-% \section*{Acknowledgments}
-% <acknowledgements go here once permission to name
-%  the people concerned has been obtained>
 
 \begin{thebibliography}{99}
 \bibitem{r1} H. Akatsuka, \emph{Zeta Mahler measures}, J. Number Theory \textbf{129} (2009), 2713--2734. DOI \mbox{10.1016/j.jnt.2009.05.007}.
