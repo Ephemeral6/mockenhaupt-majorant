@@ -138,9 +138,9 @@ Say that a set $\Lambda \subseteq \mathbb{Z}$ and an exponent $p$ have the \emph
 \[
   \left\| \sum_{n\in \Lambda } a_n e(nx) \right\|_{L^p(\mathbb{T})} \le \left\| \sum_{n\in \Lambda } b_n e(nx) \right\|_{L^p(\mathbb{T})} .
 \]
-Hardy and Littlewood \cite{r7} observed that this holds for every even integer $p$, for the trivial reason that $\|F\|_p^p$ is then an exact convolution count with nonnegative weights. They asked whether it might hold for all $p$. Boas \cite{r1} answered negatively, and the question became quantitative: how small a set, and how mild a failure?
+Hardy and Littlewood~\cite{r18} observed that this holds for every even integer $p$, for the trivial reason that $\|F\|_p^p$ is then an exact convolution count with nonnegative weights. They asked whether it might hold for all $p$. Boas~\cite{r4} answered negatively, and the question became quantitative: how small a set, and how mild a failure?
 
-Montgomery \cite{r15} conjectured that the property fails, for every non-even $p$, already for some \emph{idempotent} --- that is, with all coefficients in $\{0,1\}$ and the majorant obtained by flipping a single sign. Mockenhaupt and Schlag \cite{r17} proved a four-term version of this. Mockenhaupt then conjectured \cite{r16} the sharpest possible form: three terms suffice, and one may take the same three frequencies $0, 1, N$ throughout, with $N = k+2$ tied to the interval $(2k, 2k+2)$. Explicitly:
+Montgomery~\cite{r26} conjectured that the property fails, for every non-even $p$, already for some \emph{idempotent} --- that is, with all coefficients in $\{0,1\}$ and the majorant obtained by flipping a single sign. Mockenhaupt and Schlag~\cite{r28} proved a four-term version of this. Mockenhaupt then conjectured~\cite{r27} the sharpest possible form: three terms suffice, and one may take the same three frequencies $0, 1, N$ throughout, with $N = k+2$ tied to the interval $(2k, 2k+2)$. Explicitly:
 
 
 \begin{quote}
@@ -152,9 +152,13 @@ Montgomery \cite{r15} conjectured that the property fails, for every non-even $p
 \end{quote}
 The exponent range is forced: at the two endpoints $p = 2k$ and $p = 2k+2$ the two norms coincide, by Parseval-type identities, so the conjecture asserts a strict inequality on each open interval between consecutive even integers, with a different triple of frequencies on each interval.
 
+\textbf{A note on the indexing.} The conjecture is stated above in a shifted form, and a reader comparing with the original should expect the offset. R\'ev\'esz~\cite{r30}, pp. 18--19, records the assertion as it stands in the Habilitationsschrift~\cite{r27}: there the proposed counterexample is $1 + e(y) \pm e((k+1)y)$ on the interval $2k-2 < p < 2k$. Replacing $k$ by $k+1$ throughout turns that into the interval $(2k, 2k+2)$ carrying the frequency $k+2$, which is the indexing used above and in~\cite{r20,r21,r22}; the two are the same family of assertions. The same account records that the argument given in the Habilitationsschrift is confined to $2 < p < 4$.
+
+\textbf{Later work on the same property.} Gressman, Guo, Pierce, Roos and Yung~\cite{r17} showed that a set $\Gamma \subseteq \mathbb{Z}^d$ has the strict majorant property on $L^p([0,1]^d)$ for every $p > 0$ precisely when it is affinely independent, and that any $\Gamma$ of cardinality at least $d+2$ --- in particular any three frequencies on the circle --- fails it on some interval $(2m, 2m+2)$. That statement and Mockenhaupt's conjecture are close in shape, down to the length of the interval, but neither contains the other. Their violating coefficients are small real numbers produced by a Taylor expansion, whereas the conjecture asks for an idempotent with a single sign flipped; and their $m$ is produced by the argument, whereas the conjecture prescribes the interval $(2k, 2k+2)$ and attaches it to the frequency $N = k+2$. The analogous question for the periodic Schr\"odinger group is treated by Bennett and Bez~\cite{r7}.
+
 
 \subsection{What was known}
-Krenedits settled the conjecture for $k = 0,1,2$ in \cite{r9}, for $k = 3,4$ in \cite{r10}, and for $k = 5$ in \cite{r11}. The case $k = 0$ is analytic; the remaining published cases proceed by a delicate Rolle-type argument on the difference function, driven by numerical quadrature with proved error bounds --- rigorous, but one value of $k$ at a time, with the node count growing rapidly (up to $N \le 1200$ nodes already at $k = 2$). No proof for $k \ge 6$ has appeared, and no uniform method was known. Krenedits himself remarked that no clear structural reason was visible for why the inequality should persist for all $k$.
+Krenedits settled the conjecture for $k = 0,1,2$ in~\cite{r20}, for $k = 3,4$ in~\cite{r21}, and for $k = 5$ in~\cite{r22}. The case $k = 0$ is analytic; the remaining published cases proceed by a delicate Rolle-type argument on the difference function, driven by numerical quadrature with proved error bounds --- rigorous, but one value of $k$ at a time, with the node count growing rapidly (up to $N \le 1200$ nodes already at $k = 2$). No proof for $k \ge 6$ has appeared, and no uniform method was known. Krenedits himself remarked that no clear structural reason was visible for why the inequality should persist for all $k$.
 
 
 \subsection{Results}
@@ -170,7 +174,7 @@ For every integer $k \ge 4$ and every real $p$ with $2k < p < 2k+2$,
 \begin{theorem}\label{res:1.2}
 Mockenhaupt's conjecture holds for every integer $k \ge 0$.
 \end{theorem}
-Theorem~1.2 follows from Theorem~1.1 together with the published cases $k = 0,1,2,3$ of \cite{r9,r10}; the normalisations, the exponent intervals and the direction of the inequality agree with ours, as we record in \S11. The overlap at $k = 4$ is genuine: our proof and \cite{r10} establish that case independently.
+Theorem~1.2 follows from Theorem~1.1 together with the published cases $k = 0,1,2,3$ of~\cite{r20,r21}; the normalisations, the exponent intervals and the direction of the inequality agree with ours, as we record in \S11. The overlap at $k = 4$ is genuine: our proof and~\cite{r21} establish that case independently.
 
 Two features of Theorem~1.1 deserve emphasis. First, it is \textbf{uniform in $k$}: a single argument covers the whole tail, and the threshold $4$ is not an artefact of where we stopped computing but the exact point at which an explicit comparison turns (\S8). Second, the argument for $k \ge 4$ invokes \textbf{no numerical routine}: no quadrature, no interval arithmetic, no computer algebra. Nor does any \textbf{decimal} figure enter a proof.
 
@@ -200,6 +204,8 @@ along the line $\theta = 2\pi x, \psi = 2\pi Nx$, respectively that line shifted
 \]
 This is an identity, not an estimate. Crucially the surviving modes form a ray indexed by a single integer $q$, so that ``leading mode plus tail'' is a meaningful decomposition.
 
+\textbf{Where the ingredients of Step 1 come from.} Neither half of this step is new, and it is worth saying so before going on. Lifting a three-term idempotent to a function of two variables and comparing the two lines obtained by shifting the second coordinate through half a period is the device of Bonami and R\'ev\'esz~\cite{r8}, who build their concentration results on bivariate idempotents and, for $0 < p < 2$, on the idempotent $1 + e(y) + e(x + 2y)$, whose specialisations at $x = 0$ and at $x = 1/2$ are precisely the pair $f_0, g_0$ above; Krenedits settles $k = 0$ on that basis, in Proposition 4 of~\cite{r20}. Bonami and R\'ev\'esz in turn attribute earlier appearances of bivariate idempotents in this subject to Anderson, Ash, Jones, Rider and Saffari~\cite{r2,r3}. The identity itself is an instance of a mechanism that is also known: for a monomial substitution of a torus given by an integer matrix, the integral over the image subtorus differs from the integral over the whole torus by the sum of the Fourier coefficients over the kernel lattice of that matrix, as used by Brunault, Guilloux, Mehrabdollahei and Pengo~\cite{r10} to control the error in Boyd--Lawton convergence. Their hypothesis is that the integrand be holomorphic on a neighbourhood of the torus, which is what makes those coefficients decay exponentially; $H^s$ is merely H\"older, and Lemma~3.2 supplies the absolute summability from $H^s \in C^{1,1} \subset H^{2}$ instead. Here the substitution is $x \mapsto (x, Nx)$, and its kernel lattice $\ker (1,N) \cap \mathbb{Z}^{2}$ is exactly the ray $\{(-Nq, q) : q \in \mathbb{Z}\}$ --- that is what \emph{resonant ray} means throughout, the term being used for readability and denoting nothing more than this annihilator of the subgroup swept out by the line. What is not taken from that literature is the use made of the lift: the exact identity displayed above on the ray alone, and the continuation in $s$ of its individual coefficients.
+
 \textbf{Step 2 (\S4): analytic continuation, one mode at a time.} Each coefficient $\widehat{H}^s(-Nq, q)$ extends holomorphically to $\{\Re s > -1\}$, while a triple-Bessel integral
 
 \[
@@ -209,6 +215,8 @@ is holomorphic on the strip $\Omega_q = \{-3/4 < \Re s < qN\}$. The two agree on
 
 This step must be performed \textbf{per mode}, and it is worth saying at once why --- and worth not overstating it. Proposition~3.4 is established only for $s \ge 1$, that being where $\widehat{H}^s \in \ell^{1}(\mathbb{Z}^{2})$ is available, and the anchor strip lies in $\{\Re s < 0\}$; so on the anchor strip the summed identity is \textbf{not available} to be continued. The obstruction is one of \emph{proof}, not of existence: we do not show that the summed identity fails there, and numerically it appears to hold (Remark~4.7). What we continue instead is a \textbf{single} Fourier coefficient, for which Lemma~4.1 gives holomorphy on $\{\Re s > -1\} \supset \Omega_q$, Lemma~4.3(iv) gives holomorphy of $I_q$ on $\Omega_q$, and Lemma~4.5 gives agreement on the anchor strip --- all three are needed, as holomorphy of one side alone continues nothing. Summation over $q$ is reinstated only after returning to $s \in (k, k+1)$. This is the single most delicate point of the argument; Remark~4.7 sets it out in full, and also records what the obstruction is \emph{not} --- the failure of $\ell^{1}(\mathbb{Z}^{2})$ over the whole lattice at negative $\Re s$ is by itself no obstacle, since the quadratic structure of the two zeros recorded in Lemma~3.1 leads one to expect the ray coefficients to decay like $q^{-2-2\sigma }$, which is summable exactly when $\sigma > -1/2$. That quantitative decay, and \textbf{not} the fact that the resonant ray has density zero in $\mathbb{Z}^{2}$, is the point at issue; the localisation that would turn the expected decay into a theorem is not carried out here (\S12, item 3).
 
+\textbf{What is already in the literature for the zeroth mode.} For the single coefficient at the origin the programme just described has been carried out and published. $\widehat{H}^s(0,0)$ is the zeta Mahler measure $Z(1+x+y; 2s)$ of Akatsuka~\cite{r1}, equivalently the moment $W_{3}(2s)$ of a three-step uniform random walk; Borwein, Nuyens, Straub and Wan~\cite{r9} prove that $W_n(s)$ is analytic on $\{\Re s > 0\}$, continue it to the whole plane from the even integers by Carlson's theorem, and match it on a strip to a Bessel integral representation of Broadhurst which they record --- and which, at $n = 3$, already produces such identities as $W_{3}(1) = 3\int_{0}^\infty J_{0}(x)^{2} J_{1}(x) dx/x$, an integral of a product of three Bessel functions of equal argument against a negative power. What is done below is that same programme on the \textbf{non-zero} modes $(-Nq, q)$ of the ray, where the three orders $qN$, $q(N-1)$, $q$ are distinct and grow with $q$, and where the sum over $q$ must afterwards be reinstated; it is that last step, and not the continuation itself, that we did not find anywhere.
+
 \textbf{Step 3 (\S5): the leading mode, in closed form.} The mode $q = 1$ is evaluated exactly, via Neumann's product formula, a Weber--Schafheitlin integral, and an Euler transformation. The point is not that the resulting expression is small or large, but that after the transformation every visible quantity is manifestly nonnegative, so that $I_{1} > 0$ becomes an inspection rather than an estimate --- including at the degenerate endpoint $\alpha = 0$, where a factor $1/\Gamma (\alpha )$ tends to zero and where the whole difficulty of the problem is concentrated.
 
 \textbf{Step 4 (\S\S6--8): one explicit comparison.} Only now do inequalities appear. An explicit lower bound for $I_{1}$ and an explicit bound for the odd tail $\sum_{q\ge 3, q \,\mathrm{odd}}|I_q|$ are compared; the comparison holds precisely when $k \ge 4$. The proof of the comparison for all $k \ge 4$ is by induction, and the mechanism that makes it work is a change of variables ($\Gamma$-arguments become $s+N$ and $N-s$) which removes $\alpha$ from the problem entirely; see Remark~8.1 for why bounding each factor separately in $\alpha$ cannot work.
@@ -217,7 +225,9 @@ This step must be performed \textbf{per mode}, and it is worth saying at once wh
 \subsection{What is not claimed}
 We prove nothing about the majorant property for general idempotents, nor about exponents outside the intervals $(2k, 2k+2)$, nor do we obtain the sharp constant in any of the inequalities used. The threshold $K_{0} = 4$ is what our comparison yields; we do not claim it is optimal for the method.
 
-The evaluation of integrals of triple products of Bessel functions is itself a substantial and much older subject, running from MacDonald \cite{r12} and Watson \cite{r19} through Bailey \cite{r2,r3}, Jackson--Maximon \cite{r8}, Glasser--Montaldi \cite{r6}, and on to Fabrikant \cite{r4,r5} and Mehrem--Hohenegger \cite{r14}; none of this is new. The specific two-step technique of \S5 --- collapsing two of the three Bessel factors by Neumann's product formula and then recognising the resulting integral as a Weber--Schafheitlin integral --- also has documented precedent: Martin \cite{r13} applies exactly this reduction (to a different sum) and explicitly identifies the result as ``a critical case of the Weber--Schafheitlin integrals.'' What we did not find in this literature is the specific triple product $J_{qN} J_{q(N-1)} J_q$ with the order ratios $N : (N-1) : 1$ that arise here, the power-law weight $r^{-2s-1}$ evaluated for real (as opposed to integer) $s$, or any prior connection of such an integral to the Hardy--Littlewood majorant problem. No priority claim beyond this is made.
+The evaluation of integrals of triple products of Bessel functions is itself a substantial and much older subject, running from MacDonald~\cite{r23} and Watson~\cite{r31} through Bailey~\cite{r5,r6}, Jackson--Maximon~\cite{r19}, Gervois--Navelet~\cite{r13,r14,r15}, Glasser--Montaldi~\cite{r16}, and on to Fabrikant~\cite{r11,r12} and Mehrem--Hohenegger~\cite{r25}; none of this is new. Of these the closest general framework is that of Gervois and Navelet, who carry Bailey's Appell-$F_4$ formula for $\int_{0}^\infty t^{\lambda -1} J_\mu (at) J_\nu (bt) J_\rho (ct) dt$ into the triangle region by analytic continuation in every case where the $F_4$ factorises into functions of one variable, and who tabulate those cases. One of them is exactly the relation $\mu - \nu = \pm \rho$ among the orders that holds here; but it is tabulated only for $\lambda = 2$, whereas the weight of \S5 has $\lambda = -2s$ with $s$ real. That is where the present situation leaves the tabulated ones, and it is also why the route of \S5 is open at all: the three arguments here are equal, which is what allows Neumann's product formula to collapse two of the factors --- that step requires the two collapsed factors to have the same argument --- leaving a Weber--Schafheitlin integral, which is available for general $\lambda$.
+
+Both ingredients of that two-step reduction also occur, separately, in Martin~\cite{r24}: he uses Neumann's product formula, there to obtain a Fourier representation of $J_n^{2}$, and he twice identifies an infinite Bessel integral as ``a critical case of the Weber--Schafheitlin integrals.'' His own evaluation of an integral of three Bessel factors proceeds differently, by a Mellin--Barnes representation followed by a Weber--Schafheitlin integration and a residue computation. What we did not find in this literature is the two-step route of \S5 itself --- Neumann's product formula to collapse two of the three factors, then Weber--Schafheitlin on what is left --- nor the specific triple product $J_{qN} J_{q(N-1)} J_q$ with the order ratios $N : (N-1) : 1$ that arise here, nor the power-law weight $r^{-2s-1}$ evaluated for real (as opposed to integer) $s$, nor any prior connection of such an integral to the Hardy--Littlewood majorant problem. No priority claim beyond this is made.
 
 We also claim no formal verification: Theorem~1.1 stands or falls on the argument of \S\S2--10 alone. On the tools used while the paper was prepared, see the note preceding the references.
 
@@ -431,7 +441,7 @@ Several letters carry more than one meaning, as is unavoidable in an argument th
 
 
 {\small
-\begin{longtable}{P{0.171\linewidth}P{0.504\linewidth}P{0.235\linewidth}}
+\begin{longtable}{P{0.175\linewidth}P{0.515\linewidth}l}
 \toprule
 symbol & meaning & where \\
 \midrule
@@ -457,7 +467,7 @@ $C_q$ & $\Gamma (qN+1)\Gamma (q(N-1)+1)\Gamma (q+1)$ --- subscripted by the mode
 $C_{0}$ & the single absolute constant $20\sqrt{3}\pi /9$ --- no argument, no subscript variable & \S8 \\
 $C^{1}$, $C^{2}$, $C^{3}$, $C^{1,1}$ & pointwise smoothness classes --- always with a superscript, never an argument & \S3 \\
 $z_{+}$, $z_{-}$ & the two zeros of $H$; $z_\pm$ means ``either one'' & \S3 \\
-$A$, $B$ & on the circle: $A = |f_k|^{2}$, $B = |g_k|^{2}$ & \S2, \S5 ($A = 2\cos \vartheta$, the junction variable --- flagged in situ) \\
+$A$, $B$ & on the circle: $A = |f_k|^{2}$, $B = |g_k|^{2}$ & \S2 \\
 $B(s)$ & the bracket $1/(6N-2s) + 1/(2s)$ of \S7 --- with an argument & \S\S7--8 \\
 $\kappa$ & the single rational constant $29/50$ of Proposition~7.3 --- never an index or a variable & \S\S7--9 \\
 $Q$ & the local abbreviation $\nu^{2} - 1/4$, occurring in the proof of Lemma~4.3(iii) and nowhere else & \S4 \\
@@ -465,6 +475,7 @@ $\lambda_N$ & the exact limit $\lim_q R_q/(Nq)$ of Remark~7.4; $\lambda = 2s+1$ 
 $s$, $\alpha$, $k$, $N$, $L$, $q$, $m$ & $s = p/2 = k+\alpha$, $\alpha \in [0,1]$, $N = k+2$, $L = 2N-1$; $q$ indexes resonant modes, $m$ indexes moments & throughout \\
 $a$, $b$ & dummy Fourier indices on the two-torus in Lemma~4.2, and in the invocation of Lemma~4.2 inside the proof of Lemma~4.5 (at $(a,b) = (-Nq,q)$); in \S5, $a < b$ are the two Bessel scales of \eqref{eq:ws}. Lemma~4.5 writes $\rho = \sqrt{H}$, not $a = \sqrt{H}$, precisely to keep the letter free & \S\S4, 5 \\
 $\rho$ & $\sqrt{H}$ in the proof of Lemma~4.5 only & \S4 \\
+$u$ & the scale ratio $u = 2 \cos \vartheta \in [0,2]$ of Neumann's product formula in \S\S5--6. Three proofs use the letter locally for something else --- $u = e^{i\theta }$ in Lemma~3.1, a summation index in Lemma~4.2, $u = r^{1/2} J_\nu (r)$ in Lemma~4.3(iii) --- and none of them occurs in \S\S5--6 & \S\S5--6 \\
 \end{longtable}}
 
 \section{The two-torus identity}
@@ -712,21 +723,18 @@ At $\alpha \in \{0,1\}$ the prefactor $\sin (\pi \alpha )$ in \eqref{eq:star1} a
 \end{remark}
 
 \section{The leading mode is positive}
-\emph{A note on notation.} Throughout this section $A$ denotes the \textbf{scale ratio} $A = 2 \cos \vartheta \in [0,2]$ of Neumann's product formula, not the circle function $A = |f_k|^{2}$ of \S2. The two never appear in the same display, and $A$ occurs here only as the argument of $W$; \S2's $A$ does not occur in \S\S5--8 at all.
-
 
 \begin{proposition}\label{res:5.1}
 For $s = k + \alpha > 0$,
 
 \[
-  I_{1}(s) = (2/\pi ) \int_{0}^{\pi /2} \cos \vartheta \cdot W(2 \cos \vartheta ) d\vartheta , \qquad  W(A) = \int_{0}^\infty J_L(Ar) J_{1}(r) r^{-2s-1} dr .
+  I_{1}(s) = (2/\pi ) \int_{0}^{\pi /2} \cos \vartheta \cdot W(2 \cos \vartheta ) d\vartheta , \qquad  W(u) = \int_{0}^\infty J_L(ur) J_{1}(r) r^{-2s-1} dr .
 \]
 \end{proposition}
 
 \begin{proof}
-Neumann's product formula (\cite{r18}, DLMF 10.9.26; also in \cite{r20}) in the form
+Neumann's product formula (\cite{r29}, DLMF 10.9.26; also in~\cite{r32}) in the form
 
-\par\nobreak
 \[
   J_{N}(r) J_{N-1}(r) = (2/\pi ) \int_{0}^{\pi /2} J_{2N-1}(2r \cos \vartheta ) \cos \vartheta d\vartheta = (2/\pi )\int_{0}^{\pi /2} J_L(2r \cos \vartheta ) \cos \vartheta d\vartheta
 \]
@@ -736,26 +744,26 @@ collapses the two Bessel factors of orders $N$ and $N-1$ (the case $q = 1$ of $\
 \[
   I_{1}(s) = \int_{0}^\infty \left[ (2/\pi )\int_{0}^{\pi /2} J_L(2r \cos \vartheta ) \cos \vartheta d\vartheta \right] J_{1}(r) r^{-2s-1} dr .
 \]
-To interchange the two integrations we exhibit a majorant valid uniformly in $\vartheta \in [0,\pi /2]$. Write $A = 2 \cos \vartheta \in [0,2]$. For $r \le 1$ the Poisson bound gives $|J_L(Ar)J_{1}(r)| \le (Ar/2)^L (r/2)/(\Gamma (L+1)\Gamma (2)) \le c r^{L+1}$, uniformly in $\vartheta$ since $A \le 2$, so the integrand is $O(r^{L+1-2s-1}) = O(r^{2k+3-2s}) = O(r^{3-2\alpha })$, integrable on $(0,1]$ for $\alpha < 2$. For $r \ge 1$ we use $|J_\nu | \le 1$ twice, giving $O(r^{-2s-1})$, integrable on $[1,\infty )$ because $s > 0$. Both majorants are independent of $\vartheta$, and $\int_{0}^{\pi /2} \cos \vartheta d\vartheta < \infty$, so Fubini applies and yields the stated formula.
+To interchange the two integrations we exhibit a majorant valid uniformly in $\vartheta \in [0,\pi /2]$. Write $u = 2 \cos \vartheta \in [0,2]$. For $r \le 1$ the Poisson bound gives $|J_L(ur)J_{1}(r)| \le (ur/2)^L (r/2)/(\Gamma (L+1)\Gamma (2)) \le c r^{L+1}$, uniformly in $\vartheta$ since $u \le 2$, so the integrand is $O(r^{L+1-2s-1}) = O(r^{2k+3-2s}) = O(r^{3-2\alpha })$, integrable on $(0,1]$ for $\alpha < 2$. For $r \ge 1$ we use $|J_\nu | \le 1$ twice, giving $O(r^{-2s-1})$, integrable on $[1,\infty )$ because $s > 0$. Both majorants are independent of $\vartheta$, and $\int_{0}^{\pi /2} \cos \vartheta d\vartheta < \infty$, so Fubini applies and yields the stated formula.
 \end{proof}
 
 \begin{proposition}[Weber--Schafheitlin]\label{res:5.2}
-With $\lambda = 2s+1$, $L = 2k+3$, $s = k+\alpha$, and $A \ne 1$,
+With $\lambda = 2s+1$, $L = 2k+3$, $s = k+\alpha$, and $u \ne 1$,
 
 \begin{gather*}
-  W(A) =
+  W(u) =
 \begin{cases}
-\dfrac{A^{L}\,\Gamma(2-\alpha)}{2^{2s+1}\,\Gamma(\alpha)\,\Gamma(L+1)}\;
-   {}_2F_1\!\bigl(2-\alpha,\,1-\alpha;\,L+1;\,A^{2}\bigr), & A<1,\\[3.2ex]
-\dfrac{\Gamma(2-\alpha)\,A^{2s-1}}{2^{2s+1}\,\Gamma(2k+2+\alpha)}
-   \bigl(1-A^{-2}\bigr)^{2k+1+2\alpha}\;
-   {}_2F_1\!\bigl(\alpha,\,2k+3+\alpha;\,2;\,A^{-2}\bigr), & A>1.
+\dfrac{u^{L}\,\Gamma(2-\alpha)}{2^{2s+1}\,\Gamma(\alpha)\,\Gamma(L+1)}\;
+   {}_2F_1\!\bigl(2-\alpha,\,1-\alpha;\,L+1;\,u^{2}\bigr), & u<1,\\[3.2ex]
+\dfrac{\Gamma(2-\alpha)\,u^{2s-1}}{2^{2s+1}\,\Gamma(2k+2+\alpha)}
+   \bigl(1-u^{-2}\bigr)^{2k+1+2\alpha}\;
+   {}_2F_1\!\bigl(\alpha,\,2k+3+\alpha;\,2;\,u^{-2}\bigr), & u>1.
 \end{cases}
 \end{gather*}
 \end{proposition}
 
 \begin{proof}
-We use the Weber--Schafheitlin evaluation (\cite{r18}, DLMF 10.22.56; also in \cite{r20}) in the form valid for $0 < a < b$:
+We use the Weber--Schafheitlin evaluation (\cite{r29}, DLMF 10.22.56; also in~\cite{r32}) in the form valid for $0 < a < b$:
 
 \par\nobreak
 \begin{equation}\label{eq:ws}
@@ -772,31 +780,31 @@ We use the Weber--Schafheitlin evaluation (\cite{r18}, DLMF 10.22.56; also in \c
 \end{equation}
 Its hypotheses are $\Re (\mu +\nu +1) > \Re \lambda$, $\Re \lambda > -1$ and $0 < a < b$. \textbf{The choice of which Bessel factor plays the role of $a$ is forced by which scale is smaller, and therefore differs between the two branches.}
 
-\emph{The hypotheses hold in both branches.} In either assignment the pair of orders is $\{L, 1\}$, so $\mu + \nu + 1 = L + 2 = 2k+5$, while $\lambda = 2s+1 = 2k+2\alpha +1$; hence $\Re (\mu +\nu +1) > \Re \lambda$ reduces to $4 > 2\alpha$, i.e. $\alpha < 2$, and $\Re \lambda > -1$ reduces to $s > -1$. Both hold throughout the range in use, $\alpha \in [0,1]$ and $s \ge 0$. The condition $0 < a < b$ is exactly the case distinction that defines the two branches --- $(a,b) = (A,1)$ with $A < 1$, and $(a,b) = (1,A)$ with $A > 1$ --- so it holds by construction, the two excluded values being $A = 1$, which is the junction treated separately in Proposition~5.4, and $A = 0$, a single endpoint of the $\vartheta$-integration and hence a null set for the purposes of \S6.
+\emph{The hypotheses hold in both branches.} In either assignment the pair of orders is $\{L, 1\}$, so $\mu + \nu + 1 = L + 2 = 2k+5$, while $\lambda = 2s+1 = 2k+2\alpha +1$; hence $\Re (\mu +\nu +1) > \Re \lambda$ reduces to $4 > 2\alpha$, i.e. $\alpha < 2$, and $\Re \lambda > -1$ reduces to $s > -1$. Both hold throughout the range in use, $\alpha \in [0,1]$ and $s \ge 0$. The condition $0 < a < b$ is exactly the case distinction that defines the two branches --- $(a,b) = (u,1)$ with $u < 1$, and $(a,b) = (1,u)$ with $u > 1$ --- so it holds by construction, the two excluded values being $u = 1$, which is the junction treated separately in Proposition~5.4, and $u = 0$, a single endpoint of the $\vartheta$-integration and hence a null set for the purposes of \S6.
 
-\emph{Convergence.} Before applying \eqref{eq:ws} we record that $W(A)$ converges absolutely for $\alpha \in [0,1]$, $s \ge 0$. As $r \to 0$, $J_L(Ar)J_{1}(r) r^{-2s-1} = O(r^{L+1-2s-1}) = O(r^{3-2\alpha })$, so convergence at the origin requires only $\alpha < 2$. As $r \to \infty$, the product of the two Bessel factors is $O(r^{-1})$, so the integrand is $O(r^{-2s-2})$ and absolute convergence requires only $s > -1/2$. In the range actually used, $\alpha \in [0,1]$ and $s \ge 0$, both are satisfied with room to spare. (The weaker hypothesis $s > -1$ quoted in some sources refers to a conditionally convergent version; we do not need it.)
+\emph{Convergence.} Before applying \eqref{eq:ws} we record that $W(u)$ converges absolutely for $\alpha \in [0,1]$, $s \ge 0$. As $r \to 0$, $J_L(ur)J_{1}(r) r^{-2s-1} = O(r^{L+1-2s-1}) = O(r^{3-2\alpha })$, so convergence at the origin requires only $\alpha < 2$. As $r \to \infty$, the product of the two Bessel factors is $O(r^{-1})$, so the integrand is $O(r^{-2s-2})$ and absolute convergence requires only $s > -1/2$. In the range actually used, $\alpha \in [0,1]$ and $s \ge 0$, both are satisfied with room to spare. (The weaker hypothesis $s > -1$ quoted in some sources refers to a conditionally convergent version; we do not need it.)
 
-\textbf{Branch $0 < A < 1$.} Here the smaller scale is $A$, so we take $(\mu , \nu , a, b) = (L, 1, A, 1)$. The three parameters of \eqref{eq:ws} evaluate to
+\textbf{Branch $0 < u < 1$.} Here the smaller scale is $u$, so we take $(\mu , \nu , a, b) = (L, 1, u, 1)$. The three parameters of \eqref{eq:ws} evaluate to
 
 \begin{gather*}
   (\mu +\nu -\lambda +1)/2 = (L + 1 - (2s+1) + 1)/2 = (2k+3+1-2k-2\alpha )/2 = 2 - \alpha , \\ 
   (\mu -\nu -\lambda +1)/2 = (L - 1 - (2s+1) + 1)/2 = 1 - \alpha , \\ 
   (\nu -\mu +\lambda +1)/2 = (1 - L + (2s+1) + 1)/2 = \alpha ,
 \end{gather*}
-and $a^\mu b^{\lambda -\mu -1} = A^L$, $\mu +1 = L+1$, $a^{2}/b^{2} = A^{2}$. Substituting gives the first branch verbatim.
+and $a^\mu b^{\lambda -\mu -1} = u^L$, $\mu +1 = L+1$, $a^{2}/b^{2} = u^{2}$. Substituting gives the first branch verbatim.
 
-\textbf{Branch $A > 1$.} Now the smaller scale is $1$, so the roles must be \textbf{interchanged}: $(\mu , \nu , a, b) = (1, L, 1, A)$. The parameters become
+\textbf{Branch $u > 1$.} Now the smaller scale is $1$, so the roles must be \textbf{interchanged}: $(\mu , \nu , a, b) = (1, L, 1, u)$. The parameters become
 
 \begin{gather*}
   (\mu +\nu -\lambda +1)/2 = (1 + L - (2s+1) + 1)/2 = 2 - \alpha , \\ 
   (\mu -\nu -\lambda +1)/2 = (1 - L - (2s+1) + 1)/2 = -2k - 1 - \alpha , \\ 
   (\nu -\mu +\lambda +1)/2 = (L - 1 + (2s+1) + 1)/2 = 2k + 2 + \alpha ,
 \end{gather*}
-with $a^\mu b^{\lambda -\mu -1} = A^{2s+1-2} = A^{2s-1}$, $\mu +1 = 2$, $a^{2}/b^{2} = A^{-2}$. Hence
+with $a^\mu b^{\lambda -\mu -1} = u^{2s+1-2} = u^{2s-1}$, $\mu +1 = 2$, $a^{2}/b^{2} = u^{-2}$. Hence
 
 \par\nobreak
 \begin{equation}\label{eq:ast}
-  W(A) = ( \Gamma (2-\alpha ) A^{2s-1} / ( 2^{2s+1} \Gamma (2k+2+\alpha ) ) ) \cdot {}_2F_1( 2-\alpha , -2k-1-\alpha ; 2 ; A^{-2} ) .
+  W(u) = ( \Gamma (2-\alpha ) u^{2s-1} / ( 2^{2s+1} \Gamma (2k+2+\alpha ) ) ) \cdot {}_2F_1( 2-\alpha , -2k-1-\alpha ; 2 ; u^{-2} ) .
 \end{equation}
 Only now do we apply Euler's transformation ${}_2F_1(a,b;c;x) = (1-x)^{c-a-b} {}_2F_1(c-a, c-b; c; x)$ to \eqref{eq:ast}, with
 
@@ -812,8 +820,8 @@ This yields the second branch as stated.
 The second branch is \textbf{not} obtained by applying Euler's transformation to the first: the two branches come from two \emph{different} substitutions into \eqref{eq:ws}, differing by the interchange of the two Bessel orders and scales, and Euler's transformation is applied afterwards, to the intermediate form \eqref{eq:ast}. Compressing the two steps into one produces a false identity: the transformation must be applied to \eqref{eq:ast}, not to the first branch.
 \end{remark}
 
-\begin{proposition}[the junction $A = 1$]\label{res:5.4}
-$W$ is continuous on $(0,2]$; in particular the two branches of Proposition~5.2 have a common limit at $A = 1$, namely
+\begin{proposition}[the junction $u = 1$]\label{res:5.4}
+$W$ is continuous on $(0,2]$; in particular the two branches of Proposition~5.2 have a common limit at $u = 1$, namely
 
 \par\nobreak
 \begin{equation}\label{eq:w1}
@@ -823,15 +831,15 @@ read at $\alpha = 0$ by the convention $1/\Gamma (0) = 0$.
 \end{proposition}
 
 \begin{proof}
-We prove continuity directly from the integral, which avoids having to compare two hypergeometric limit constants. Fix $\alpha \in [0,1]$, $s = k+\alpha \ge 0$, and let $A$ range over $[1/2, 3/2]$. Then, uniformly in such $A$:
+We prove continuity directly from the integral, which avoids having to compare two hypergeometric limit constants. Fix $\alpha \in [0,1]$, $s = k+\alpha \ge 0$, and let $u$ range over $[1/2, 3/2]$. Then, uniformly in such $u$:
 
 \begin{itemize}
-\item for $0 < r \le 1$, the Poisson bound gives $|J_L(Ar)J_{1}(r)r^{-2s-1}| \le c_{1} r^{L+1-2s-1} = c_{1} r^{3-2\alpha }$;
-\item for $r \ge 1$, the large-argument bound $|J_\nu (r)| \le c_\nu r^{-1/2}$ (Lemma~4.3(iii), applied to each factor, with the constant uniform over the compact $A$-range after the substitution $t = Ar$) gives $|J_L(Ar)J_{1}(r)r^{-2s-1}| \le c_{2} r^{-2s-2}$.
+\item for $0 < r \le 1$, the Poisson bound gives $|J_L(ur)J_{1}(r)r^{-2s-1}| \le c_{1} r^{L+1-2s-1} = c_{1} r^{3-2\alpha }$;
+\item for $r \ge 1$, the large-argument bound $|J_\nu (r)| \le c_\nu r^{-1/2}$ (the single-factor bound obtained in the proof of Lemma~4.3(iii), one line before the three factors are multiplied together; it is applied here to each factor, with the constant uniform over the compact $u$-range after the substitution $t = ur$) gives $|J_L(ur)J_{1}(r)r^{-2s-1}| \le c_{2} r^{-2s-2}$.
 \end{itemize}
-Both majorants are integrable on their respective ranges ($3-2\alpha > -1$ and $2s+2 > 1$) and independent of $A$. Since $A \mapsto J_L(Ar)$ is continuous for each $r$, dominated convergence gives $W(A) \to W(1)$ as $A \to 1$, from either side. Continuity at other points of $(0,2]$ is the same argument.
+Both majorants are integrable on their respective ranges ($3-2\alpha > -1$ and $2s+2 > 1$) and independent of $u$. Since $u \mapsto J_L(ur)$ is continuous for each $r$, dominated convergence gives $W(u) \to W(1)$ as $u \to 1$, from either side. Continuity at other points of $(0,2]$ is the same argument.
 
-It remains to identify $W(1)$. Let $A \uparrow 1$ in the first branch. The hypergeometric argument $A^{2} \uparrow 1$, and Gauss's summation applies because
+It remains to identify $W(1)$. Let $u \uparrow 1$ in the first branch. The hypergeometric argument $u^{2} \uparrow 1$, and Gauss's summation applies because
 
 \par\nobreak
 \[
@@ -839,7 +847,7 @@ It remains to identify $W(1)$. Let $A \uparrow 1$ in the first branch. The hyper
 \]
 giving ${}_2F_1(2-\alpha , 1-\alpha ; L+1; 1) = \Gamma (L+1)\Gamma (2s+1)/(\Gamma (2k+2+\alpha )\Gamma (2k+3+\alpha ))$, where we used $c - a = L+1-2+\alpha = 2k+2+\alpha$ and $c - b = L+1-1+\alpha = 2k+3+\alpha$. Substituting into the first branch, the factor $\Gamma (L+1)$ cancels and \eqref{eq:w1} results.
 
-For consistency we note that the second branch produces the same value: there $c - a - b = -(2s+1) < 0$, so ${}_2F_1(\alpha , 2k+3+\alpha ; 2; x)$ diverges like $c\cdot (1-x)^{-(2s+1)}$ as $x \uparrow 1$, and this divergence is cancelled \emph{exactly} by the explicit Euler factor $(1-A^{-2})^{2s+1}$ standing in front of it --- which is why the product has a finite limit. The dominated-convergence argument above is what shows the two limits agree; the cancellation alone would only show that each is finite.
+For consistency we note that the second branch produces the same value: there $c - a - b = -(2s+1) < 0$, so ${}_2F_1(\alpha , 2k+3+\alpha ; 2; x)$ diverges like $c\cdot (1-x)^{-(2s+1)}$ as $x \uparrow 1$, and this divergence is cancelled \emph{exactly} by the explicit Euler factor $(1-u^{-2})^{2s+1}$ standing in front of it --- which is why the product has a finite limit. The dominated-convergence argument above is what shows the two limits agree; the cancellation alone would only show that each is finite.
 \end{proof}
 
 \begin{theorem}\label{res:5.5}
@@ -847,11 +855,11 @@ For every integer $k \ge 0$ and every $\alpha \in [0,1]$ with $s = k + \alpha > 
 \end{theorem}
 
 \begin{proof}
-By Proposition~5.1, $I_{1} = (2/\pi )\int_{0}^{\pi /2} \cos \vartheta \cdot W(2\cos \vartheta ) d\vartheta$, with $A = 2 \cos \vartheta$.
+By Proposition~5.1, $I_{1} = (2/\pi )\int_{0}^{\pi /2} \cos \vartheta \cdot W(2\cos \vartheta ) d\vartheta$, with $u = 2 \cos \vartheta$.
 
-On the range $A < 1$ (i.e. $\vartheta \in (\pi /3, \pi /2)$) every displayed factor of the first branch of Proposition~5.2 is nonnegative: $A^L > 0$, $\Gamma (2-\alpha ) > 0$ since $2-\alpha \in [1,2]$, $1/\Gamma (\alpha ) \ge 0$ (equal to $0$ at $\alpha = 0$), $\Gamma (L+1) > 0$, and the hypergeometric series ${}_2F_1(2-\alpha , 1-\alpha ; L+1; A^{2}) = \sum_n \frac{(2-\alpha )_n (1-\alpha )_n}{(L+1)_n n!} A^{2n}$ has nonnegative coefficients since $2-\alpha \ge 1 > 0$ and $1-\alpha \ge 0$. So this contribution is $\ge 0$.
+On the range $u < 1$ (i.e. $\vartheta \in (\pi /3, \pi /2)$) every displayed factor of the first branch of Proposition~5.2 is nonnegative: $u^L > 0$, $\Gamma (2-\alpha ) > 0$ since $2-\alpha \in [1,2]$, $1/\Gamma (\alpha ) \ge 0$ (equal to $0$ at $\alpha = 0$), $\Gamma (L+1) > 0$, and the hypergeometric series ${}_2F_1(2-\alpha , 1-\alpha ; L+1; u^{2}) = \sum_n \frac{(2-\alpha )_n (1-\alpha )_n}{(L+1)_n n!} u^{2n}$ has nonnegative coefficients since $2-\alpha \ge 1 > 0$ and $1-\alpha \ge 0$. So this contribution is $\ge 0$.
 
-On the range $A \in (1,2)$ (i.e. $\vartheta \in (0, \pi /3)$, a set of positive measure on which $\cos \vartheta > 0$), the second branch gives $\Gamma (2-\alpha ) > 0$, $A^{2s-1} > 0$, $(1 - A^{-2})^{2s+1} > 0$, $1/\Gamma (2k+2+\alpha ) > 0$, and ${}_2F_1(\alpha , 2k+3+\alpha ; 2; A^{-2}) \ge 1$ because all Pochhammer parameters are $\ge 0$, all coefficients are nonnegative and the constant term is $1$. So this contribution is \textbf{strictly} positive.
+On the range $u \in (1,2)$ (i.e. $\vartheta \in (0, \pi /3)$, a set of positive measure on which $\cos \vartheta > 0$), the second branch gives $\Gamma (2-\alpha ) > 0$, $u^{2s-1} > 0$, $(1 - u^{-2})^{2s+1} > 0$, $1/\Gamma (2k+2+\alpha ) > 0$, and ${}_2F_1(\alpha , 2k+3+\alpha ; 2; u^{-2}) \ge 1$ because all Pochhammer parameters are $\ge 0$, all coefficients are nonnegative and the constant term is $1$. So this contribution is \textbf{strictly} positive.
 
 Adding a strictly positive contribution to a nonnegative one gives $I_{1}(s) > 0$.
 \end{proof}
@@ -861,7 +869,7 @@ Proposition~5.1 requires $s > 0$: the interchange there uses $\int_{1}^\infty r^
 \end{remark}
 
 \begin{remark}[what happens at $\alpha = 0$]\label{res:5.7}
-The endpoint $\alpha = 0$ --- where the whole difficulty of the conjecture is concentrated --- is covered by the proof above without a separate argument, and it is worth saying exactly why. At $\alpha = 0$ the first branch does not merely become small: it \textbf{vanishes identically}. Every factor of that branch is finite and continuous in $A$ on $(0,1)$, and it carries the prefactor $1/\Gamma (\alpha )$, which is $0$ at $\alpha = 0$ by the convention of Proposition~5.4 ($\Gamma$ has a pole at $0$). Hence the entire contribution of the range $A < 1$ to $I_{1}(k)$ is zero, for every $k$. All of $I_{1}(k)$ comes from the range $A \in (1,2)$, i.e. from $\vartheta \in (0, \pi /3)$ --- and there the second branch has no degenerate factor at all: $\Gamma (2-\alpha ) = \Gamma (2) = 1$, $A^{2s-1} > 0$, $(1-A^{-2})^{2s+1} > 0$, $1/\Gamma (2k+2) > 0$, and the hypergeometric factor is $\ge 1$. So the strict positivity survives the endpoint intact; nothing is lost and nothing needs to be recovered by a limiting argument. (Numerically the vanishing of the $A < 1$ contribution at $\alpha = 0$ is visible as a residual at the level of the quadrature error rather than at the level of the integrand, which is the expected signature of an identically-zero contribution; the analytic reason $1/\Gamma (0) = 0$ above is what the proof uses, and it needs no numerics.)
+The endpoint $\alpha = 0$ --- where the whole difficulty of the conjecture is concentrated --- is covered by the proof above without a separate argument, and it is worth saying exactly why. At $\alpha = 0$ the first branch does not merely become small: it \textbf{vanishes identically}. Every factor of that branch is finite and continuous in $u$ on $(0,1)$, and it carries the prefactor $1/\Gamma (\alpha )$, which is $0$ at $\alpha = 0$ by the convention of Proposition~5.4 ($\Gamma$ has a pole at $0$). Hence the entire contribution of the range $u < 1$ to $I_{1}(k)$ is zero, for every $k$. All of $I_{1}(k)$ comes from the range $u \in (1,2)$, i.e. from $\vartheta \in (0, \pi /3)$ --- and there the second branch has no degenerate factor at all: $\Gamma (2-\alpha ) = \Gamma (2) = 1$, $u^{2s-1} > 0$, $(1-u^{-2})^{2s+1} > 0$, $1/\Gamma (2k+2) > 0$, and the hypergeometric factor is $\ge 1$. So the strict positivity survives the endpoint intact; nothing is lost and nothing needs to be recovered by a limiting argument. (Numerically the vanishing of the $u < 1$ contribution at $\alpha = 0$ is visible as a residual at the level of the quadrature error rather than at the level of the integrand, which is the expected signature of an identically-zero contribution; the analytic reason $1/\Gamma (0) = 0$ above is what the proof uses, and it needs no numerics.)
 \end{remark}
 
 \section{An explicit lower bound for the leading mode}
@@ -876,34 +884,34 @@ For every integer $k \ge 1$ and every $\alpha \in [0,1]$,
 \end{proposition}
 
 \begin{proof}
-Discard the nonnegative $A < 1$ contribution (Theorem~5.5) and, on $A \in (1,2)$, insert the second branch of \textbf{Proposition~5.2} and use ${}_2F_1 \ge 1$:
+Discard the $u < 1$ contribution, which the first part of the proof of Theorem~5.5 shows to be nonnegative, and, on $u \in (1,2)$, insert the second branch of \textbf{Proposition~5.2} and use ${}_2F_1 \ge 1$:
 
 \par\nobreak
 \[
-  I_{1} \ge (2/\pi ) \cdot \Gamma (2-\alpha )/( 2^{2s+1} \Gamma (2k+2+\alpha ) ) \cdot \int_{\vartheta \in (0,\pi /3)} \cos \vartheta \cdot A^{2s-1}(1-A^{-2})^{2s+1} d\vartheta .
+  I_{1} \ge (2/\pi ) \cdot \Gamma (2-\alpha )/( 2^{2s+1} \Gamma (2k+2+\alpha ) ) \cdot \int_{\vartheta \in (0,\pi /3)} \cos \vartheta \cdot u^{2s-1}(1-u^{-2})^{2s+1} d\vartheta .
 \]
-Substitute $A = 2 \cos \vartheta$, so that $\cos \vartheta = A/2$, $dA = -2 \sin \vartheta d\vartheta$ and $d\vartheta = dA/\sqrt{4-A^{2}}$, with $\vartheta \in (0,\pi /3)$ corresponding to $A \in (1,2)$. The factor $\cos \vartheta = A/2$ supplies the $1/2$:
+Substitute $u = 2 \cos \vartheta$, so that $\cos \vartheta = u/2$, $du = -2 \sin \vartheta d\vartheta$ and $d\vartheta = du/\sqrt{4-u^{2}}$, with $\vartheta \in (0,\pi /3)$ corresponding to $u \in (1,2)$. The factor $\cos \vartheta = u/2$ supplies the $1/2$:
 
 \par\nobreak
 \[
-  I_{1} \ge (2/\pi ) \cdot \Gamma (2-\alpha )/( 2^{2s+1} \Gamma (2k+2+\alpha ) ) \cdot (1/2) \int_{1}^{2} A^{2s} (1-A^{-2})^{2s+1} (4-A^{2})^{-1/2} dA .
+  I_{1} \ge (2/\pi ) \cdot \Gamma (2-\alpha )/( 2^{2s+1} \Gamma (2k+2+\alpha ) ) \cdot (1/2) \int_{1}^{2} u^{2s} (1-u^{-2})^{2s+1} (4-u^{2})^{-1/2} du .
 \]
-\emph{An exact identity.} With $t = A - 1/A$,
+\emph{An exact identity.} With $t = u - 1/u$,
 
 \[
-  A^{2s}(1-A^{-2})^{2s+1} = (A^{2}-1)^{2s+1}/A^{2s+2} = ( (A^{2}-1)/A )^{2s+1} \cdot (1/A) = t^{2s+1}/A .
+  u^{2s}(1-u^{-2})^{2s+1} = (u^{2}-1)^{2s+1}/u^{2s+2} = ( (u^{2}-1)/u )^{2s+1} \cdot (1/u) = t^{2s+1}/u .
 \]
-\emph{Three elementary bounds.} (a) For $A \in (1,2)$, $4 - A^{2} \in (0,3)$, so $(4-A^{2})^{-1/2} \ge 3^{-1/2}$. (b) From $t = A - 1/A$ we get $dt = (1 + A^{-2}) dA = \frac{A^{2}+1}{A^{2}} dA$, hence
+\emph{Three elementary bounds.} (a) For $u \in (1,2)$, $4 - u^{2} \in (0,3)$, so $(4-u^{2})^{-1/2} \ge 3^{-1/2}$. (b) From $t = u - 1/u$ we get $dt = (1 + u^{-2}) du = \frac{u^{2}+1}{u^{2}} du$, hence
 
 \[
-  dA/A = \frac{A}{A^{2}+1} dt ,
+  du/u = \frac{u}{u^{2}+1} dt ,
 \]
-and $A \mapsto A/(A^{2}+1)$ is decreasing on $(1,2)$ (its derivative is $(1-A^{2})/(A^{2}+1)^{2} < 0$), so its minimum there is at $A = 2$, namely $2/5$. Thus $dA/A \ge (2/5) dt$. (c) As $A$ runs over $(1,2)$, $t$ runs over $(0, 3/2)$, and $\int_{0}^{3/2} t^{2s+1} dt = (3/2)^{2s+2}/(2s+2)$.
+and $u \mapsto u/(u^{2}+1)$ is decreasing on $(1,2)$ (its derivative is $(1-u^{2})/(u^{2}+1)^{2} < 0$), so its minimum there is at $u = 2$, namely $2/5$. Thus $du/u \ge (2/5) dt$. (c) As $u$ runs over $(1,2)$, $t$ runs over $(0, 3/2)$, and $\int_{0}^{3/2} t^{2s+1} dt = (3/2)^{2s+2}/(2s+2)$.
 
 Combining (a)--(c),
 
 \[
-  \int_{1}^{2} A^{2s}(1-A^{-2})^{2s+1}(4-A^{2})^{-1/2} dA \ge 3^{-1/2} \cdot (2/5) \cdot (3/2)^{2s+2}/(2s+2) .
+  \int_{1}^{2} u^{2s}(1-u^{-2})^{2s+1}(4-u^{2})^{-1/2} du \ge 3^{-1/2} \cdot (2/5) \cdot (3/2)^{2s+2}/(2s+2) .
 \]
 Finally the exact bookkeeping $(3/2)^{2s+2}/2^{2s+1} = (9/4)^{s+1}/2^{2s+1} = (9/8)(9/16)^{s}$ collects the powers of $2$, and $(1/2)\cdot (2/\pi )\cdot 3^{-1/2}\cdot (2/5) = (1/\pi )\cdot 2/(5\sqrt{3})$ collects the constants. This is the claim.
 \end{proof}
@@ -1188,7 +1196,7 @@ Block by block:
 \begin{itemize}
 \item $\Gamma (2k+5)/\Gamma (2k+3) = (2k+4)(2k+3)$.
 \item $\mu_{N+1}^{k+1}/\mu_N^{k} = \mu_{N+1} \cdot (\mu_{N+1}/\mu_N)^k = \frac{16}{81\kappa^{2}(k+3)^{2}} \cdot \left[\frac{N}{N+1}\right]^{2k} = \frac{16}{81\kappa^{2}}\cdot \frac{1}{(k+3)^{2}}\cdot \left[1 - \frac{1}{k+3}\right]^{2k}$.
-\item $T(k+1)/T(k) < 1$ and $B(k+1)/B(k) < 1$. For $T$, which does not involve $N$, this is Lemma~8.2. For $B$ it is \textbf{not}: Lemma~8.2 gives $B'(s) < 0$ at \emph{fixed} $N$, whereas here $N$ changes with $k$ as well, so the comparison must be made directly, as follows. $B(k)$ means $B$ evaluated at $s = k$ with $N = k+2$, and $B(k+1)$ at $s = k+1$ with $N = k+3$; these are $1/(4k+12) + 1/(2k)$ and $1/(4k+16) + 1/(2k+2)$ respectively, and the second is smaller term by term.
+\item $T(k+1)/T(k) < 1$ and $B(k+1)/B(k) < 1$. For $T$, which does not involve $N$, this is the monotonicity $T' < 0$ established in the proof of Lemma~8.2. For $B$ it is \textbf{not}: that proof gives $B'(s) < 0$ at \emph{fixed} $N$, whereas here $N$ changes with $k$ as well, so the comparison must be made directly, as follows. $B(k)$ means $B$ evaluated at $s = k$ with $N = k+2$, and $B(k+1)$ at $s = k+1$ with $N = k+3$; these are $1/(4k+12) + 1/(2k)$ and $1/(4k+16) + 1/(2k+2)$ respectively, and the second is smaller term by term.
 \end{itemize}
 Now $(2k+4)(2k+3)/(k+3)^{2} < 4$, equivalently $4k^{2} + 14k + 12 < 4k^{2} + 24k + 36$, i.e. $0 < 10k + 24$, true for all $k \ge 0$. Also $[1 - 1/(k+3)]^{2k} \le e^{-2k/(k+3)} \le e^{-8/7} < 8/25$, since $2k/(k+3)$ increases in $k$ (derivative $6/(k+3)^{2} > 0$) and equals $8/7$ at $k = 4$, the last bound being the integer comparison $25^7 = 6 103 515 625 < 6 249 512 960 = 8^7 \cdot 2980 < 8^7 e^8$. Finally $16/(81\kappa^{2}) = 16 \cdot 2500/(81 \cdot 841) = 40000/68121$. Hence
 
@@ -1318,10 +1326,10 @@ For $k \in \{0,1,2,3\}$ we invoke the published results. The following compariso
 \begin{center}\small
 \begin{tabular}{lP{0.349\linewidth}P{0.407\linewidth}}
 \toprule
-item & this paper & \cite{r9}, \cite{r10} \\
+item & this paper &~\cite{r20},~\cite{r21} \\
 \midrule
 polynomials & $f_k = 1+e(x)+e(Nx)$, $g_k = 1+e(x)-e(Nx)$, $N = k+2$ & $1 + e^{2\pi ix} \pm e^{2\pi i([p/2]+2)x}$, i.e. our $f_k, g_k$ with $k = [p/2]$ \\
-exponent range & $p \in (2k, 2k+2)$, open & $0 < p < 6$, $p \notin 2\mathbb{N}$ in \cite{r9} ($k = [p/2] \in \{0,1,2\}$); $k = 3,4$ in \cite{r10} \\
+exponent range & $p \in (2k, 2k+2)$, open & $0 < p < 6$, $p \notin 2\mathbb{N}$ in~\cite{r20} ($k = [p/2] \in \{0,1,2\}$); $k = 3,4$ in~\cite{r21} \\
 direction & $\|g_k\|_p > \|f_k\|_p$ & $\Delta (p) = f_-(p) - f_+(p) > 0$, i.e. $\|F_-\|_p > \|F_+\|_p$ \\
 measure & normalised Haar on $\mathbb{R}/\mathbb{Z}$, i.e. $\int_{0}^{1}$ & $\int_{0}^{1/2}$, with $e(t) = e^{2\pi it}$ \\
 \bottomrule
@@ -1336,18 +1344,18 @@ The domain of integration differs and must be reconciled explicitly. The sources
 \]
 and likewise for $g_k$. The half-range difference is thus exactly $1/2$ of ours: $\Delta_{[0,1/2]} = (1/2) D(s)$. A strictly positive factor multiplying both sides leaves the sign of the difference unchanged, so the published statements and ours are the same statement. No constant intervenes anywhere else: the total mass of the measure is the only normalisation in play, and it enters both sides identically.
 
-One inconsistency in the sources should be recorded rather than smoothed over: the arXiv text of \cite{r9} declares $\mathbb{T} := \mathbb{R}/2\pi \mathbb{Z}$ while simultaneously defining $e(t) = e^{2\pi it}$ and performing every operative integral over a subinterval of $[0,1]$. These statements cannot literally describe the same torus; the functions and propositions used are $1$-periodic, so the operative normalisation is that of $\mathbb{R}/\mathbb{Z}$, matching ours up to the half-range factor just discussed.
+One inconsistency in the sources should be recorded rather than smoothed over: the arXiv text of~\cite{r20} declares $\mathbb{T} := \mathbb{R}/2\pi \mathbb{Z}$ while simultaneously defining $e(t) = e^{2\pi it}$ and performing every operative integral over a subinterval of $[0,1]$. These statements cannot literally describe the same torus; the functions and propositions used are $1$-periodic, so the operative normalisation is that of $\mathbb{R}/\mathbb{Z}$, matching ours up to the half-range factor just discussed.
 
-The published coverage is: $k = 0,1,2$ in \cite{r9}; $k = 3,4$ in \cite{r10}. Only $k = 0,1,2,3$ are needed, since Theorem~1.1 covers every $k \ge 4$; the third Krenedits paper ($k = 5$) is not needed at all.
+The published coverage is: $k = 0,1,2$ in~\cite{r20}; $k = 3,4$ in~\cite{r21}. Only $k = 0,1,2,3$ are needed, since Theorem~1.1 covers every $k \ge 4$; the third Krenedits paper ($k = 5$) is not needed at all.
 
-\emph{Proof of Theorem~1.2.} Combine Theorem~1.1 ($k \ge 4$) with \cite{r9,r10} ($k \le 3$).\qedmark
+\emph{Proof of Theorem~1.2.} Combine Theorem~1.1 ($k \ge 4$) with~\cite{r20,r21} ($k \le 3$).\qedmark
 
 It should be stated plainly that the small cases are proved by rigorous numerical quadrature --- each lemma there supplies an analytic bound on a fourth derivative, inserts it into the error term of a quadrature rule, and chooses a node count making the error smaller than the quantity to be signed. This is a complete proof, but it is not of the same character as \S\S2--10, no \emph{proof} in which contains a numerical component. The distinction is worth stating precisely: no proof in \S\S2--10 contains a decimal at all, every constant entering one being one of the explicit rationals listed in \S1.3, whereas \S11 relies on a quadrature whose output must be trusted. Consequently Theorem~1.2 is \textbf{not} self-contained within this paper, whereas Theorem~1.1 is.
 
 
 \section{Open questions}
 \begin{enumerate}
-\item The threshold $K_{0} = 4$ is what the comparison of \S8 yields; the true threshold for the method is not determined here. It is worth being precise about \emph{which} step binds, because the natural guess --- that it is the bound on $R_q$ of \S7 --- is wrong. The corrected form of Remark~7.4 establishes $R_q \ge \lambda_N \cdot Nq$ for \textbf{every} $N$ and every $q \ge 1$, with $\lambda_N$ the sharp constant; so \S7 does supply a usable constant at $N = 3,4,5$, merely a smaller one than $\kappa = 29/50$. What fails is the comparison of \S8, which at $s = k$ requires $R(k,0) = C_{0} \Gamma (2k+3) B(k) T(k) \mu_N^k < 1$ with $\mu_N = 16/(81\kappa^{2}N^{2})$, and so demands a constant of size at least $\kappa_{\min }(k) := (4/(9N)) \cdot [ C_{0} \Gamma (2k+3) B(k) T(k) ]^{1/(2k)}$, namely
+\item The threshold $K_{0} = 4$ is what the comparison of \S8 yields; the true threshold for the method is not determined here. It is worth being precise about \emph{which} step binds, because the natural guess --- that it is the bound on $R_q$ of \S7 --- is wrong. The sharp form of Remark~7.4 establishes $R_q \ge \lambda_N \cdot Nq$ for \textbf{every} $N$ and every $q \ge 1$, with $\lambda_N$ the sharp constant; so \S7 does supply a usable constant at $N = 3,4,5$, merely a smaller one than $\kappa = 29/50$. What fails is the comparison of \S8, which at $s = k$ requires $R(k,0) = C_{0} \Gamma (2k+3) B(k) T(k) \mu_N^k < 1$ with $\mu_N = 16/(81\kappa^{2}N^{2})$, and so demands a constant of size at least $\kappa_{\min }(k) := (4/(9N)) \cdot [ C_{0} \Gamma (2k+3) B(k) T(k) ]^{1/(2k)}$, namely
 
 \par\nobreak
 \[
@@ -1363,7 +1371,7 @@ against the sharp values $\lambda_{3} = 0.5352\ldots$, $\lambda_{4} = 0.5554\ldo
 \end{gather*}
 The specification $\alpha = 0$ is essential. The same quantity at the right endpoint \textbf{diverges}: $k \cdot 16^k \cdot \Phi (k+1)$ runs $2.86$ at $k = 4$ to $1224.8$ at $k = 14$, growing without apparent bound, because $\Phi (k+1)/\Phi (k)$ itself grows (from $5.77$ at $k = 4$ to $2.2 \cdot 10^{3}$ at $k = 14$). So there is no $\alpha$-uniform version of the statement, and any correct asymptotic must carry an $\alpha$-dependent normalisation. The limit at $\alpha = 0$ is supported by two independent computations --- one from the exact rational moments $\tau_m$ of \S2, one from the Bessel integrals $I_q$ of \S5 --- and is \textbf{not proved}; the convergence is slow, and the figures above are consistent with, but do not establish, the constant $(3/4)\sqrt{3/5}$.
 \item The sharp regularity threshold for $\sum_n |\widehat{H}^s(n)| < \infty$ is $s > 0$, as the two-point structure of the zero set makes plausible: near a zero $H^s \asymp |y|^{2s}$, whose Fourier coefficients decay like $|n|^{-2-2s}$, and $\sum_{n \in \mathbb{Z}^{2}} |n|^{-2-2s} < \infty$ exactly when $2 + 2s > 2$. We have not written out the localisation needed to turn this into a proof, and \S3 uses instead the convenient but non-sharp $s \ge 1$, which suffices here (the argument only ever needs $s \ge 4$).
-\item Whether the closed-form evaluation of $I_q$ in \S5 is new is addressed in \S1.5: the general subject is classical \cite{r12,r19,r2,r3,r8,r6,r4,r5,r14}, and the Neumann-then-Weber--Schafheitlin reduction has documented precedent in a different setting in \cite{r13}; the specific triple product and its use in the majorant problem were not located in this search.
+\item Whether the closed-form evaluation of $I_q$ in \S5 is new is addressed in \S1.5: the general subject is classical~\cite{r23,r31,r5,r6,r19,r13,r14,r15,r16,r11,r12,r25}, the nearest general framework being that of Gervois and Navelet, whose tabulated factorisations cover the relation among the orders occurring here only at $\lambda = 2$; the two ingredients of the reduction of \S5 occur separately in~\cite{r24}; and the two-step reduction itself, the specific triple product, and its use in the majorant problem were not located in this search.
 \item Theorem~5.5 is proved for $s > 0$, leaving the single degenerate pair $(k,\alpha ) = (0,0)$ uncovered by our method (Remark~5.6). This is immaterial for Theorem~1.1 but would need attention if the method were pushed to small $k$.
 \end{enumerate}
 
@@ -1376,26 +1384,38 @@ The argument was developed and checked with the assistance of AI language models
 %  the people concerned has been obtained>
 
 \begin{thebibliography}{99}
-\bibitem{r1} R. P. Boas, \emph{Majorant problems for trigonometric series}, J. Analyse Math. \textbf{10} (1962/63), 253--271.
-\bibitem{r2} W. N. Bailey, \emph{Some infinite integrals involving Bessel functions}, Proc. London Math. Soc. (2) \textbf{40} (1936), 37--48.
-\bibitem{r3} W. N. Bailey, \emph{Some infinite integrals involving Bessel functions (II)}, J. London Math. Soc. \textbf{11} (1936), 16--20.
-\bibitem{r4} V. I. Fabrikant, \emph{Computation of infinite integrals involving three Bessel functions by introduction of new formalism}, Z. Angew. Math. Mech. \textbf{83} (2003), 363--374.
-\bibitem{r5} V. I. Fabrikant, \emph{Elementary exact evaluation of infinite integrals of the product of several spherical Bessel functions, power and exponential}, Quart. Appl. Math. \textbf{71} (2013), 573--581.
-\bibitem{r6} M. L. Glasser and E. Montaldi, \emph{Some integrals involving Bessel functions}, J. Math. Anal. Appl. \textbf{183} (1994), no. 3, 577--590. arXiv:math/9307213, DOI 10.1006/jmaa.1994.1164.
-\bibitem{r7} G. H. Hardy and J. E. Littlewood, \emph{Notes on the theory of series (XIX): a problem concerning majorants of Fourier series}, Quart. J. Math. Oxford Ser. \textbf{6} (1935), 304--315.
-\bibitem{r8} A. D. Jackson and L. C. Maximon, \emph{Integrals of products of Bessel functions}, SIAM J. Math. Anal. \textbf{3} (1972), 446--460.
-\bibitem{r9} S. Krenedits, \emph{Three-term idempotent counterexamples in the Hardy--Littlewood majorant problem}, J. Math. Anal. Appl. \textbf{388} (2012), 136--150. arXiv:1006.0409, DOI 10.1016/j.jmaa.2011.09.053.
-\bibitem{r10} S. Krenedits, \emph{On Mockenhoupt's conjecture in the Hardy--Littlewood majorant problem}, J. Contemp. Math. Anal. \textbf{48} (2013), 91--109. arXiv:1203.2378, DOI 10.3103/S1068362313030011.
-\bibitem{r11} S. Krenedits, \emph{Special quadrature error estimates and their application in the Hardy--Littlewood majorant problem}, Acta Math. Acad. Paedagog. Nyh\'azi. \textbf{28} (2012), no. 2, 121--151. arXiv:1207.6453.
-\bibitem{r12} H. M. MacDonald, \emph{Note on the evaluation of a certain integral containing Bessel's functions}, Proc. London Math. Soc. (2) \textbf{7} (1909), 142--149. DOI 10.1112/plms/s2-7.1.142.
-\bibitem{r13} P. A. Martin, \emph{On functions defined by sums of products of Bessel functions}, J. Phys. A \textbf{41} (2008), 015207.
-\bibitem{r14} R. Mehrem and A. Hohenegger, \emph{A generalization for the infinite integral over three spherical Bessel functions}, J. Phys. A \textbf{43} (2010), 455204.
-\bibitem{r15} H. L. Montgomery, \emph{Ten lectures on the interface between analytic number theory and harmonic analysis}, CBMS Regional Conference Series in Mathematics \textbf{84}, AMS, 1994.
-\bibitem{r16} G. Mockenhaupt, \emph{Bounds in Lebesgue spaces of oscillatory integral operators}, Habilitationsschrift, Universit\"at-Gesamthochschule Siegen, Fachbereich Mathematik, 1996, 52 pp.
-\bibitem{r17} G. Mockenhaupt and W. Schlag, \emph{On the Hardy--Littlewood majorant problem for random sets}, J. Funct. Anal. \textbf{256} (2009), 1189--1237.
-\bibitem{r18} \emph{NIST Digital Library of Mathematical Functions}, https://dlmf.nist.gov/, Release 1.2.7 of 2026-06-15, F. W. J. Olver, A. B. Olde Daalhuis, D. W. Lozier, B. I. Schneider, R. F. Boisvert, C. W. Clark, B. R. Miller, B. V. Saunders, H. S. Cohl, and M. A. McClain, eds. Neumann's product formula 10.9.26; Weber--Schafheitlin 10.22.56.
-\bibitem{r19} G. N. Watson, \emph{An infinite integral involving Bessel functions}, J. London Math. Soc. \textbf{9} (1934), 16--22.
-\bibitem{r20} G. N. Watson, \emph{A treatise on the theory of Bessel functions}, 2nd ed., Cambridge Univ. Press, 1944.
+\bibitem{r1} H. Akatsuka, \emph{Zeta Mahler measures}, J. Number Theory \textbf{129} (2009), 2713--2734. DOI \mbox{10.1016/j.jnt.2009.05.007}.
+\bibitem{r2} B. Anderson, J. M. Ash, R. L. Jones, D. G. Rider and B. Saffari, \emph{$L^p$ norm local estimates for exponential sums}, C. R. Acad. Sci. Paris S\'er. I Math. \textbf{330} (2000), no. 9, 765--769. DOI \mbox{10.1016/S0764-4442(00)00280-9}.
+\bibitem{r3} B. Anderson, J. M. Ash, R. L. Jones, D. G. Rider and B. Saffari, \emph{Exponential sums with coefficients 0 or 1 and concentrated $L^p$ norms}, Ann. Inst. Fourier (Grenoble) \textbf{57} (2007), no. 5, 1377--1404. DOI \mbox{10.5802/aif.2298}.
+\bibitem{r4} R. P. Boas, \emph{Majorant problems for trigonometric series}, J. Analyse Math. \textbf{10} (1962/63), 253--271. DOI \mbox{10.1007/BF02790309}.
+\bibitem{r5} W. N. Bailey, \emph{Some infinite integrals involving Bessel functions}, Proc. London Math. Soc. (2) \textbf{40} (1936), 37--48. DOI \mbox{10.1112/plms/s2-40.1.37}.
+\bibitem{r6} W. N. Bailey, \emph{Some infinite integrals involving Bessel functions (II)}, J. London Math. Soc. \textbf{11} (1936), 16--20. DOI \mbox{10.1112/jlms/s1-11.1.16}.
+\bibitem{r7} J. Bennett and N. Bez, \emph{A majorant problem for the periodic Schr\"odinger group}, RIMS Kokyuroku Bessatsu (2012), 1--10. http://hdl.handle.net/2433/196263.
+\bibitem{r8} A. Bonami and Sz. Gy. R\'ev\'esz, \emph{Integral concentration of idempotent trigonometric polynomials with gaps}, Amer. J. Math. \textbf{131} (2009), no. 4, 1065--1108. arXiv:0707.3023, DOI \mbox{10.1353/ajm.0.0065}.
+\bibitem{r9} J. M. Borwein, D. Nuyens, A. Straub and J. Wan, \emph{Some arithmetic properties of short random walk integrals}, Ramanujan J. \textbf{26} (2011), no. 1, 109--132. DOI \mbox{10.1007/s11139-011-9325-y}.
+\bibitem{r10} F. Brunault, A. Guilloux, M. Mehrabdollahei and R. Pengo, \emph{Limits of Mahler measures in multiple variables}, Ann. Inst. Fourier (Grenoble) \textbf{74} (2024), no. 4, 1407--1450. arXiv:2203.12259, DOI \mbox{10.5802/aif.3611}.
+\bibitem{r11} V. I. Fabrikant, \emph{Computation of infinite integrals involving three Bessel functions by introduction of new formalism}, Z. Angew. Math. Mech. \textbf{83} (2003), 363--374. DOI \mbox{10.1002/zamm.200310059}.
+\bibitem{r12} V. I. Fabrikant, \emph{Elementary exact evaluation of infinite integrals of the product of several spherical Bessel functions, power and exponential}, Quart. Appl. Math. \textbf{71} (2013), 573--581. DOI \mbox{10.1090/S0033-569X-2012-01300-8}.
+\bibitem{r13} A. Gervois and H. Navelet, \emph{Integrals of three Bessel functions and Legendre functions. I}, J. Math. Phys. \textbf{26} (1985), no. 4, 633--644. DOI \mbox{10.1063/1.526600}.
+\bibitem{r14} A. Gervois and H. Navelet, \emph{Integrals of some three Bessel functions and Legendre functions. II}, J. Math. Phys. \textbf{26} (1985), no. 4, 645--655. DOI \mbox{10.1063/1.526601}.
+\bibitem{r15} A. Gervois and H. Navelet, \emph{Infinite integrals involving three spherical Bessel functions}, SIAM J. Math. Anal. \textbf{20} (1989), no. 4, 1006--1018. DOI \mbox{10.1137/0520067}.
+\bibitem{r16} M. L. Glasser and E. Montaldi, \emph{Some integrals involving Bessel functions}, J. Math. Anal. Appl. \textbf{183} (1994), no. 3, 577--590. arXiv:math/9307213, DOI \mbox{10.1006/jmaa.1994.1164}.
+\bibitem{r17} P. T. Gressman, S. Guo, L. B. Pierce, J. Roos and P.-L. Yung, \emph{On the strict majorant property in arbitrary dimensions}, Q. J. Math. \textbf{74} (2023), no. 1, 139--161. arXiv:2106.12538, DOI \mbox{10.1093/qmath/haac021}.
+\bibitem{r18} G. H. Hardy and J. E. Littlewood, \emph{Notes on the theory of series (XIX): a problem concerning majorants of Fourier series}, Quart. J. Math. Oxford Ser. \textbf{6} (1935), 304--315. DOI \mbox{10.1093/qmath/os-6.1.304}.
+\bibitem{r19} A. D. Jackson and L. C. Maximon, \emph{Integrals of products of Bessel functions}, SIAM J. Math. Anal. \textbf{3} (1972), 446--460. DOI \mbox{10.1137/0503043}.
+\bibitem{r20} S. Krenedits, \emph{Three-term idempotent counterexamples in the Hardy--Littlewood majorant problem}, J. Math. Anal. Appl. \textbf{388} (2012), 136--150. arXiv:1006.0409, DOI \mbox{10.1016/j.jmaa.2011.09.053}.
+\bibitem{r21} S. Krenedits, \emph{On Mockenhoupt's conjecture in the Hardy--Littlewood majorant problem}, J. Contemp. Math. Anal. \textbf{48} (2013), 91--109. arXiv:1203.2378, DOI \mbox{10.3103/S1068362313030011}.
+\bibitem{r22} S. Krenedits, \emph{Special quadrature error estimates and their application in the Hardy--Littlewood majorant problem}, Acta Math. Acad. Paedagog. Nyh\'azi. \textbf{28} (2012), no. 2, 121--151. arXiv:1207.6453.
+\bibitem{r23} H. M. MacDonald, \emph{Note on the evaluation of a certain integral containing Bessel's functions}, Proc. London Math. Soc. (2) \textbf{7} (1909), 142--149. DOI \mbox{10.1112/plms/s2-7.1.142}.
+\bibitem{r24} P. A. Martin, \emph{On functions defined by sums of products of Bessel functions}, J. Phys. A \textbf{41} (2008), 015207. DOI \mbox{10.1088/1751-8113/41/1/015207}.
+\bibitem{r25} R. Mehrem and A. Hohenegger, \emph{A generalization for the infinite integral over three spherical Bessel functions}, J. Phys. A \textbf{43} (2010), 455204. DOI \mbox{10.1088/1751-8113/43/45/455204}.
+\bibitem{r26} H. L. Montgomery, \emph{Ten lectures on the interface between analytic number theory and harmonic analysis}, CBMS Regional Conference Series in Mathematics \textbf{84}, AMS, 1994. DOI \mbox{10.1090/cbms/084}.
+\bibitem{r27} G. Mockenhaupt, \emph{Bounds in Lebesgue spaces of oscillatory integral operators}, Habilitationsschrift, Universit\"at-Gesamthochschule Siegen, Fachbereich Mathematik, 1996, 52 pp.
+\bibitem{r28} G. Mockenhaupt and W. Schlag, \emph{On the Hardy--Littlewood majorant problem for random sets}, J. Funct. Anal. \textbf{256} (2009), 1189--1237. DOI \mbox{10.1016/j.jfa.2008.06.005}.
+\bibitem{r29} \emph{NIST Digital Library of Mathematical Functions}, https://dlmf.nist.gov/, Release 1.2.7 of 2026-06-15, F. W. J. Olver, A. B. Olde Daalhuis, D. W. Lozier, B. I. Schneider, R. F. Boisvert, C. W. Clark, B. R. Miller, B. V. Saunders, H. S. Cohl, and M. A. McClain, eds. Neumann's product formula 10.9.26; Weber--Schafheitlin 10.22.56.
+\bibitem{r30} Sz. Gy. R\'ev\'esz, \emph{Extrem\'alis probl\'em\'ak pozit\'iv definit f\"uggv\'enyekre \'es polinomokra}, habilitation theses, Budapest University of Technology and Economics, 2010, 42 pp. (in Hungarian).
+\bibitem{r31} G. N. Watson, \emph{An infinite integral involving Bessel functions}, J. London Math. Soc. \textbf{9} (1934), 16--22. DOI \mbox{10.1112/jlms/s1-9.1.16}.
+\bibitem{r32} G. N. Watson, \emph{A treatise on the theory of Bessel functions}, 2nd ed., Cambridge Univ. Press, 1944.
 \end{thebibliography}
 
 \end{document}

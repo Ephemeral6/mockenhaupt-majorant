@@ -54,7 +54,7 @@ pdfTeX's embedded timestamps (`/CreationDate`, `/ModDate`, `/ID`) are stripped.
 
 | File | |
 |---|---|
-| `mockenhaupt.tex` | the source; 32 pages, 11pt `amsart` |
+| `mockenhaupt.tex` | the source; 33 pages, 11pt `amsart` |
 | `mockenhaupt.pdf` | compiled proof copy |
 
 ## What changed on 2026-08-31
@@ -94,6 +94,32 @@ A second pass the same day acted on a full read-through by a mathematician:
   corrected** (`[11]` was cited under a title that journal never printed), one added
   (Mockenhaupt's 1996 habilitation, where the conjecture is posed), and several
   entries completed with series numbers and DOIs.
+
+A third pass acted on a systematic literature search. It changed no mathematics;
+it changed what the paper claims for itself:
+
+- **The two-variable lift is not new, and the paper now says so.** Lifting a
+  three-term idempotent to the torus and comparing the two lines a half period
+  apart is the device of Bonami and Révész; their idempotent, specialised at two
+  points, is exactly the pair `f_0, g_0` of this paper, and Krenedits settles
+  `k = 0` on that basis. Section 1.4 now attributes both halves of that step, and
+  the ray identity is attributed to the kernel-lattice mechanism used by Brunault,
+  Guilloux, Mehrabdollahei and Pengo.
+- **For the zeroth mode, this programme is already published.** `Ĥ^s(0,0)` is a
+  zeta Mahler measure, equivalently a short random walk moment; Borwein, Nuyens,
+  Straub and Wan continue it and match it to a Bessel integral. What is new here
+  is the same programme on the non-zero modes of the ray, where the three orders
+  are distinct and grow, and where the sum over modes must be reassembled.
+- **A misattribution was corrected.** The paper credited Martin with the two-step
+  reduction used in Section 5. He uses both ingredients separately; his own
+  evaluation of a triple Bessel integral goes through a Mellin–Barnes
+  representation instead. The claim is now stated accurately, which makes the
+  precedent more distant, not less.
+- **Gervois–Navelet and Gressman–Guo–Pierce–Roos–Yung are now cited and
+  distinguished**, and the indexing of Mockenhaupt's original statement — which is
+  shifted by one relative to the form used here — is recorded.
+
+The bibliography grew from 20 entries to 32 in the process.
 
 ## Status — please read this before citing
 
