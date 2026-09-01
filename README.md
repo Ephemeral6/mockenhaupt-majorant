@@ -144,11 +144,10 @@ The bibliography grew from 20 entries to 32 in the process.
 ## Status — please read this before citing
 
 Being typeset and compiling cleanly says nothing about whether the mathematics is
-right. As of 2026-08-31:
+right. As of 2026-09-01:
 
 - **Not independently refereed.** The paper has not been submitted to a journal
-  and has not been read by a referee. It has not yet been through the independent
-  multi-engine audit the authors' own project criteria require.
+  and has not been read by a referee.
 - **No formal verification is claimed.** An exploratory Lean 4 formalisation was
   attempted while the paper was being written; it is partial, its build does not
   pass, it covers no part of the main line, and it is not part of the proof or of
@@ -165,9 +164,10 @@ right. As of 2026-08-31:
   Bonami–Révész idempotents, and the `q = 0` mode of the route used here is
   published as a short-random-walk moment. All of those were corrected in the text
   rather than left standing. The screen declares its own blind spots: MathSciNet was
-  not covered, Google Scholar refused access, and one reference work
-  (Prudnikov vol. 2, §2.13) could not be read first-hand. If part of this argument
-  is already in print somewhere those gaps are where it would be hiding.
+  not covered, Google Scholar refused access, and two reference works
+  (Prudnikov vol. 2, §2.13 and Erdélyi, *Tables of Integral Transforms* II, p. 351)
+  could not be read first-hand. If part of this argument is already in print
+  somewhere those gaps are where it would be hiding.
 
 Corrections, counterexamples, and pointers to prior art are all welcome — open an
 issue. A refutation is worth more to the authors than a citation.
