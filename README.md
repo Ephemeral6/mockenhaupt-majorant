@@ -21,12 +21,12 @@ f_k(x) = 1 + e(x) + e(Nx),      g_k(x) = 1 + e(x) - e(Nx),      e(t) = exp(2πi 
 ```
 
 `f_k` and `g_k` have the same frequency support and `|ĝ_k| = |f̂_k|` pointwise, so
-`f_k` majorises `g_k` in the sense of Hardy and Littlewood. Mockenhaupt conjectured
-that the majorant property nevertheless **fails**:
+`f_k` majorises `g_k` in the sense of Hardy and Littlewood. Mockenhaupt asked
+whether the majorant property nevertheless **fails**:
 
 > `‖g_k‖_{L^p(T)} > ‖f_k‖_{L^p(T)}` for every real `p ∈ (2k, 2k+2)`.
 
-Before this paper the conjecture was known only for `k ≤ 5`, one value of `k` at a
+Before this paper the statement was known only for `k ≤ 5`, one value of `k` at a
 time. This paper settles all `k ≥ 4` by a single argument.
 
 ## The method, in one paragraph
@@ -58,10 +58,51 @@ pdfTeX's embedded timestamps (`/CreationDate`, `/ModDate`, `/ID`) are stripped.
 
 | File | |
 |---|---|
-| `mockenhaupt.tex` | the source; 36 pages, 11pt `article`, 32 bibliography entries |
+| `mockenhaupt.tex` | the source; 35 pages, 11pt `article`, 32 bibliography entries |
 | `mockenhaupt.pdf` | compiled proof copy |
 
-## What changed on 2026-09-01 (second revision of the day)
+## What changed on 2026-09-02
+
+This revision follows a second round of correspondence with Gerd Mockenhaupt, who
+supplied the source of his 1996 Habilitationsschrift [27]. The mathematics is
+untouched; what changed is what the paper says about its own history, and where it
+states its use of AI.
+
+- **The statement is a problem, not a conjecture — and the paper now says so.**
+  Checked against the source of [27] rather than against a secondary account: the
+  three-term inequality appears there in a footnote to the definition of the
+  constants `B^p`, asserts one case (`m = 3`, which is `k = 2` in the indexing used
+  here), and is followed by the remark that finding such polynomials "becomes more
+  difficult … for any particular `p ≫ 6` not an even integer". Its author has
+  confirmed that he had at the time no structural reason to expect it to hold for
+  every `k`. Section 1.1 now says *posed*, not *conjectured*, and a note after the
+  statement records the history. The name *Conjecture (Mockenhaupt)* is kept,
+  because that is how the statement is known.
+- **The indexing note is now first-hand.** The polynomial in [27] is
+  `z^m + z^{m+1} − 1`, with frequencies `{0, m, m+1}` and the sign on the constant
+  term; a reflection and a translation of the frequencies — neither of which changes
+  an `L^p` norm — carry it to the normalisation used here. That derivation replaces
+  the previous appeal to a secondary source, which is kept as corroboration.
+- **`k = 1` is not proved in [27].** Example 3.4, p. 33, gives a lower bound for the
+  corresponding constant on `ℤ/mℤ`, for the frequencies `{0, 1, 3}`, and states in
+  the author's own words that it is established by numerical calculations.
+- **The bibliography entry for [27] follows the title page** of the original
+  (Fachbereich 6 — Mathematik, Gesamthochschule Siegen), and its 52 pages are
+  confirmed by measurement.
+- **A paragraph on what numerics can and cannot reach** was added to §1.2, and an
+  **Acknowledgment** thanks Gerd Mockenhaupt for the comments, the correspondence
+  and the text of [27].
+- **Appendix A is now titled *AI usage*** and opens with an explicit statement: the
+  argument was produced by an artificial-intelligence system, not merely checked by
+  one; the system and the two models are named; the authors have read and verified
+  the argument and take full responsibility for it; no formal verification is
+  claimed. The rest of the appendix is unchanged in substance — what the system did,
+  and the four identifiable ways its output was wrong.
+- **A first pass of compression**, 36 → 35 pages. Five expository remarks and the
+  symbol index were tightened and one section of open problems shortened; no lemma,
+  proof, constant or table of data was touched.
+
+## What changed on 2026-09-01 (second revision of that day)
 
 The mathematics is untouched. The paper was re-set as a preprint rather than in a
 journal class, and reorganised to match.
@@ -70,11 +111,13 @@ journal class, and reorganised to match.
   numbered affiliations, their e-mail addresses and a date; plain numbered
   section headings.
 - **The tool disclosure moved to the front and shrank at the back.** A short
-  **AI Usage** paragraph now follows the abstract, naming the system and the two
+  **AI Usage** paragraph followed the abstract, naming the system and the two
   models; the long note at the end became **Appendix A**, cut from a full page to
   half a page. Nothing it asserted was dropped: the search, the exact-arithmetic
   verification of the finite range with its negative control, and all four ways
-  the system's output was wrong are still there, told shorter.
+  the system's output was wrong are still there, told shorter. *(Superseded the
+  next day: the front paragraph was removed and the whole statement now lives in
+  Appendix A, which is titled* AI usage. *See above.)*
 - **Section 1 was reorganised** into Results, Technical Overview and Related
   Works, and an **Acknowledgment** was added before the references. Section 2 is
   now *Preliminaries* and section 12 *Conclusion and Future Work*. No sentence of
@@ -83,7 +126,7 @@ journal class, and reorganised to match.
   was setting with two binary operators crushed to nothing, so that `a − b` read
   as `a-b`.
 
-## What changed on 2026-09-01 (first revision of the day)
+## What changed on 2026-09-01 (first revision of that day)
 
 - **The paper now has five authors** rather than one; four of them hold two
   affiliations each, and the corresponding authors are named in a footnote on the
@@ -166,20 +209,19 @@ The bibliography grew from 20 entries to 32 in the process.
 ## Status — please read this before citing
 
 Being typeset and compiling cleanly says nothing about whether the mathematics is
-right. As of 2026-09-01:
+right. As of 2026-09-02:
 
 - **Not independently refereed.** The paper has not been submitted to a journal
   and has not been read by a referee.
 - **No formal verification is claimed.** An exploratory Lean 4 formalisation was
   attempted while the paper was being written; it is partial, its build does not
   pass, it covers no part of the main line, and it is not part of the proof or of
-  this repository. The paper's closing note records the same thing. Removing the
-  earlier status section changed the paper's exposition, not this fact.
-- **The argument was produced by an automated system**, not merely checked by
-  one. This is stated plainly in the paper's `Note on tools`, together with what the
-  system got wrong. The mathematics stands or falls on the written proof, which is
-  self-contained and can be checked by hand; the authors have read it and take
-  responsibility for it.
+  this repository. Appendix A records the same thing.
+- **The argument was produced by an artificial-intelligence system**, not merely
+  checked by one. This is stated plainly in **Appendix A, *AI usage***, together
+  with what the system got wrong. The mathematics stands or falls on the written
+  proof, which is self-contained and can be checked by hand; the authors have read
+  and verified it and take full responsibility for it.
 - **A novelty screen was run on 2026-09-01, and it is not complete.** It found no
   prior work on `k ≥ 6`, and it also found that several things the paper had been
   claiming for itself were already known — `f_0, g_0` are a specialisation of the
