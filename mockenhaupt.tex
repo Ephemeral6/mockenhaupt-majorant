@@ -11,6 +11,19 @@
 \usepackage[colorlinks=true,linkcolor=linkcol,citecolor=linkcol,
             urlcolor=linkcol]{hyperref}
 
+% 2026-09-05.  Reproducible output, matching the authors' other two preprints:
+% omit the creation and modification dates, the pdfTeX banner and the
+% non-deterministic trailer id.  Without these three lines every recompilation
+% produces a different PDF, so nobody can tell an edit apart from a rebuild;
+% with them the PDF has a stable checksum and a claim like "this is the file
+% that was checked" becomes verifiable.  These settings write PDF metadata
+% only: page count, line breaks and every glyph position are unchanged, and
+% that was confirmed by comparing the extracted text of the PDF before and
+% after, page by page, all 35 identical.
+\pdfinfoomitdate=1
+\pdfsuppressptexinfo=-1
+\pdftrailerid{}
+
 % Equations are numbered FLAT, (1)...(12), deliberately NOT per section.
 % With \numberwithin all twelve landed on numbers that a statement in the same
 % section already owns -- eq (2.1) beside Lemma 2.1, (8.2) beside Lemma 8.2 --
@@ -90,9 +103,10 @@
 % The remaining Overfull is 2.18pt, in the FRONT MATTER (TeX attributes it to
 % the line where the abstract environment opens; the box holds "[][]" and no
 % text).  NOTE: this comment must not spell that environment's opening command
-% out, because arxiv_form.py locates the abstract by searching the tex for it
-% and would then slice from here -- it did, and reported 685 words against the
-% form's 149.  Comments are part of the file every other tool reads.  Three
+% out.  A tool that finds the abstract by searching the source for that command
+% would start slicing from here instead -- one did, and reported 685 words
+% against the form's 149.  Comments are part of the file every other tool
+% reads.  Three
 % candidates for the overfull were
 % ruled out by measurement, not by argument: replacing the abstract display's
 % \qquad by \quad left the amount at exactly 2.17523pt; so did \tolerance and
