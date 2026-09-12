@@ -1,5 +1,19 @@
 # Three-term idempotents defeat the Hardy–Littlewood majorant property on every interval (2k, 2k+2)
 
+## arXiv status — checked 13 September 2026
+
+**Available on arXiv:** [arXiv:2609.09740](https://arxiv.org/abs/2609.09740)
+(math.CA), under the title **Mockenhaupt's Three-Term Hardy-Littlewood
+Majorant Conjecture**. The public submission history lists arXiv v1,
+submitted on 9 September 2026.
+
+The public record describes the revised 23-page manuscript. The source and
+PDF currently in this repository are the earlier 35-page manuscript under
+the title above; the revision history and mathematical discussion below
+refer to that repository copy. Use the arXiv link for the announced version.
+An arXiv announcement is not journal peer review; the dated review and
+verification notes below are retained.
+
 **Guancheng Pan**`¹²` · **Chengsong You**`¹³` · **Hengyu Wang**`¹⁴` · **Junwei Zhou**`⁵ *` · **Yongchao Chen**`¹⁶ *`
 
 `¹` Apex Intelligence · `²` Chu Kochen Honors College, Zhejiang University · `³` East China Normal University · `⁴` Tongji University · `⁵` Independent Researcher · `⁶` Tsinghua University
