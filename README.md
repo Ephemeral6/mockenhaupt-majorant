@@ -7,18 +7,18 @@
 Majorant Conjecture**. The public submission history lists arXiv v1,
 submitted on 9 September 2026.
 
-The public record describes the revised 23-page manuscript. The source and
-PDF currently in this repository are the earlier 35-page manuscript under
-the title above; the revision history and mathematical discussion below
-refer to that repository copy. Use the arXiv link for the announced version.
+The public record describes the revised 23-page manuscript. Since
+1 October 2026 the source and PDF in this repository are the author's current
+23-page manuscript (see *What changed on 2026-10-01* below); it carries later
+edits than the announced arXiv version, so the two are not byte-identical.
+The revision notes dated 2026-09-02 and earlier describe the earlier 35-page
+manuscript. Use the arXiv link for the announced version.
 An arXiv announcement is not journal peer review; the dated review and
 verification notes below are retained.
 
-**Guancheng Pan**`¹²` · **Chengsong You**`¹³` · **Hengyu Wang**`¹⁴` · **Junwei Zhou**`⁵ *` · **Yongchao Chen**`¹⁶ *`
+**Guancheng Pan**
 
-`¹` Apex Intelligence · `²` Chu Kochen Honors College, Zhejiang University · `³` East China Normal University · `⁴` Tongji University · `⁵` Independent Researcher · `⁶` Tsinghua University
-
-`*` Corresponding authors: Junwei Zhou `<zjw330501@gmail.com>`, Yongchao Chen `<cyc@apexin.ai>`
+Chu Kochen Honors College, Zhejiang University · `<3250101086@zju.edu.cn>`
 
 This repository holds the LaTeX source and a compiled PDF of a paper proving
 Mockenhaupt's three-term conjecture for every integer `k ≥ 4`, and hence —
@@ -62,18 +62,42 @@ runtime.
 latexmk -pdf mockenhaupt.tex
 ```
 
-Requires only standard TeX Live / MiKTeX packages (14 of them, all standard);
+Requires only standard TeX Live / MiKTeX packages (11 of them, all standard);
 the bibliography is an inline `thebibliography`, so there is no BibTeX step and no
 `.bbl` to carry around. The source has been reproduced from scratch in a clean
 room — empty directory, only `mockenhaupt.tex`, three bare `pdflatex` passes, zero
 errors, zero undefined references, no `Overfull`/`Underfull`/missing-character
-warnings — and the resulting PDF matches the one committed here byte for byte once
-pdfTeX's embedded timestamps (`/CreationDate`, `/ModDate`, `/ID`) are stripped.
+warnings — and the resulting PDF matches the one committed here byte for byte
+(the source suppresses pdfTeX's embedded dates and trailer `/ID`, so no stripping
+is needed). Checked on 2026-10-01 with MiKTeX pdfTeX 1.40.27.
 
 | File | |
 |---|---|
-| `mockenhaupt.tex` | the source; 35 pages, 11pt `article`, 32 bibliography entries |
+| `mockenhaupt.tex` | the source; 23 pages, 11pt `article`, 9 bibliography entries |
 | `mockenhaupt.pdf` | compiled proof copy |
+
+## What changed on 2026-10-01
+
+The repository copy was replaced by the author's current version of the paper,
+the 23-page revision. Taken from the comments in the source:
+
+- **The route of the proof is the revised one.** The moment/binomial reduction of
+  the earlier §2 is dropped, `H` is renormalised from the `2π` convention to the
+  `e(·)` convention, and the introduction, §§2–6, the acknowledgment and the
+  reference list (now 9 entries) come from the revision. The preamble, title
+  block, flat equation numbering and Appendix A come from the 35-page version.
+- **Appendix A (*AI usage*) was rewritten** on 2026-09-26: it names
+  Propositions 4.1–4.2 as the system's substantive contribution, calls the
+  rational end-game of §6 bookkeeping, and moves the material of the first
+  route into a short history paragraph.
+- **The attribution follows the 1996 Habilitationsschrift** — Mockenhaupt
+  *asked*, with a note on the name — and the Habilitationsschrift is cited; the
+  Sobolev space of Lemma 2.2 is written `W^{2,2}`.
+- **The paper is single-author**, and the AI system is described as the
+  author's personal AI research system (models Claude Opus 5 and GPT-5.6 Sol).
+
+The notes below, dated 2026-09-02 and earlier, describe the 35-page manuscript;
+reference numbers in them refer to its 32-entry bibliography.
 
 ## What changed on 2026-09-02
 
@@ -108,8 +132,8 @@ states its use of AI.
   and the text of [27].
 - **Appendix A is now titled *AI usage*** and opens with an explicit statement: the
   argument was produced by an artificial-intelligence system, not merely checked by
-  one; the system and the two models are named; the authors have read and verified
-  the argument and take full responsibility for it; no formal verification is
+  one; the system and the two models are named; the author has read and verified
+  the argument and takes full responsibility for it; no formal verification is
   claimed. The rest of the appendix is unchanged in substance — what the system did,
   and the four identifiable ways its output was wrong.
 - **A first pass of compression**, 36 → 35 pages. Five expository remarks and the
@@ -121,8 +145,8 @@ states its use of AI.
 The mathematics is untouched. The paper was re-set as a preprint rather than in a
 journal class, and reorganised to match.
 
-- **Layout.** `amsart` → `article`: a title page carrying the authors with
-  numbered affiliations, their e-mail addresses and a date; plain numbered
+- **Layout.** `amsart` → `article`: a title page carrying the author
+  information with numbered affiliations, e-mail addresses and a date; plain numbered
   section headings.
 - **The tool disclosure moved to the front and shrank at the back.** A short
   **AI Usage** paragraph followed the abstract, naming the system and the two
@@ -142,13 +166,12 @@ journal class, and reorganised to match.
 
 ## What changed on 2026-09-01 (first revision of that day)
 
-- **The paper now has five authors** rather than one; four of them hold two
-  affiliations each, and the corresponding authors are named in a footnote on the
-  first page. Nothing in the mathematics changed with this revision.
+- **The author information on the title page was revised** (since superseded:
+  the current version is single-author). Nothing in the mathematics changed with
+  this revision.
 - **The closing `Note on tools` was expanded from one paragraph to a full page.**
-  It now says which system produced the argument (Apex Math, an automated
-  mathematical research system built by the authors, running Claude Opus 5 and
-  GPT-5.6 Sol), how the search actually went — five parallel lines of attack, four
+  It now says which system produced the argument (the author's personal AI
+  research system, running Claude Opus 5 and GPT-5.6 Sol), how the search actually went — five parallel lines of attack, four
   of which converged on the same saddle-point geometry, and the one that closed the
   problem was not the one it set out on — and, in detail, **the four ways the
   system's output was wrong** and how each was corrected. It also records that the
@@ -234,8 +257,8 @@ right. As of 2026-09-02:
 - **The argument was produced by an artificial-intelligence system**, not merely
   checked by one. This is stated plainly in **Appendix A, *AI usage***, together
   with what the system got wrong. The mathematics stands or falls on the written
-  proof, which is self-contained and can be checked by hand; the authors have read
-  and verified it and take full responsibility for it.
+  proof, which is self-contained and can be checked by hand; the author has read
+  and verified it and takes full responsibility for it.
 - **A novelty screen was run on 2026-09-01, and it is not complete.** It found no
   prior work on `k ≥ 6`, and it also found that several things the paper had been
   claiming for itself were already known — `f_0, g_0` are a specialisation of the
@@ -248,12 +271,11 @@ right. As of 2026-09-02:
   somewhere those gaps are where it would be hiding.
 
 Corrections, counterexamples, and pointers to prior art are all welcome — open an
-issue. A refutation is worth more to the authors than a citation.
+issue. A refutation is worth more to the author than a citation.
 
 ## Licence
 
-Copyright © 2026 Guancheng Pan, Chengsong You, Hengyu Wang, Junwei Zhou and
-Yongchao Chen. The paper — both `mockenhaupt.tex` and
+Copyright © 2026 Guancheng Pan. The paper — both `mockenhaupt.tex` and
 `mockenhaupt.pdf` — is licensed under
 [Creative Commons Attribution 4.0 International](LICENSE) (CC BY 4.0): reuse,
 redistribute and adapt freely, including commercially, with attribution.
